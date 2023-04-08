@@ -17,7 +17,7 @@ let mergedCommands = [
 module.exports = {
   alias: [...mergedCommands],
   description: "All picture related commands",
-  start: async (Atlas, m, { inputCMD, text, doReact }) => {
+  start: async (Atlas, m, { inputCMD, text, doReact, prefix}) => {
     switch (inputCMD) {
       case "ppcouple":
       case "couplepp":
@@ -41,7 +41,7 @@ module.exports = {
       case "image":
         if (!text) {
           doReact("❔").then(() => {
-            return reply("Please provide an image Search Term !");
+            return reply(`Please provide an image Search Term !\n\nExample: *${prefix}image cheems*`);
           });
           return;
         }
@@ -76,7 +76,7 @@ module.exports = {
       case "gifsearch":
         if (!text) {
           doReact("❔").then(() => {
-            return reply("Please provide an Tenor gif Search Term !");
+            return reply(`Please provide an Tenor gif Search Term !\n\nExample: *${prefix}gif cheems bonk*`);
           });
           return;
         }
@@ -100,34 +100,34 @@ module.exports = {
       case "pin":
       case "pinterest":
         if (!text) {
-            doReact("❔").then(() => {
-              return reply("Please provide an Pinterest image Search Term !");
-            });
-            return;
-          }
-          doReact("📍");
-          hxzapi
-      .pinterest(text)
-      .then(async (res) => {
-        imgnyee = res[Math.floor(Math.random() * res.length)];
-        /*let buttons = [
+          doReact("❔").then(() => {
+            return reply(`Please provide an Pinterest image Search Term !\n\nExample: *${prefix}pin cheems*`);
+          });
+          return;
+        }
+        doReact("📍");
+        hxzapi
+          .pinterest(text)
+          .then(async (res) => {
+            imgnyee = res[Math.floor(Math.random() * res.length)];
+            /*let buttons = [
           {
             buttonId: `${prefix}pinterest ${args.join(" ")}`,
             buttonText: { displayText: ">>" },
             type: 1,
           },
         ];*/
-        let txt = `\n_🎀 Pinterest Search Term:_ *${text}*\n\n_🧩 Powered by_ *${botName}*\n`;
-        let buttonMessage = {
-          image: { url: imgnyee },
-          caption: txt,
-          //footer: `*${botName}*`,
-          //buttons: buttons,
-          //headerType: 4,
-        };
-        Atlas.sendMessage(m.from, buttonMessage, { quoted: m });
-      })
-      .catch((_) => _);
+            let txt = `\n_🎀 Pinterest Search Term:_ *${text}*\n\n_🧩 Powered by_ *${botName}*\n`;
+            let buttonMessage = {
+              image: { url: imgnyee },
+              caption: txt,
+              //footer: `*${botName}*`,
+              //buttons: buttons,
+              //headerType: 4,
+            };
+            Atlas.sendMessage(m.from, buttonMessage, { quoted: m });
+          })
+          .catch((_) => _);
 
         break;
 
