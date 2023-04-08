@@ -14,7 +14,6 @@ module.exports = {
   alias: [...mergedCommands],
   description: "All miscleaneous commands",
   start: async (Atlas, m, { pushName, prefix, inputCMD, chat, text,doReact }) => {
-    let pic = fs.readFileSync("./Assets/Atlas.jpg");
     switch (inputCMD) {
       case "ppcouple":
       case "couplepp":
@@ -37,7 +36,7 @@ module.exports = {
       case "googleimage":
       case "image":
         if (!text) {
-            doReact("❓").then(() => {
+            doReact("❔").then(() => {
                 return reply("Please provide an image Search Term !");
             });
             return;        
