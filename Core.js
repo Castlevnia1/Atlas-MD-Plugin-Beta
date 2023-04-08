@@ -53,6 +53,15 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     let text = (q = args.join(" "));
     global.suppL = "https://cutt.ly/AtlasBotSupport";
     let inputCMD = body.slice(1).trim().split(/ +/).shift().toLowerCase();
+    async function doReact(emoji){
+      let reactm = {
+        react: {
+          text: emoji,
+          key: m.key,
+        },
+      };
+      await Atlas.sendMessage(chat, reactm);
+    };
     const cmdName = response
       .slice(prefix.length)
       .trim()
@@ -129,6 +138,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       isAdmin,
       groupAdmin,
       text,
+      doReact,
       quoted,
       mentionByTag,
       mime,
