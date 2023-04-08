@@ -8,24 +8,26 @@ let mergedCommands = [
   "image",
   "ppcouple",
   "couplepp",
+  "gifsearch",
+  "gif",
 ];
 
 module.exports = {
   alias: [...mergedCommands],
   description: "All miscleaneous commands",
-  start: async (Atlas, m, { pushName, prefix, inputCMD, chat, text,doReact }) => {
+  start: async (Atlas, m, { inputCMD, text,doReact }) => {
     switch (inputCMD) {
       case "ppcouple":
       case "couplepp":
         doReact("❤️");
         let imgRes = await axios.get("https://neko-couple-api.onrender.com");
         Atlas.sendMessage(
-          chat,
+          m.from,
           { image: { url: imgRes.data.male }, caption: `_For Him..._` },
           { quoted: m }
         );
         Atlas.sendMessage(
-          chat,
+            m.from,
           { image: { url: imgRes.data.female }, caption: `_For Her..._` },
           { quoted: m }
         );
@@ -56,7 +58,7 @@ module.exports = {
           ];
           */
           await Atlas.sendMessage(
-            chat,
+            m.from,
             {
               image: {url: images,},
               caption: resText,
@@ -67,6 +69,22 @@ module.exports = {
             { quoted: m }
           );
         });
+        break;
+        case "gif":
+        case "gifsearch":
+            if (!text) {
+                doReact("❔").then(() => {
+                    return reply("Please provide an Tenor gif Search Term !");
+                });
+                return;        
+            }
+            doReact("🎴");
+            let resGif = await axios.get(
+                `https://tenor.googleapis.com/v2/search?q=${text}&key=${tenorApiKey}&client_key=my_project&limit=12&media_filter=mp4`
+              );
+            let resultGif = Math.floor(Math.random() * 12);
+            let gifUrl = resGif.data.results[resultGif].media_formats.mp4.url;
+            await Atlas.sendMessage(m.from, {video: { url: gifUrl}, gifPlayback: true, caption: `🎀 Gif serach result for: *${text}*\n`,}, { quoted: m });
         break;
 
       default:

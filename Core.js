@@ -45,7 +45,6 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     let isCmd = body.startsWith(prefix);
     let quoted = m.quoted ? m.quoted : m;
     let mime = (quoted.msg || m.msg).mimetype || " ";
-    let chat = m.from;
     let isMedia = /image|video|sticker|audio/.test(mime);
     let budy = typeof m.text == "string" ? m.text : "";
     let args = body.trim().split(/ +/).slice(1);
@@ -60,7 +59,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
           key: m.key,
         },
       };
-      await Atlas.sendMessage(chat, reactm);
+      await Atlas.sendMessage(m.from, reactm);
     };
     const cmdName = response
       .slice(prefix.length)
@@ -104,11 +103,11 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
           chalk.black(chalk.bgWhite("[ MESSAGE ]")),
         chalk.black(chalk.bgBlueBright(body || type)) + "\n" + ""
       );
-    }
+    };
     if (m.message && !isGroup) {
       console.log(
         "" + "\n" + chalk.black(chalk.bgWhite("[ PRIVATE CHAT ]")),
-        chalk.black(chalk.bgRedBright("+"+chat.split("@")[0])) +
+        chalk.black(chalk.bgRedBright("+"+m.from.split("@")[0])) +
           "\n" +
           chalk.black(chalk.bgWhite("[ SENDER ]")),
         chalk.black(
@@ -118,7 +117,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
           chalk.black(chalk.bgWhite("[ MESSAGE ]")),
         chalk.black(chalk.bgRedBright(body || type)) + "\n" + ""
       );
-    }
+    };
     if (body.startsWith(prefix) && !icmd)
       return Atlas.sendMessage(m.from, { text: "Baka no such command" });
 
@@ -132,7 +131,6 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       args,
       botNumber,
       isCmd,
-      chat,
       isMedia,
       ar,
       isAdmin,

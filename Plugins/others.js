@@ -5,7 +5,7 @@ let mergedCommands = ["sc", "support", "supportgc","script"];
 module.exports = {
   alias: [...mergedCommands],
   description: "All miscleaneous commands",
-  start: async (Atlas, m, { pushName, prefix, inputCMD, chat }) => {
+  start: async (Atlas, m, { pushName, prefix, inputCMD }) => {
     let pic = fs.readFileSync("./Assets/Atlas.jpg");
     switch (inputCMD) {
       case "script": case "sc":
@@ -22,13 +22,13 @@ module.exports = {
         )} MB\n*📅 Last Updated:* ${repo.updated_at}\n\n*🔗 Repo Link:* ${
           repo.html_url
         }\n\n❝ Dont forget to give a Star ⭐ to the repo. It's made with restless hardwork by *Team ATLAS*. ❞\n\n*©️ Team ATLAS- 2023*`;
-        Atlas.sendMessage(chat, { image: pic, caption: txt }, { quoted: m });
+        Atlas.sendMessage(m.from, { image: pic, caption: txt }, { quoted: m });
         break;
 
       case "support":
       case "supportgc":
         let txt2 = `              🧣 *Support Group* 🧣\n\n*${botName}* is an open source project, and we are always happy to help you.\n\n*Link:* ${suppL}\n\n*Note:* Please don't spam in the group, and don't message *Admins directly* without permission. Ask for help inside *Group*.\n\n*Thanks for using Atlas.*`
-        Atlas.sendMessage(chat,{image:pic, caption:txt2},{quoted:m})
+        Atlas.sendMessage(m.from,{image:pic, caption:txt2},{quoted:m})
       break;
 
       default:
