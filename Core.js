@@ -53,7 +53,6 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     let text = (q = args.join(" "));
     global.suppL = "https://cutt.ly/AtlasBotSupport";
     let inputCMD = body.slice(1).trim().split(/ +/).shift().toLowerCase();
-    console.log(inputCMD)
     const cmdName = response
       .slice(prefix.length)
       .trim()
