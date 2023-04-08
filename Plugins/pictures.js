@@ -14,7 +14,7 @@ let mergedCommands = [
 
 module.exports = {
   alias: [...mergedCommands],
-  description: "All miscleaneous commands",
+  description: "All picture related commands",
   start: async (Atlas, m, { inputCMD, text,doReact }) => {
     switch (inputCMD) {
       case "ppcouple":
