@@ -1,4 +1,5 @@
 require("./Configurations");
+require("./System/BotCharacters");
 const { getBinaryNodeChild } = require("@adiwajshing/baileys");
 const chalk = require("chalk");
 const { color } = require("./System/color.js");
@@ -120,6 +121,49 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     };
     if (body.startsWith(prefix) && !icmd)
       return Atlas.sendMessage(m.from, { text: "Baka no such command" });
+
+    // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
+
+    let char = "0"; // default one
+    let CharacterSelection = "10"; // user selected character
+
+    /*let character = await mkchar.findOne({
+      id: "1",
+    });
+    if (character) {
+      CharacterSelection = character.seletedCharacter;
+    } else {
+      let newCharacter = new mkchar({
+        id: "1",
+        seletedCharacter: "0",
+      });
+      await newCharacter.save();
+    }
+
+    await mkchar
+      .findOne({
+        id: "1",
+      })
+      .then(async (res) => {
+        if (res.seletedCharacter != char) {
+          CharacterSelection = res.seletedCharacter;
+        } else {
+          CharacterSelection = char;
+        }
+      });*/
+
+    let idConfig = "charID" + CharacterSelection;
+
+    global.botName = global[idConfig].botName;
+    global.botVideo = global[idConfig].botVideo;
+    global.botImage1 = global[idConfig].botImage1;
+    global.botImage2 = global[idConfig].botImage2;
+    global.botImage3 = global[idConfig].botImage3;
+    global.botImage4 = global[idConfig].botImage4;
+    global.botImage5 = global[idConfig].botImage5;
+    global.botImage6 = global[idConfig].botImage6;
+
+
 
     cmd.start(Atlas, m, {
       name: "Atlas",

@@ -1,6 +1,6 @@
-const fs = require("fs");
 const gis = require("g-i-s");
 const axios = require("axios");
+const hxzapi = require("hxz-api");
 let mergedCommands = [
   "gig",
   "gimage",
@@ -10,12 +10,14 @@ let mergedCommands = [
   "couplepp",
   "gifsearch",
   "gif",
+  "pin",
+  "pinterest",
 ];
 
 module.exports = {
   alias: [...mergedCommands],
   description: "All picture related commands",
-  start: async (Atlas, m, { inputCMD, text,doReact }) => {
+  start: async (Atlas, m, { inputCMD, text, doReact }) => {
     switch (inputCMD) {
       case "ppcouple":
       case "couplepp":
@@ -27,7 +29,7 @@ module.exports = {
           { quoted: m }
         );
         Atlas.sendMessage(
-            m.from,
+          m.from,
           { image: { url: imgRes.data.female }, caption: `_For Her..._` },
           { quoted: m }
         );
@@ -38,10 +40,10 @@ module.exports = {
       case "googleimage":
       case "image":
         if (!text) {
-            doReact("❔").then(() => {
-                return reply("Please provide an image Search Term !");
-            });
-            return;        
+          doReact("❔").then(() => {
+            return reply("Please provide an image Search Term !");
+          });
+          return;
         }
         doReact("🎴");
         gis(text, async (error, result) => {
@@ -60,7 +62,7 @@ module.exports = {
           await Atlas.sendMessage(
             m.from,
             {
-              image: {url: images,},
+              image: { url: images },
               caption: resText,
               //footer: `*${botName}*`,
               //buttons: buttons,
@@ -70,21 +72,63 @@ module.exports = {
           );
         });
         break;
-        case "gif":
-        case "gifsearch":
-            if (!text) {
-                doReact("❔").then(() => {
-                    return reply("Please provide an Tenor gif Search Term !");
-                });
-                return;        
-            }
-            doReact("🎴");
-            let resGif = await axios.get(
-                `https://tenor.googleapis.com/v2/search?q=${text}&key=${tenorApiKey}&client_key=my_project&limit=12&media_filter=mp4`
-              );
-            let resultGif = Math.floor(Math.random() * 12);
-            let gifUrl = resGif.data.results[resultGif].media_formats.mp4.url;
-            await Atlas.sendMessage(m.from, {video: { url: gifUrl}, gifPlayback: true, caption: `🎀 Gif serach result for: *${text}*\n`,}, { quoted: m });
+      case "gif":
+      case "gifsearch":
+        if (!text) {
+          doReact("❔").then(() => {
+            return reply("Please provide an Tenor gif Search Term !");
+          });
+          return;
+        }
+        doReact("🎴");
+        let resGif = await axios.get(
+          `https://tenor.googleapis.com/v2/search?q=${text}&key=${tenorApiKey}&client_key=my_project&limit=12&media_filter=mp4`
+        );
+        let resultGif = Math.floor(Math.random() * 12);
+        let gifUrl = resGif.data.results[resultGif].media_formats.mp4.url;
+        await Atlas.sendMessage(
+          m.from,
+          {
+            video: { url: gifUrl },
+            gifPlayback: true,
+            caption: `🎀 Gif serach result for: *${text}*\n`,
+          },
+          { quoted: m }
+        );
+        break;
+
+      case "pin":
+      case "pinterest":
+        if (!text) {
+            doReact("❔").then(() => {
+              return reply("Please provide an Pinterest image Search Term !");
+            });
+            return;
+          }
+          doReact("📍");
+          hxzapi
+      .pinterest(text)
+      .then(async (res) => {
+        imgnyee = res[Math.floor(Math.random() * res.length)];
+        /*let buttons = [
+          {
+            buttonId: `${prefix}pinterest ${args.join(" ")}`,
+            buttonText: { displayText: ">>" },
+            type: 1,
+          },
+        ];*/
+        let txt = `\n_🎀 Pinterest Search Term:_ *${text}*\n\n_🧩 Powered by_ *${botName}*\n`;
+        let buttonMessage = {
+          image: { url: imgnyee },
+          caption: txt,
+          //footer: `*${botName}*`,
+          //buttons: buttons,
+          //headerType: 4,
+        };
+        Atlas.sendMessage(m.from, buttonMessage, { quoted: m });
+      })
+      .catch((_) => _);
+
         break;
 
       default:
