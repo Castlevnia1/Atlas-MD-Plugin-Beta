@@ -24,47 +24,76 @@ module.exports = {
   name: "audioedit",
   alias: [...mergedCommands],
   description: "All Audio Editing Commands",
-  start: async (Atlas, m, { inputCMD, text, doReact, mime, quoted }) => {
-    if (!/audio/.test(mime)) {
-      doReact("❌").then(() => {
-        return reply(`Please mention an audio file !`);
-      });
-      return;
-    }
+  start: async (Atlas, m, { inputCMD, text, doReact, mime, isMedia, quoted, groupAdmin, isAdmin }) => {
     switch (inputCMD) {
-      case "bass":
+      case "admins":
         doReact("🎶");
-        
+        let message = "       『 *Attention Admins* 』";
+        if (text && !isMedia) {
+          message = text;
+        } else if (!text && m.quoted) {
+          message = `${m.quoted ? m.quoted.msg : ""}`;
+        } else if (text && m.quoted) {
+          message = text;
+        } else if (text && !m.quoted) {
+          message = text;
+        } else {
+          message = "       『 *Attention Admins* 』";
+        }
+        Atlas.sendMessage(
+          m.from,
+          { text: message, mentions: groupAdmin },
+          { quoted: m }
+        );
         break;
 
-      case "nightcore":
+      case "setgcname":
         doReact("🎶");
-       
+
         break;
 
-      case "deep":
-        
+      case "delete":
+
         break;
 
-      case "reverse":
-        
+      case "group":
+      case "gc":
+
         break;
 
-      case "robot":
-        
+      case "groupinfo":
+      case "gcinfo":
+
         break;
 
-      case "slow":
-        
+      case "hidetag":
+
         break;
 
-      case "smooth":
-        
+      case "leave":
+
         break;
 
-      case "tempo":
-        
+      case "promote":
+
         break;
+
+      case "remove":
+
+        break;
+
+      case "setppgc":
+
+        break;
+
+      case "setgcdesc":
+
+        break;
+
+      case "tagall":
+
+        break;
+
       default:
         break;
     }
