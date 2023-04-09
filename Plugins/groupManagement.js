@@ -5,8 +5,10 @@ let mergedCommands = [
   "admins",
   "setgcname",
   "delete",
+  "del",
   "demote",
   "gclink",
+  "grouplink",
   "group",
   "gc",
   "groupinfo",
@@ -24,7 +26,7 @@ module.exports = {
   name: "audioedit",
   alias: [...mergedCommands],
   description: "All Audio Editing Commands",
-  start: async (Atlas, m, { inputCMD, text, doReact, mime, isMedia, quoted, botNumber, isBotAdmin, groupAdmin, isAdmin }) => {
+  start: async (Atlas, m, { inputCMD, text, doReact, itsMe, metadata, mentionByTag, mime, isMedia, quoted, botNumber, isBotAdmin, groupAdmin, isAdmin }) => {
     switch (inputCMD) {
       case "admins":
         doReact("🏅");
@@ -49,7 +51,7 @@ module.exports = {
 
       case "setgcname":
         doReact("🎐");
-        if (!isAdmin && !isBotAdmin) return reply(`*Bot* and *Command user* both must be *Admin* in order to use this Command!`);
+        if (!isAdmin && !isBotAdmin) return reply(`*You* and *Bot* both must be *Admin* in order to use this Command!`);
         if (!text) return m.reply(`Please provide a new group name !\n\nExample: *${prefix}setgcname Bot Testing*`);
 
         let oldGCName = metadata.subject;
@@ -75,15 +77,12 @@ module.exports = {
         break;
 
       case "delete":
+      case "del":
         doReact("📛");
-
-        //if (!isAdmin && !isBotAdmin) return reply(`*Bot* and *Command user* both must be *Admin* in order to use this Command!`);
         if (!m.quoted) return reply(`Please mention a message to delete !`);
-        if (!isAdmin || !isBotAdmin) {
-          if (!m.sender.includes(botNumber)) return reply(`Sorry, Without *Admin* permission, I can only delete my own messages !`);
-          let { from, fromMe, id } = m.quoted;
-
-          let key = {
+        if (!isBotAdmin) {
+          if (!itsMe) return reply(`Sorry, Without *Admin* permission, I can only delete my own messages !`);
+          key = {
             remoteJid: m.from,
             fromMe: true,
             id: m.quoted.id,
@@ -91,9 +90,8 @@ module.exports = {
 
           await Atlas.sendMessage(m.from, { delete: key });
         } else {
-          var { from, fromMe, id } = m.quoted;
-
-          const key = {
+          if (!isAdmin) return reply(`Sorry, only *Admins* can delete other's messages !`);
+          key = {
             remoteJid: m.from,
             fromMe: false,
             id: m.quoted.id,
@@ -105,9 +103,66 @@ module.exports = {
 
         break;
 
+      case "demote":
+        doReact("📉");
+        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
+        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
+
+        if(m.quoted.sender == m.sender)
+
+        if (!text && !m.quoted) {
+          return reply(`Please tag an user to *Demote*!`);
+        } else if (m.quoted) {
+          mentionedUser = m.quoted.sender;
+        } else {
+          mentionedUser = mentionByTag[0];
+        }
+
+        userId = (await mentionedUser) || m.msg.contextInfo.participant;
+        if (!groupAdmin.includes(userId)) {
+          return Atlas.sendMessage(
+            m.from,
+            {
+              text: `@${mentionedUser.split("@")[0]} Senpai is not an *Admin* of this group!`,
+              mentions: [mentionedUser],
+            },
+            { quoted: m }
+          )
+        }
+        try {
+          await Atlas.groupParticipantsUpdate(m.from, [userId], "demote").then(
+            (res) =>
+              Atlas.sendMessage(
+                m.from,
+                {
+                  text: `Sorry @${mentionedUser.split("@")[0]} Senpai, you have been *Demoted* by @${m.sender.split("@")[0]} !`,
+                  mentions: [mentionedUser],
+                },
+                { quoted: m }
+              )
+          );
+        } catch (error) {
+          Atlas.sendMessage(
+            m.from,
+            {
+              text: (`An error occured while trying to demote @${mentionedUser.split("@")[0]} Senpai !\n\n*Error:* ${error}`),
+              mentions: [mentionedUser],
+            },
+            { quoted: m }
+          )
+        }
+
+        break;
+
+      case "gclink":
+      case "grouplink":
+        doReact("🧩");
+
+        break;
+
       case "group":
       case "gc":
-        doReact("🎀");
+        doReact("🎊");
 
         break;
 

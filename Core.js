@@ -33,15 +33,16 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
         ? body
         : "";
 
-    let metadata = isGroup ? await Atlas.groupMetadata(from) : {};
+    let metadata = m.isGroup ? await Atlas.groupMetadata(from) : {};
     let pushname = m.pushName || "NO name";
     let participants = isGroup ? metadata.participants : [sender];
-    let groupAdmin = isGroup
+    let groupAdmin = m.isGroup
       ? participants.filter((v) => v.admin !== null).map((v) => v.id)
       : [];
     let botNumber = await Atlas.decodeJid(Atlas.user.id);
-    let isBotAdmin = isGroup ? groupAdmin.includes(botNumber) : false;
-    let isAdmin = isGroup ? groupAdmin.includes(sender) : false;
+    let isBotAdmin = m.isGroup ? groupAdmin.includes(botNumber) : false;
+    let isAdmin = m.isGroup ? groupAdmin.includes(m.sender) : false;
+    let itsMe = m.quoted.sender.includes(botNumber)? true : false;
 
     let isCmd = body.startsWith(prefix);
     let quoted = m.quoted ? m.quoted : m;
@@ -180,6 +181,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       isAdmin,
       groupAdmin,
       text,
+      itsMe,
       doReact,
       quoted,
       mentionByTag,
