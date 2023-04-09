@@ -24,7 +24,7 @@ module.exports = {
   name: "audioedit",
   alias: [...mergedCommands],
   description: "All Audio Editing Commands",
-  start: async (Atlas, m, { inputCMD, text, doReact, mime, isMedia, quoted, groupAdmin, isAdmin }) => {
+  start: async (Atlas, m, { inputCMD, text, doReact, mime, isMedia, quoted, botNumber, isBotAdmin, groupAdmin, isAdmin }) => {
     switch (inputCMD) {
       case "admins":
         doReact("🏅");
@@ -50,7 +50,7 @@ module.exports = {
       case "setgcname":
         doReact("🎐");
         if (!isAdmin && !isBotAdmin) return reply(`*Bot* and *Command user* both must be *Admin* in order to use this Command!`);
-        if (!text) return m.reply(`Please provide a new group name !`);
+        if (!text) return m.reply(`Please provide a new group name !\n\nExample: *${prefix}setgcname Bot Testing*`);
 
         let oldGCName = metadata.subject;
 
@@ -66,7 +66,7 @@ module.exports = {
               m.from,
               {
                 image: { url: ppgc, mimetype: "image/jpeg" },
-                caption: `*『 Group Name Changed 』*\n\n_🔶 Old Name:_\n*${oldGCName}*\n\n_🔷 New Name:_\n*${text}*\n`,
+                caption: `*『 Group Name Updated 』*\n\n_🔶 Old Name:_\n*${oldGCName}*\n\n_🔷 New Name:_\n*${text}*\n`,
               },
               { quoted: m }
             )
@@ -76,6 +76,32 @@ module.exports = {
 
       case "delete":
         doReact("📛");
+
+        //if (!isAdmin && !isBotAdmin) return reply(`*Bot* and *Command user* both must be *Admin* in order to use this Command!`);
+        if (!m.quoted) return reply(`Please mention a message to delete !`);
+        if (!isAdmin || !isBotAdmin) {
+          if (!m.sender.includes(botNumber)) return reply(`Sorry, Without *Admin* permission, I can only delete my own messages !`);
+          let { from, fromMe, id } = m.quoted;
+
+          let key = {
+            remoteJid: m.from,
+            fromMe: true,
+            id: m.quoted.id,
+          };
+
+          await Atlas.sendMessage(m.from, { delete: key });
+        } else {
+          var { from, fromMe, id } = m.quoted;
+
+          const key = {
+            remoteJid: m.from,
+            fromMe: false,
+            id: m.quoted.id,
+            participant: m.quoted.sender,
+          };
+
+          await Atlas.sendMessage(m.from, { delete: key });
+        }
 
         break;
 
