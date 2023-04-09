@@ -23,7 +23,7 @@ let mergedCommands = [
 ];
 
 module.exports = {
-  name: "audioedit",
+  name: "groupanagement",
   alias: [...mergedCommands],
   description: "All Audio Editing Commands",
   start: async (Atlas, m, { inputCMD, text, doReact, itsMe, metadata, mentionByTag, mime, isMedia, quoted, botNumber, isBotAdmin, groupAdmin, isAdmin }) => {
@@ -54,7 +54,7 @@ module.exports = {
         if (!isAdmin && !isBotAdmin) return reply(`*You* and *Bot* both must be *Admin* in order to use this Command!`);
         if (!text) return m.reply(`Please provide a new group name !\n\nExample: *${prefix}setgcname Bot Testing*`);
 
-        let oldGCName = metadata.subject;
+        oldGCName = metadata.subject;
 
         try {
           ppgc = await Atlas.profilePictureUrl(m.from, "image");
@@ -107,8 +107,8 @@ module.exports = {
         doReact("📉");
         if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
         if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
-
-        if(m.quoted.sender == m.sender)
+        if (m.quoted.sender.includes(m.sender)) return reply(`You can't demote yourself !`);
+        if (!itsMe) return reply(`Sorry, I can't demote myself !`);
 
         if (!text && !m.quoted) {
           return reply(`Please tag an user to *Demote*!`);
@@ -120,14 +120,17 @@ module.exports = {
 
         userId = (await mentionedUser) || m.msg.contextInfo.participant;
         if (!groupAdmin.includes(userId)) {
-          return Atlas.sendMessage(
-            m.from,
-            {
-              text: `@${mentionedUser.split("@")[0]} Senpai is not an *Admin* of this group!`,
-              mentions: [mentionedUser],
-            },
-            { quoted: m }
-          )
+          doReact("😅").then(() => {
+            return Atlas.sendMessage(
+              m.from,
+              {
+                text: `@${mentionedUser.split("@")[0]} Senpai is not an *Admin* of this group!`,
+                mentions: [mentionedUser],
+              },
+              { quoted: m }
+            )
+          });
+          return;
         }
         try {
           await Atlas.groupParticipantsUpdate(m.from, [userId], "demote").then(
@@ -156,8 +159,29 @@ module.exports = {
 
       case "gclink":
       case "grouplink":
+        if (!isBotAdmin) return reply(`I can't get the group link without *Admin* permission !`);
         doReact("🧩");
+        let link = await Atlas.groupInviteCode(m.from);
+        let linkcode = `https://chat.whatsapp.com/${link}`;
 
+        try {
+          ppgc = await Atlas.profilePictureUrl(m.from, "image");
+        } catch {
+          ppgc = botImage1;
+        }
+
+        try {
+          await Atlas.sendMessage(
+            m.from,
+            {
+              image: { url: ppgc, mimetype: "image/jpeg" },
+              caption: `\n_🎀 Group Name:_ *${metadata.subject}*\n\n_🧩 Group Link:_\n${linkcode}\n`,
+            },
+            { quoted: m }
+          );
+        } catch (err) {
+          Atlas.sendMessage(m.from, { text: `${mess.botadmin}` }, { quoted: m });
+        }
         break;
 
       case "group":

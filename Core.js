@@ -35,17 +35,18 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
 
     let metadata = m.isGroup ? await Atlas.groupMetadata(from) : {};
     let pushname = m.pushName || "NO name";
-    let participants = isGroup ? metadata.participants : [sender];
+    let participants = m.isGroup ? metadata.participants : [sender];
+    let quoted = m.quoted ? m.quoted : m;
     let groupAdmin = m.isGroup
       ? participants.filter((v) => v.admin !== null).map((v) => v.id)
       : [];
     let botNumber = await Atlas.decodeJid(Atlas.user.id);
     let isBotAdmin = m.isGroup ? groupAdmin.includes(botNumber) : false;
     let isAdmin = m.isGroup ? groupAdmin.includes(m.sender) : false;
-    let itsMe = m.quoted.sender.includes(botNumber)? true : false;
+    let messSender = m.sender;
+    let itsMe = messSender.includes(botNumber)? true : false;
 
     let isCmd = body.startsWith(prefix);
-    let quoted = m.quoted ? m.quoted : m;
     let mime = (quoted.msg || m.msg).mimetype || " ";
     let isMedia = /image|video|sticker|audio/.test(mime);
     let budy = typeof m.text == "string" ? m.text : "";
