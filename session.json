@@ -3161,8 +3161,8 @@
         {
           "senderKeyId": 1096168315,
           "senderChainKey": {
-            "iteration": 160,
-            "seed": "pJD7CIjxCmWUJWLZ57Q8ou3TpUoBbEpU/YNmQBMcjq8="
+            "iteration": 173,
+            "seed": "bItlC+kGeOr22kWD6sHHEsREXZ8yEPoCmAAMNuuAjgk="
           },
           "senderSigningKey": {
             "public": "BWPblxw1jNH+86Z8KOpoybPilNZpZgnsKDlfHbuFFaFS"
@@ -3185,8 +3185,8 @@
         {
           "senderKeyId": 884777005,
           "senderChainKey": {
-            "iteration": 160,
-            "seed": "yBCL9HHvibxldSKOQEiP956OFmtDMCq7x8+ooa5MzJY="
+            "iteration": 183,
+            "seed": "or02o1M/BQhAZiVrvF5/v/gM15RVocV6pGc9LAIeXOg="
           },
           "senderSigningKey": {
             "public": "BZGwa0e3wEMA714VpxlGeDHsnYXYNWgnZhaE1JKycJN1",
@@ -3331,8 +3331,24 @@
         {
           "senderKeyId": 1688324237,
           "senderChainKey": {
-            "iteration": 164,
-            "seed": "eI9+O9y7R/2I4mgLfu1obVLzRXb6fCyXoKNnMXqtawA="
+            "iteration": 169,
+            "seed": "oEFw2FUXmX9aO7rinXdXVzl1cEgFYUQZHRKRsYyv+LI="
+          },
+          "senderSigningKey": {
+            "public": "Bc8OeiEYqNZMBqpRNoLirAI+ETJpOr+Nj0S/PI9gYEUP"
+          },
+          "senderMessageKeys": [
+            {},
+            {},
+            {},
+            {}
+          ]
+        },
+        {
+          "senderKeyId": 1688324237,
+          "senderChainKey": {
+            "iteration": 168,
+            "seed": "NlzX6tHf8muep97/9EBe5qaQIsqT1E9MsCwYN8/vNK4="
           },
           "senderSigningKey": {
             "public": "Bc8OeiEYqNZMBqpRNoLirAI+ETJpOr+Nj0S/PI9gYEUP"
@@ -3347,7 +3363,8 @@
           },
           "senderSigningKey": {
             "public": "Bc8OeiEYqNZMBqpRNoLirAI+ETJpOr+Nj0S/PI9gYEUP"
-          }
+          },
+          "senderMessageKeys": []
         },
         {
           "senderKeyId": 1688324237,
@@ -3357,17 +3374,8 @@
           },
           "senderSigningKey": {
             "public": "Bc8OeiEYqNZMBqpRNoLirAI+ETJpOr+Nj0S/PI9gYEUP"
-          }
-        },
-        {
-          "senderKeyId": 1688324237,
-          "senderChainKey": {
-            "iteration": 168,
-            "seed": "NlzX6tHf8muep97/9EBe5qaQIsqT1E9MsCwYN8/vNK4="
           },
-          "senderSigningKey": {
-            "public": "Bc8OeiEYqNZMBqpRNoLirAI+ETJpOr+Nj0S/PI9gYEUP"
-          }
+          "senderMessageKeys": []
         }
       ],
       "120363027173902535@g.us::13654000471::0": [
@@ -3417,8 +3425,8 @@
         {
           "senderKeyId": 1599029408,
           "senderChainKey": {
-            "iteration": 10,
-            "seed": "gnLEZgvAurOsYksN6tWf3dH0yDHlnbYyxtmC3ghNbto="
+            "iteration": 11,
+            "seed": "HXWyq7hmM0sjmvoTGQdnAgpXb0xs9XyEKF8ENJWXY3Y="
           },
           "senderSigningKey": {
             "public": "BcbLpOZi7OEHhDXbYfU/jrAfFdA07Bb7na8Ic70KZ9MO"
