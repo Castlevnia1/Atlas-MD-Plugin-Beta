@@ -40,7 +40,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       ? participants.filter((v) => v.admin !== null).map((v) => v.id)
       : [];
     let botNumber = await Atlas.decodeJid(Atlas.user.id);
-    let isBotAdmin = isGroup ? groupAdmin.includes(Atlas.user?.jid) : false;
+    let isBotAdmin = isGroup ? groupAdmin.includes(botNumber) : false;
     let isAdmin = isGroup ? groupAdmin.includes(sender) : false;
 
     let isCmd = body.startsWith(prefix);
