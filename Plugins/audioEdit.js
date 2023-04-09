@@ -70,7 +70,7 @@ module.exports = {
         }
         break;
 
-        case "deep":
+      case "deep":
         doReact("🎶");
         let media2 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set2 = "-af atempo=4/4,asetrate=44500*2/3";
@@ -93,7 +93,7 @@ module.exports = {
         }
         break;
 
-        case "reverse":
+      case "reverse":
         doReact("🎶");
         let media4 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set4 = '-filter_complex "areverse"';
@@ -116,10 +116,11 @@ module.exports = {
         }
         break;
 
-        case "robot":
+      case "robot":
         doReact("🎶");
         let media5 = await Atlas.downloadAndSaveMediaMessage(quoted);
-        let set5 = "-filter_complex \"afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)':win_size=512:overlap=0.75\"";
+        let set5 =
+          "-filter_complex \"afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)':win_size=512:overlap=0.75\"";
         let ran5 = getRandom(".mp3");
         try {
           exec(`ffmpeg -i ${media5} ${set5} ${ran5}`, (err, stderr, stdout) => {
@@ -139,7 +140,7 @@ module.exports = {
         }
         break;
 
-        case "slow":
+      case "slow":
         doReact("🎶");
         let media6 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set6 = '-filter:a "atempo=0.8,asetrate=44100"';
@@ -162,10 +163,11 @@ module.exports = {
         }
         break;
 
-        case "smooth":
+      case "smooth":
         doReact("🎶");
         let media7 = await Atlas.downloadAndSaveMediaMessage(quoted);
-        let set7 = "-filter:v \"minterpolate='mi_mode=mci:mc_mode=aobmc:vsbmc=1:fps=120'\"";
+        let set7 =
+          "-filter:v \"minterpolate='mi_mode=mci:mc_mode=aobmc:vsbmc=1:fps=120'\"";
         let ran7 = getRandom(".mp3");
         try {
           exec(`ffmpeg -i ${media7} ${set7} ${ran7}`, (err, stderr, stdout) => {
@@ -185,7 +187,7 @@ module.exports = {
         }
         break;
 
-        case "tempo":
+      case "tempo":
         doReact("🎶");
         let media8 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set8 = '-filter:a "atempo=0.9,asetrate=65100"';
@@ -207,7 +209,6 @@ module.exports = {
           reply("An error Occurd ! Please mention an Audio!");
         }
         break;
-
       default:
         break;
     }
