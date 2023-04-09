@@ -27,7 +27,7 @@ module.exports = {
   start: async (Atlas, m, { inputCMD, text, doReact, mime, isMedia, quoted, groupAdmin, isAdmin }) => {
     switch (inputCMD) {
       case "admins":
-        doReact("🎶");
+        doReact("🏅");
         let message = "       『 *Attention Admins* 』";
         if (text && !isMedia) {
           message = text;
@@ -48,49 +48,81 @@ module.exports = {
         break;
 
       case "setgcname":
-        doReact("🎶");
+        doReact("🎐");
+        if (!isAdmin && !isBotAdmin) return reply(`*Bot* and *Command user* both must be *Admin* in order to use this Command!`);
+        if (!text) return m.reply(`Please provide a new group name !`);
 
+        let oldGCName = metadata.subject;
+
+        try {
+          ppgc = await Atlas.profilePictureUrl(m.from, "image");
+        } catch {
+          ppgc = botImage1;
+        }
+
+        await Atlas.groupUpdateSubject(m.from, text)
+          .then((res) =>
+            Atlas.sendMessage(
+              m.from,
+              {
+                image: { url: ppgc, mimetype: "image/jpeg" },
+                caption: `*『 Group Name Changed 』*\n\n_🔶 Old Name:_\n*${oldGCName}*\n\n_🔷 New Name:_\n*${text}*\n`,
+              },
+              { quoted: m }
+            )
+          )
+          .catch((err) => replay(jsonformat(err)));
         break;
 
       case "delete":
+        doReact("📛");
 
         break;
 
       case "group":
       case "gc":
+        doReact("🎀");
 
         break;
 
       case "groupinfo":
       case "gcinfo":
+        doReact("⚜️");
 
         break;
 
       case "hidetag":
+        doReact("🎌");
 
         break;
 
       case "leave":
+        doReact("🎶");
 
         break;
 
       case "promote":
+        doReact("💹");
 
         break;
 
       case "remove":
+        doReact("⛔");
 
         break;
 
       case "setppgc":
+        doReact("🎴");
 
         break;
 
       case "setgcdesc":
+        doReact("📑");
 
         break;
 
       case "tagall":
+        doReact("〽️");
 
         break;
 
