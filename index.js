@@ -12,6 +12,7 @@ const fs = require("fs");
 const figlet = require("figlet");
 const pino = require("pino");
 const path = require("path");
+const FileType = require('file-type');
 const { Boom } = require("@hapi/boom");
 const Collections = require("./System/Collections");
 const { state, saveState } = useSingleFileAuthState("./session.json");
