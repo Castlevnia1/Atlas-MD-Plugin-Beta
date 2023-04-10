@@ -35,6 +35,7 @@
     "hxz-api": "^1.0.1",
     "jimp": "^0.16.13",
     "moment-timezone": "^0.5.43",
+    "node-fetch": "^2.6.9",
     "path": "^0.12.7",
     "pino": "^8.11.0",
     "qrcode": "^1.5.1",

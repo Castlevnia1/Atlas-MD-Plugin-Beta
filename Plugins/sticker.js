@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { Sticker, StickerTypes } = require("wa-sticker-formatter");
 const { getRandom } = require("../System/Function2.js");
+let { TelegraPh } = require("../System/Uploader.js")
 const Jimp = require("jimp");
 const moment = require("moment-timezone");
 let mergedCommands = [
@@ -176,6 +177,35 @@ module.exports = {
 
       case "smeme":
       case "stickermeme":
+        doReact("📮");
+        if (/image/.test(mime)) {
+          if(!text) return reply(`Please type *${prefix}smeme <text>* to create sticker meme.`)
+          media = await Atlas.downloadAndSaveMediaMessage(quoted);
+          mem = await TelegraPh(media);
+          meme = `https://api.memegen.link/images/custom/-/${text}.png?background=${mem}`;
+
+          let stickerMess = new Sticker(meme, {
+            pack: packname,
+            author: pushName,
+            type: StickerTypes.FULL,
+            categories: ["🤩", "🎉"],
+            id: "12345",
+            quality: 70,
+            background: "transparent",
+          });
+
+          const stickerBuffer2 = await stickerMess.toBuffer();
+          await Atlas.sendMessage(
+            m.from,
+            { sticker: stickerBuffer2 },
+            { quoted: m }
+          );
+          fs.unlinkSync(media);
+        } else {
+          m.reply(
+            `Please mention an *image* and type *${prefix}smeme* to create sticker meme.`
+          );
+        }
         break;
 
       case "q":
