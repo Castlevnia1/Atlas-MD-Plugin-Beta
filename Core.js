@@ -6,16 +6,14 @@ const { color } = require("./System/color.js");
 const { readdirSync } = require("fs-extra");
 const prefix = "/";
 const { QuickDB, MongoDriver } = require("quick.db");    
+global.Levels = require("discord-xp");
 
 module.exports = async (Atlas, m, commands, chatUpdate) => {
   try {
     const mongoDriver = new MongoDriver("mongodb+srv://fantox001:fantox001@cluster0.ypvhtia.mongodb.net/?retryWrites=true&w=majority");
-
     await mongoDriver.connect();
-
     const db = new QuickDB({ driver: mongoDriver });
 
-global.Levels = require("discord-xp");
 Levels.setURL(mongodb);
     let { type, isGroup, sender, from } = m;
     let body =
@@ -203,6 +201,7 @@ Levels.setURL(mongodb);
       mime,
       isBotAdmin,
       prefix,
+      db,
       command: cmd.name,
       commands,
       toUpper: function toUpper(query) {
