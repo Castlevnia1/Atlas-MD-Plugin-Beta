@@ -22,7 +22,7 @@ module.exports = {
       case "ppcouple":
       case "couplepp":
         doReact("❤️");
-        let imgRes = await axios.get("https://neko-couple-api.onrender.com");
+        let imgRes = await axios.get("https://zany-teal-alligator-suit.cyclic.app/couple");
         Atlas.sendMessage(
           m.from,
           { image: { url: imgRes.data.male }, caption: `_For Him..._` },
