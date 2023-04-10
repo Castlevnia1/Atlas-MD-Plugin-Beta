@@ -5,8 +5,18 @@ const chalk = require("chalk");
 const { color } = require("./System/color.js");
 const { readdirSync } = require("fs-extra");
 const prefix = "/";
+const { QuickDB, MongoDriver } = require("quick.db");    
+
 module.exports = async (Atlas, m, commands, chatUpdate) => {
   try {
+    const mongoDriver = new MongoDriver("mongodb+srv://fantox001:fantox001@cluster0.ypvhtia.mongodb.net/?retryWrites=true&w=majority");
+
+    await mongoDriver.connect();
+
+    const db = new QuickDB({ driver: mongoDriver });
+
+global.Levels = require("discord-xp");
+Levels.setURL(mongodb);
     let { type, isGroup, sender, from } = m;
     let body =
       type == "buttonsResponseMessage"
@@ -123,6 +133,10 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     };
     if (body.startsWith(prefix) && !icmd)
       return Atlas.sendMessage(m.from, { text: "Baka no such command" });
+
+
+
+
 
     // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
 

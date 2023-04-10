@@ -1,10 +1,9 @@
-const { exec } = require("child_process");
 const fs = require("fs");
-const { getRandom } = require("../System/Function2.js");
 const Jimp = require("jimp");
 const moment = require('moment-timezone')
 let mergedCommands = [
   "admins",
+  "admin",
   "setgcname",
   "delete",
   "del",
@@ -35,6 +34,7 @@ module.exports = {
     let quotedsender = m.quoted ? m.quoted.sender : mentionByTag[0];
     switch (inputCMD) {
       case "admins":
+      case "admin":
         if (!isMedia) {
           message = m.quoted ? m.quoted.msg : "『 *Attention Admins* 』";
         }
