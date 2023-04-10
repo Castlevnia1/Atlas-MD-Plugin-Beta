@@ -104,7 +104,7 @@ const startAtlas = async () => {
         startAtlas();
       } else {
         console.log(
-          `[ ATLAS ] Server Disconnected: "It's either safe disconnect or WhatsApp accoubt got banned !\n"`
+          `[ ATLAS ] Server Disconnected: "It's either safe disconnect or WhatsApp Account got banned !\n"`
         );
       }
     }

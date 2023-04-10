@@ -1,6 +1,7 @@
 const { exec } = require("child_process");
 const fs = require("fs");
 const { getRandom } = require("../System/Function2.js");
+const Jimp = require("jimp");
 const moment = require('moment-timezone')
 let mergedCommands = [
   "admins",
@@ -19,6 +20,7 @@ let mergedCommands = [
   "leave",
   "promote",
   "remove",
+  "revoke",
   "setgcdesc",
   "setppgc",
   "tagall",
@@ -262,8 +264,8 @@ module.exports = {
         break;
 
       case "promote":
-        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`)
-        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`)
+        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
+        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
         if (quotedsender.includes(m.sender)) return reply(`You are already an *Admin* of this group!`);
         if (quotedsender.includes(botNumber)) return reply(`I am already an *Admin* of this group!`);
 
@@ -313,19 +315,137 @@ module.exports = {
         break;
 
       case "remove":
+        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
+        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
+        if (quotedsender.includes(m.sender)) return reply(`You cannot *Remove* yourself from this group !`);
+        if (quotedsender.includes(botNumber)) return reply(`I cannot *Remove* myself from this group !`);
+
+        if (!text && !m.quoted) {
+          return Atlas.sendMessage(
+            m.from,
+            { text: `Please tag a user to *Remove* !` },
+            { quoted: m }
+          );
+        } else if (m.quoted) {
+          var mentionedUser = m.quoted.sender;
+        } else {
+          var mentionedUser = mentionByTag[0];
+        }
+
+        let users = (await mentionedUser) || m.msg.contextInfo.participant;
         doReact("⛔");
+        if (groupAdmin.includes(users)) {
+          return Atlas.sendMessage(
+            m.from,
+            {
+              text: `*Command Rejected !* @${mentionedUser.split("@")[0]} Senpai is an *Admin* of this group so you are not allowed to remove him !`,
+              mentions: [mentionedUser],
+            },
+            { quoted: m }
+          )
+        }
+
+        await Atlas.groupParticipantsUpdate(m.from, [users], "remove").then(
+          (res) =>
+            Atlas.sendMessage(
+              m.from,
+              { 
+                text: `@${mentionedUser.split("@")[0]} has been *Removed* Successfully from *${metadata.subject}*`,
+                mentions: [mentionedUser], 
+              },
+              { quoted: m }
+            )
+        );
 
         break;
 
       case "setppgc":
         doReact("🎴");
+        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
+        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
+
+        if (!/image/.test(mime))
+      return Atlas.sendMessage(
+        m.from,
+        {
+          text: `Send/Reply Image With Caption ${
+            prefix + "setgcpp"
+          } to change the Profile Pic of this group.`,
+        },
+        { quoted: m }
+      );
+
+      let quotedimage = await Atlas.downloadAndSaveMediaMessage(quoted);
+    var { preview } = await generatePP(quotedimage);
+
+    await Atlas.query({
+      tag: "iq",
+      attrs: {
+        to: m.from,
+        type: "set",
+        xmlns: "w:profile:picture",
+      },
+      content: [
+        {
+          tag: "picture",
+          attrs: { type: "image" },
+          content: preview,
+        },
+      ],
+    });
+    fs.unlinkSync(quotedimage);
+
+    ppgc = await Atlas.profilePictureUrl(m.from, "image");
+
+    Atlas.sendMessage(
+      m.from,
+      {
+        image: { url: ppgc },
+        caption: `\nGroup Profile Picture has been updated Successfully by @${messageSender.split("@")[0]} !`,
+        mentions: [messageSender],
+      },
+      { quoted: m }
+    );
+
 
         break;
 
       case "setgcdesc":
         doReact("📑");
+        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
+        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
+
+        if (!text)
+      return Atlas.sendMessage(
+        m.from,
+        { text: `Please provide a new group description !` },
+        { quoted: m }
+      );
+
+      try {
+        ppgc = await Atlas.profilePictureUrl(m.from, "image");
+      } catch {
+        ppgc = botImage1;
+      }
+
+      await Atlas.groupUpdateDescription(m.from, args.join(" "))
+      .then((res) =>
+        Atlas.sendMessage(
+          m.from,
+          {
+            image: { url: ppgc, mimetype: "image/jpeg" },
+            caption: `*『 Group Description Changed 』*\n\n_🧩 New Description:_\n*${args.join(" ")}*`,
+          },
+          { quoted: m }
+        )
+      )
 
         break;
+
+        case "revoke":
+          doReact("📑");
+  
+          break;
 
       case "tagall":
         doReact("〽️");
@@ -337,3 +457,15 @@ module.exports = {
     }
   },
 };
+
+
+async function generatePP(buffer) {
+  const jimp = await Jimp.read(buffer);
+  const min = jimp.getWidth();
+  const max = jimp.getHeight();
+  const cropped = jimp.crop(0, 0, min, max);
+  return {
+    img: await cropped.scaleToFit(720, 720).getBufferAsync(Jimp.MIME_JPEG),
+    preview: await cropped.normalize().getBufferAsync(Jimp.MIME_JPEG),
+  };
+}
