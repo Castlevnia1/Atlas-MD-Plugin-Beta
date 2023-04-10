@@ -52,7 +52,7 @@ module.exports = {
 
       case "setgcname":
         if (!isAdmin && !isBotAdmin) return reply(`*You* and *Bot* both must be *Admin* in order to use this Command!`);
-        if (!text) return m.reply(`Please provide a new group name !\n\nExample: *${prefix}setgcname Bot Testing*`);
+        if (!text) return reply(`Please provide a new group name !\n\nExample: *${prefix}setgcname Bot Testing*`);
         doReact("🎐");
 
         oldGCName = metadata.subject;
@@ -449,7 +449,7 @@ module.exports = {
         if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
 
         if (m.from == "120363040838753957@g.us")
-          return m.reply(
+          return reply(
             "Sorry, this command is not allowed in *Atlas Support Group* !\n\nYou are not allowed to change support group link !"
           );
 
