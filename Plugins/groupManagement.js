@@ -465,21 +465,17 @@ module.exports = {
 
       case "tagall":
         if (!isMedia) {
-          var message2 = args
-          ? args.join(" ")
-          : m.quoted
-          ? m.quoted.msg
-          : "No message";
+          var message2 = m.quoted ? m.quoted.msg :  args[0] ? args.join(" ") : "No message";
         }
         else {
           message2 = "『 *Attention Everybody* 』\n\n*🎀 Message:* Check this Out !";
         }
 
-        let mess = `               *『 Attention Everybody 』*
+        let mess = `Check this out
     
-        *⚜️ Tagged by:* @${m.sender.split("@")[0]}
+*⚜️ Tagged by:* @${m.sender.split("@")[0]}
             
-        *🧩 Message:* ${message2}\n\n`;
+*🧩 Message:* ${message2}\n\n`;
 
         for (let mem of participants) {
           mess += `╰╴ @${mem.id.split("@")[0]}\n`;

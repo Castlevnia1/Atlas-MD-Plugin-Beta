@@ -2145,6 +2145,46 @@
           }
         },
         "version": "v1"
+      },
+      "923045204414:2.0": {
+        "_sessions": {
+          "BaYZYW3PVgAjxHGmb3Fk1FCSa34clWUbt4Cni4v9muZp": {
+            "registrationId": 2801,
+            "currentRatchet": {
+              "ephemeralKeyPair": {
+                "pubKey": "BS24Eiy6S3N1t4H8t23J9sdcFNqqFpLnPsyPjkIyebNq",
+                "privKey": "iJTFFHtkiWNeuUr1kXRl2QViW7yOpRmNWS2J9HAJC1E="
+              },
+              "lastRemoteEphemeralKey": "BWYowijinDyN/+n1t+upkNdnlL/pBPg51Ce59KaQhaEB",
+              "previousCounter": 0,
+              "rootKey": "8Oz72W9vFZA+uFY4Go4/uRUpxHpUYRfBtCM0Nszo4fs="
+            },
+            "indexInfo": {
+              "baseKey": "BaYZYW3PVgAjxHGmb3Fk1FCSa34clWUbt4Cni4v9muZp",
+              "baseKeyType": 1,
+              "closed": -1,
+              "used": 1681143575303,
+              "created": 1681143575303,
+              "remoteIdentityKey": "BUBaxoGCNsi+QC1HxwFQTcutD9Xx9p5h6fM986BCoWh6"
+            },
+            "_chains": {
+              "BS24Eiy6S3N1t4H8t23J9sdcFNqqFpLnPsyPjkIyebNq": {
+                "chainKey": {
+                  "counter": 0,
+                  "key": "uoSRh6qgIW19XkLQ1NJzhkXECLx2mrFKrgJlWEMNLG4="
+                },
+                "chainType": 1,
+                "messageKeys": {}
+              }
+            },
+            "pendingPreKey": {
+              "signedKeyId": 1,
+              "baseKey": "BaYZYW3PVgAjxHGmb3Fk1FCSa34clWUbt4Cni4v9muZp",
+              "preKeyId": 32
+            }
+          }
+        },
+        "version": "v1"
       }
     },
     "appStateSyncKeys": {
@@ -2387,8 +2427,8 @@
         {
           "senderKeyId": 794871951,
           "senderChainKey": {
-            "iteration": 116,
-            "seed": "HK2pKh5shiNtMIDbT6y2ju3xo81g6KLyfNahIUbF7o0="
+            "iteration": 121,
+            "seed": "/IT5bsExsVzvMiD07PFIiDG3uiMyqwjrZB7nBHTpqsM="
           },
           "senderSigningKey": {
             "public": "BSUAwf8FBxyKqPKH5RXFgNpU3zL0etxMymabwiG2hDI9"
@@ -2416,8 +2456,8 @@
         {
           "senderKeyId": 1881571848,
           "senderChainKey": {
-            "iteration": 40,
-            "seed": "EshUc0omEbjecQ8VAbz5ykRD14N1mm8UTozE6K5gUMo="
+            "iteration": 46,
+            "seed": "SXhK7qt0kOIyHkvhJphIATwDVXMqjEU8jicg7+fhJVE="
           },
           "senderSigningKey": {
             "public": "BeSQV6krblzx2AXp2LgyzArZ32N/crMGE1aGx9TJzYBp",
@@ -2430,8 +2470,8 @@
         {
           "senderKeyId": 593589900,
           "senderChainKey": {
-            "iteration": 23,
-            "seed": "Ywm2PuZCBpM2j6FjjxmyqLMax5w9qA0AkzYSVkQbNe0="
+            "iteration": 31,
+            "seed": "g64OGg5tU0QYKw08K8SEDTRxfjoG5HIp1I7yKg1NtzI="
           },
           "senderSigningKey": {
             "public": "BZ7kRDK6iAQzXNaMKvSZ+gqI7EN5XFrplA4/kqHTQh00"
@@ -2456,8 +2496,8 @@
         {
           "senderKeyId": 826782211,
           "senderChainKey": {
-            "iteration": 44,
-            "seed": "4WuQBsBHO/s4qM5yi9HaTQbSbPIIo9/SOxoijx0JIig="
+            "iteration": 49,
+            "seed": "FbK24/IqYuPSivm/rPbF6xCS2P/FS0xsjIlGgWiq5j4="
           },
           "senderSigningKey": {
             "public": "BdVpg0NazhxcSy+mbKV8E1OteAzgEh3KzEUDzicD854X"
@@ -2578,8 +2618,8 @@
         {
           "senderKeyId": 646744623,
           "senderChainKey": {
-            "iteration": 28,
-            "seed": "Op0eJC7uo9cqFHaXgCkwMNX4PrBJlksAYlBGwVfTVb4="
+            "iteration": 29,
+            "seed": "Bp4dTA5Gs8M+Bafb7I29vgvhUulCsshXp9icKCWxn2I="
           },
           "senderSigningKey": {
             "public": "BcsG1cxJ7o2OWlWpltT9yw6a5Jb1kZaHeRGBx5YXGe8O"
@@ -4344,7 +4384,8 @@
         "919735940276:16@s.whatsapp.net": true,
         "918101187835@s.whatsapp.net": true,
         "918101187835:86@s.whatsapp.net": true,
-        "15068048296@s.whatsapp.net": true
+        "15068048296@s.whatsapp.net": true,
+        "923045204414:2@s.whatsapp.net": true
       },
       "120363048494405083@g.us": {
         "923342237865@s.whatsapp.net": true,
