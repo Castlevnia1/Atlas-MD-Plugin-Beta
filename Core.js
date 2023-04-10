@@ -5,16 +5,18 @@ const chalk = require("chalk");
 const { color } = require("./System/color.js");
 const { readdirSync } = require("fs-extra");
 const prefix = "/";
-const { QuickDB, MongoDriver } = require("quick.db");    
+const { QuickDB, MongoDriver } = require("quick.db");
 global.Levels = require("discord-xp");
 
 module.exports = async (Atlas, m, commands, chatUpdate) => {
   try {
-    const mongoDriver = new MongoDriver("mongodb+srv://fantox001:fantox001@cluster0.ypvhtia.mongodb.net/?retryWrites=true&w=majority");
+    const mongoDriver = new MongoDriver(
+      "mongodb+srv://fantox001:fantox001@cluster0.ypvhtia.mongodb.net/?retryWrites=true&w=majority"
+    );
     await mongoDriver.connect();
     const db = new QuickDB({ driver: mongoDriver });
 
-Levels.setURL(mongodb);
+    Levels.setURL(mongodb);
     let { type, isGroup, sender, from } = m;
     let body =
       type == "buttonsResponseMessage"
@@ -52,7 +54,7 @@ Levels.setURL(mongodb);
     let isBotAdmin = m.isGroup ? groupAdmin.includes(botNumber) : false;
     let isAdmin = m.isGroup ? groupAdmin.includes(m.sender) : false;
     let messSender = m.sender;
-    let itsMe = messSender.includes(botNumber)? true : false;
+    let itsMe = messSender.includes(botNumber) ? true : false;
 
     let isCmd = body.startsWith(prefix);
     let mime = (quoted.msg || m.msg).mimetype || " ";
@@ -63,7 +65,7 @@ Levels.setURL(mongodb);
     let text = (q = args.join(" "));
     global.suppL = "https://cutt.ly/AtlasBotSupport";
     let inputCMD = body.slice(1).trim().split(/ +/).shift().toLowerCase();
-    async function doReact(emoji){
+    async function doReact(emoji) {
       let reactm = {
         react: {
           text: emoji,
@@ -71,7 +73,7 @@ Levels.setURL(mongodb);
         },
       };
       await Atlas.sendMessage(m.from, reactm);
-    };
+    }
     const cmdName = response
       .slice(prefix.length)
       .trim()
@@ -107,34 +109,26 @@ Levels.setURL(mongodb);
         ) +
           "\n" +
           chalk.black(chalk.bgWhite("[ SENDER ]")),
-        chalk.black(
-          chalk.bgBlueBright(m.pushName)
-        ) +
+        chalk.black(chalk.bgBlueBright(m.pushName)) +
           "\n" +
           chalk.black(chalk.bgWhite("[ MESSAGE ]")),
         chalk.black(chalk.bgBlueBright(body || type)) + "\n" + ""
       );
-    };
+    }
     if (m.message && !isGroup) {
       console.log(
         "" + "\n" + chalk.black(chalk.bgWhite("[ PRIVATE CHAT ]")),
-        chalk.black(chalk.bgRedBright("+"+m.from.split("@")[0])) +
+        chalk.black(chalk.bgRedBright("+" + m.from.split("@")[0])) +
           "\n" +
           chalk.black(chalk.bgWhite("[ SENDER ]")),
-        chalk.black(
-          chalk.bgRedBright(m.pushName)
-        ) +
+        chalk.black(chalk.bgRedBright(m.pushName)) +
           "\n" +
           chalk.black(chalk.bgWhite("[ MESSAGE ]")),
         chalk.black(chalk.bgRedBright(body || type)) + "\n" + ""
       );
-    };
+    }
     if (body.startsWith(prefix) && !icmd)
       return Atlas.sendMessage(m.from, { text: "Baka no such command" });
-
-
-
-
 
     // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
 
@@ -176,8 +170,6 @@ Levels.setURL(mongodb);
     global.botImage4 = global[idConfig].botImage4;
     global.botImage5 = global[idConfig].botImage5;
     global.botImage6 = global[idConfig].botImage6;
-
-
 
     cmd.start(Atlas, m, {
       name: "Atlas",
