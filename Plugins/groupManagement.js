@@ -15,6 +15,7 @@ let mergedCommands = [
   "groupinfo",
   "gcinfo",
   "hidetag",
+  "htag",
   "leave",
   "promote",
   "remove",
@@ -27,27 +28,24 @@ module.exports = {
   name: "groupanagement",
   alias: [...mergedCommands],
   description: "All Audio Editing Commands",
-  start: async (Atlas, m, { inputCMD, text, prefix, doReact, itsMe, metadata, mentionByTag, mime, isMedia, quoted, botNumber, isBotAdmin, groupAdmin, isAdmin }) => {
+  start: async (Atlas, m, { inputCMD, text, prefix, doReact, itsMe, participants, metadata, mentionByTag, mime, isMedia, quoted, botNumber, isBotAdmin, groupAdmin, isAdmin }) => {
+    let messageSender = m.sender;
+    let quotedsender = m.quoted ? m.quoted.sender : mentionByTag[0];
     switch (inputCMD) {
       case "admins":
-        doReact("🏅");
-        let message = "       『 *Attention Admins* 』";
-        if (text && !isMedia) {
-          message = text;
-        } else if (!text && m.quoted) {
-          message = `${m.quoted ? m.quoted.msg : ""}`;
-        } else if (text && m.quoted) {
-          message = text;
-        } else if (text && !m.quoted) {
-          message = text;
-        } else {
-          message = "       『 *Attention Admins* 』";
+        if (!isMedia) {
+          message = m.quoted ? m.quoted.msg : "『 *Attention Admins* 』";
         }
-        Atlas.sendMessage(
-          m.from,
-          { text: message, mentions: groupAdmin },
-          { quoted: m }
-        );
+        else {
+          message = "『 *Attention Admins* 』\n\n*🎀 Message:* Check this Out !";
+        }
+        doReact("🏅").then(() => {
+          Atlas.sendMessage(
+            m.from,
+            { text: message, mentions: groupAdmin },
+            { quoted: m }
+          );
+        });
         break;
 
       case "setgcname":
@@ -107,8 +105,8 @@ module.exports = {
       case "demote":
         if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`)
         if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`)
-        if (m.quoted.sender.includes(m.sender)) return reply(`You can't demote yourself !`);
-        if (m.quoted.sender.includes(botNumber)) return reply(`Sorry, I can't demote myself !`);
+        if (quotedsender.includes(m.sender)) return reply(`You can't demote yourself !`);
+        if (quotedsender.includes(botNumber)) return reply(`Sorry, I can't demote myself !`);
 
         if (!text && !m.quoted) {
           return reply(`Please tag an user to *Demote*!`);
@@ -136,8 +134,8 @@ module.exports = {
               Atlas.sendMessage(
                 m.from,
                 {
-                  text: `Sorry @${mentionedUser.split("@")[0]} Senpai, you have been *Demoted* by @${m.sender.split("@")[0]} !`,
-                  mentions: [mentionedUser],
+                  text: `Sorry @${mentionedUser.split("@")[0]} Senpai, you have been *Demoted* by @${messageSender.split("@")[0]} !`,
+                  mentions: [mentionedUser, messageSender],
                 },
                 { quoted: m }
               )
@@ -184,8 +182,8 @@ module.exports = {
 
       case "group":
       case "gc":
-        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`)
-        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`)
+        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
+        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
         doReact("⚜️");
 
         if (text === "close") {
@@ -205,6 +203,7 @@ module.exports = {
 
       case "groupinfo":
       case "gcinfo":
+        if (!m.isGroup) return reply(`This command can only be used in groups!`);
         doReact("🎊");
         try {
           ppgc = await Atlas.profilePictureUrl(m.from, "image");
@@ -229,35 +228,87 @@ module.exports = {
         break;
 
       case "hidetag":
+      case "htag":
         if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`)
-        doReact("🎌");
-        let message2 = "       『 *Attention Here* 』";
-        if (text && !isMedia) {
-          message2 = text;
-        } else if (!text && m.quoted) {
-          message2 = `${m.quoted ? m.quoted.msg : ""}`;
-        } else if (text && m.quoted) {
-          message2 = text;
-        } else if (text && !m.quoted) {
-          message2 = text;
-        } else {
-          message2 = "       『 *Attention Here* 』";
-        } 
-        await Atlas.sendMessage(
-          m.from,
-          { text: message, mentions: participants.map((a) => a.id) },
-          { quoted: m }
-        );
+        if (!isMedia) {
+          message2 = m.quoted ? m.quoted.msg : "『 *Attention Everybody* 』";
+        }
+        else {
+          message2 = "『 *Attention Everybody* 』\n\n*🎀 Message:* Check this Out !";
+        }
 
+        doReact("🎌").then(() => {
+          Atlas.sendMessage(
+            m.from,
+            { text: message2, mentions: participants.map((a) => a.id) },
+            { quoted: m }
+          );
+        });
         break;
 
       case "leave":
-        doReact("🎶");
-
+        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
+        doReact("👋");
+        await Atlas.sendMessage(m.from, {
+          image: { url: "https://wallpapercave.com/wp/wp9667218.png" },
+          caption: `I'm Leaving this group on request... \n\nTake care everyone :)`,
+          mentions: participants.map((a) => a.id),
+          quoted: m,
+        }).then(async () => {
+          Atlas.groupLeave(m.from).catch((e) => {
+            Atlas.sendMessage(m.from, { text: `An error Occurd !` }, { quoted: m });
+          });
+        });
         break;
 
       case "promote":
+        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`)
+        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`)
+        if (quotedsender.includes(m.sender)) return reply(`You are already an *Admin* of this group!`);
+        if (quotedsender.includes(botNumber)) return reply(`I am already an *Admin* of this group!`);
+
+        if (!text && !m.quoted) {
+          return reply(`Please tag an user to *Promote*!`);
+        } else if (m.quoted) {
+          mentionedUser = m.quoted.sender;
+        } else {
+          mentionedUser = mentionByTag[0];
+        }
+
+        userId = (await mentionedUser) || m.msg.contextInfo.participant;
+        if (groupAdmin.includes(userId)) {
+          return Atlas.sendMessage(
+            m.from,
+            {
+              text: `@${mentionedUser.split("@")[0]} Senpai is already an *Admin* of this group!`,
+              mentions: [mentionedUser],
+            },
+            { quoted: m }
+          )
+        }
         doReact("💹");
+        try {
+          await Atlas.groupParticipantsUpdate(m.from, [userId], "promote").then(
+            (res) =>
+              Atlas.sendMessage(
+                m.from,
+                {
+                  text: `Congratulations  @${mentionedUser.split("@")[0]} Senpai 🥳, you have been *Promoted* by @${messageSender.split("@")[0]} !`,
+                  mentions: [mentionedUser, messageSender],
+                },
+                { quoted: m }
+              )
+          );
+        } catch (error) {
+          Atlas.sendMessage(
+            m.from,
+            {
+              text: (`An error occured while trying to demote @${mentionedUser.split("@")[0]} Senpai !\n\n*Error:* ${error}`),
+              mentions: [mentionedUser],
+            },
+            { quoted: m }
+          )
+        }
 
         break;
 
