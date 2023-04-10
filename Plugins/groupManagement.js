@@ -30,7 +30,7 @@ module.exports = {
   name: "groupanagement",
   alias: [...mergedCommands],
   description: "All Audio Editing Commands",
-  start: async (Atlas, m, { inputCMD, text, prefix, doReact, itsMe, participants, metadata, mentionByTag, mime, isMedia, quoted, botNumber, isBotAdmin, groupAdmin, isAdmin }) => {
+  start: async (Atlas, m, { inputCMD, text, prefix, doReact, args, itsMe, participants, metadata, mentionByTag, mime, isMedia, quoted, botNumber, isBotAdmin, groupAdmin, isAdmin }) => {
     let messageSender = m.sender;
     let quotedsender = m.quoted ? m.quoted.sender : mentionByTag[0];
     switch (inputCMD) {
@@ -233,7 +233,7 @@ module.exports = {
       case "htag":
         if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`)
         if (!isMedia) {
-          message2 = m.quoted ? m.quoted.msg : "『 *Attention Everybody* 』";
+          message2 = m.quoted ? m.quoted.msg :  args[0] ? args.join(" ") :"『 *Attention Everybody* 』";
         }
         else {
           message2 = "『 *Attention Everybody* 』\n\n*🎀 Message:* Check this Out !";
@@ -349,9 +349,9 @@ module.exports = {
           (res) =>
             Atlas.sendMessage(
               m.from,
-              { 
+              {
                 text: `@${mentionedUser.split("@")[0]} has been *Removed* Successfully from *${metadata.subject}*`,
-                mentions: [mentionedUser], 
+                mentions: [mentionedUser],
               },
               { quoted: m }
             )
@@ -365,47 +365,46 @@ module.exports = {
         if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
 
         if (!/image/.test(mime))
-      return Atlas.sendMessage(
-        m.from,
-        {
-          text: `Send/Reply Image With Caption ${
-            prefix + "setgcpp"
-          } to change the Profile Pic of this group.`,
-        },
-        { quoted: m }
-      );
+          return Atlas.sendMessage(
+            m.from,
+            {
+              text: `Send/Reply Image With Caption ${prefix + "setgcpp"
+                } to change the Profile Pic of this group.`,
+            },
+            { quoted: m }
+          );
 
-      let quotedimage = await Atlas.downloadAndSaveMediaMessage(quoted);
-    var { preview } = await generatePP(quotedimage);
+        let quotedimage = await Atlas.downloadAndSaveMediaMessage(quoted);
+        var { preview } = await generatePP(quotedimage);
 
-    await Atlas.query({
-      tag: "iq",
-      attrs: {
-        to: m.from,
-        type: "set",
-        xmlns: "w:profile:picture",
-      },
-      content: [
-        {
-          tag: "picture",
-          attrs: { type: "image" },
-          content: preview,
-        },
-      ],
-    });
-    fs.unlinkSync(quotedimage);
+        await Atlas.query({
+          tag: "iq",
+          attrs: {
+            to: m.from,
+            type: "set",
+            xmlns: "w:profile:picture",
+          },
+          content: [
+            {
+              tag: "picture",
+              attrs: { type: "image" },
+              content: preview,
+            },
+          ],
+        });
+        fs.unlinkSync(quotedimage);
 
-    ppgc = await Atlas.profilePictureUrl(m.from, "image");
+        ppgc = await Atlas.profilePictureUrl(m.from, "image");
 
-    Atlas.sendMessage(
-      m.from,
-      {
-        image: { url: ppgc },
-        caption: `\nGroup Profile Picture has been updated Successfully by @${messageSender.split("@")[0]} !`,
-        mentions: [messageSender],
-      },
-      { quoted: m }
-    );
+        Atlas.sendMessage(
+          m.from,
+          {
+            image: { url: ppgc },
+            caption: `\nGroup Profile Picture has been updated Successfully by @${messageSender.split("@")[0]} !`,
+            mentions: [messageSender],
+          },
+          { quoted: m }
+        );
 
 
         break;
@@ -415,40 +414,85 @@ module.exports = {
         if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
         if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
 
-        if (!text)
-      return Atlas.sendMessage(
-        m.from,
-        { text: `Please provide a new group description !` },
-        { quoted: m }
-      );
+        if (!text && !m.quoted)
+          return Atlas.sendMessage(
+            m.from,
+            { text: `Please provide a new group description !` },
+            { quoted: m }
+          );
 
-      try {
-        ppgc = await Atlas.profilePictureUrl(m.from, "image");
-      } catch {
-        ppgc = botImage1;
-      }
+        try {
+          ppgc = await Atlas.profilePictureUrl(m.from, "image");
+        } catch {
+          ppgc = botImage1;
+        }
 
-      await Atlas.groupUpdateDescription(m.from, args.join(" "))
-      .then((res) =>
-        Atlas.sendMessage(
-          m.from,
-          {
-            image: { url: ppgc, mimetype: "image/jpeg" },
-            caption: `*『 Group Description Changed 』*\n\n_🧩 New Description:_\n*${args.join(" ")}*`,
-          },
-          { quoted: m }
-        )
-      )
+        var newGCdesc = m.quoted ? m.quoted.msg : text;
+
+        await Atlas.groupUpdateDescription(m.from, newGCdesc)
+          .then((res) =>
+            Atlas.sendMessage(
+              m.from,
+              {
+                image: { url: ppgc, mimetype: "image/jpeg" },
+                caption: `*『 Group Description Changed 』*\n\n_🧩 New Description:_\n*${newGCdesc}*`,
+              },
+              { quoted: m }
+            )
+          )
 
         break;
 
-        case "revoke":
-          doReact("📑");
-  
-          break;
+      case "revoke":
+        doReact("💫");
+        if (!isAdmin) return reply(`*You* must be *Admin* in order to use this Command!`);
+        if (!isBotAdmin) return reply(`*Bot* must be *Admin* in order to use this Command!`);
+
+        if (m.from == "120363040838753957@g.us")
+          return m.reply(
+            "Sorry, this command is not allowed in *Atlas Support Group* !\n\nYou are not allowed to change support group link !"
+          );
+
+        await Atlas.groupRevokeInvite(m.from).then((res) =>
+          Atlas.sendMessage(
+            m.from,
+            { text: `Group link has been *Updated* Successfully!` },
+            { quoted: m }
+          )
+        );
+
+        break;
 
       case "tagall":
-        doReact("〽️");
+        if (!isMedia) {
+          var message2 = args
+          ? args.join(" ")
+          : m.quoted
+          ? m.quoted.msg
+          : "No message";
+        }
+        else {
+          message2 = "『 *Attention Everybody* 』\n\n*🎀 Message:* Check this Out !";
+        }
+
+        let mess = `               *『 Attention Everybody 』*
+    
+        *⚜️ Tagged by:* @${m.sender.split("@")[0]}
+            
+        *🧩 Message:* ${message2}\n\n`;
+
+        for (let mem of participants) {
+          mess += `╰╴ @${mem.id.split("@")[0]}\n`;
+        }
+        mess += `\n\n                    *Thank You*\n`;
+
+        doReact("〽️").then(() => {
+          Atlas.sendMessage(
+            m.from,
+            { text: mess, mentions: participants.map((a) => a.id) },
+            { quoted: m }
+          );
+        });
 
         break;
 
