@@ -31,7 +31,7 @@ module.exports = {
           });
           return;
         }
-        doReact("🔍");
+        await doReact("🔍");
         let googleSearch = await googleit({ query: text });
         let resText = `  *『  ⚡️ Google Search Engine ⚡️  』*\n\n\n_🔍 Search Term:_ *${text}*\n\n\n`;
 
@@ -59,7 +59,7 @@ module.exports = {
           });
           return;
         }
-        doReact("📃");
+        await doReact("📃");
         let result = await axios.get(
           "https://fantox001-scrappy-api.vercel.app/lyrics?search=" + text
         );
@@ -88,7 +88,7 @@ module.exports = {
           });
           return;
         }
-        doReact("📜");
+        await doReact("📜");
         let search = await yts(text);
         let thumbnail2 = search.all[0].thumbnail;
         let num = 1;
@@ -135,7 +135,7 @@ module.exports = {
           });
           return;
         }
-        doReact("🎶");
+        await doReact("🎶");
         let resultRT = await ringtone(text);
         let resultR = resultRT[Math.floor(Math.random() * resultRT.length)];
         Atlas.sendMessage(
@@ -156,7 +156,7 @@ module.exports = {
             });
             return;
           }
-          doReact("🌤");
+          await doReact("🌤");
       var myweather = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${text}&units=metric&appid=e409825a497a0c894d2dd975542234b0&language=tr`
       );
@@ -184,7 +184,7 @@ module.exports = {
             });
             return;
           }
-          doReact("🧧");
+          await doReact("🧧");
           let gif = await axios.get(
             `https://tenor.googleapis.com/v2/search?q=${text}&key=${tenorApiKey}&client_key=my_project&limit=8&media_filter=gif`
           );
@@ -217,7 +217,7 @@ module.exports = {
             });
             return;
           }
-          doReact("📊");
+          await doReact("📊");
           var GHuserInfo = await axios
       .get(`https://api.github.com/users/${text}`)
       .then((response) => response.data)
