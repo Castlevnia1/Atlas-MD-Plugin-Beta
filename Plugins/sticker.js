@@ -52,8 +52,8 @@ module.exports = {
     switch (inputCMD) {
       case "s":
       case "sticker":
-        doReact("🔖");
         if (/image/.test(mime)) {
+          await doReact("🔖");
           let mediaMess = await quoted.download();
           let stickerMess = new Sticker(mediaMess, {
             pack: packname,
@@ -67,13 +67,16 @@ module.exports = {
           const stickerBuffer = await stickerMess.toBuffer();
           Atlas.sendMessage(m.from, { sticker: stickerBuffer }, { quoted: m });
         } else if (/video/.test(mime)) {
+          await doReact("🔖");
           let mediaMess = await quoted.download();
-          if ((quoted.msg || quoted).seconds > 15)
+          if ((quoted.msg || quoted).seconds > 15) {
+            await doReact("❌");
             return Atlas.sendMessage(
               m.from,
               { text: "Please send video less than 15 seconds." },
               { quoted: m }
             );
+          }
           let stickerMess = new Sticker(mediaMess, {
             pack: packname,
             author: pushName,
@@ -86,19 +89,15 @@ module.exports = {
           const stickerBuffer2 = await stickerMess.toBuffer();
           Atlas.sendMessage(m.from, { sticker: stickerBuffer2 }, { quoted: m });
         } else {
-          Atlas.sendMessage(
-            m.from,
-            {
-              text: `Please mention an *image/video* and type *${prefix}s* to create sticker.`,
-            },
-            { quoted: m }
-          );
+          await doReact("❌");
+          reply(`Please mention an *image/video* and type *${prefix}s* to create sticker.`)
         }
         break;
 
       case "steal":
       case "take":
-        doReact("🀄️");
+        if(!m.quoted) return reply(`Please meantion a sticker to steal it.`)
+        await doReact("🀄️");
         if (!args.join(" ")) {
           var packName = pushName;
           var authorName = pushName;
@@ -123,21 +122,16 @@ module.exports = {
           const stickerBuffer = await stickerMess.toBuffer();
           Atlas.sendMessage(m.from, { sticker: stickerBuffer }, { quoted: m });
         } else {
-          Atlas.sendMessage(
-            m.from,
-            {
-              text: `Please mention a *Sticker* and type *${prefix}steal <packname , authorname>* to create sticker with your name.`,
-            },
-            { quoted: m }
-          );
+          await doReact("❌");
+          reply(`Please mention a *Sticker* and type *${prefix}steal <packname , authorname>* to create sticker with your name.`,)
         }
 
         break;
 
       case "scrop":
       case "stickercrop":
-        doReact("🃏");
         if (/image/.test(mime)) {
+          await doReact("🃏");
           let mediaMess = await quoted.download();
           let stickerMess = new Sticker(mediaMess, {
             pack: packname,
@@ -151,13 +145,12 @@ module.exports = {
           const stickerBuffer = await stickerMess.toBuffer();
           Atlas.sendMessage(m.from, { sticker: stickerBuffer }, { quoted: m });
         } else if (/video/.test(mime)) {
+          await doReact("🃏");
           let mediaMess = await quoted.download();
-          if ((quoted.msg || quoted).seconds > 15)
-            return Atlas.sendMessage(
-              m.from,
-              { text: "Please send video less than 15 seconds." },
-              { quoted: m }
-            );
+          if ((quoted.msg || quoted).seconds > 15) {
+            await doReact("❌");
+            return reply("Please send video less than 15 seconds.")
+          }
           let stickerMess = new Sticker(mediaMess, {
             pack: packname,
             author: pushName,
@@ -170,24 +163,19 @@ module.exports = {
           const stickerBuffer2 = await stickerMess.toBuffer();
           Atlas.sendMessage(m.from, { sticker: stickerBuffer2 }, { quoted: m });
         } else {
-          Atlas.sendMessage(
-            m.from,
-            {
-              text: `Please mention an *imade/video* and type *${prefix}s* to create cropped sticker.`,
-            },
-            { quoted: m }
-          );
+          await doReact("❌");
+          reply(`Please mention an *imade/video* and type *${prefix}s* to create cropped sticker.`)
         }
         break;
 
       case "smeme":
       case "stickermeme":
-        doReact("📮");
         if (/image/.test(mime)) {
           if (!text)
             return reply(
               `Please type *${prefix}smeme <text>* to create sticker meme.`
             );
+          await doReact("📮");
           media = await Atlas.downloadAndSaveMediaMessage(quoted);
           mem = await TelegraPh(media);
           meme = `https://api.memegen.link/images/custom/-/${text}.png?background=${mem}`;
@@ -210,6 +198,7 @@ module.exports = {
           );
           fs.unlinkSync(media);
         } else {
+          await doReact("❌");
           reply(
             `Please mention an *image* and type *${prefix}smeme* to create sticker meme.`
           );
@@ -218,9 +207,10 @@ module.exports = {
 
       case "q":
       case "quote":
-        doReact("📮");
-        if (!text && !m.quoted)
-          return reply(`Please provide a text (Type or mention a message) !`);
+        if (!text && !m.quoted) {
+          await doReact("❌");
+          return reply(`Please provide a text (Type or mention a message) !\n\nExample: ${prefix}q Atlas MD is OP`);
+        }
 
         if (m.quoted) {
           try {
@@ -235,6 +225,7 @@ module.exports = {
             userPfp = botImage3;
           }
         }
+        await doReact("📮");
         var waUserName = pushName;
 
         const quoteText = m.quoted ? m.quoted.msg : args ? args.join(" ") : "";
@@ -303,13 +294,14 @@ module.exports = {
         break;
 
       case "emojimix":
-        doReact("🔖");
-        if (!args[0])
+        if (!args[0]) {
+          await doReact("❌");
           return reply(
-            `Please provide two emojis to combine! *Example :* ${
-              prefix + command
+            `Please provide two emojis to combine! *Example :* ${prefix + "emojimix"
             } 🦉+🤣`
           );
+        }
+        await doReact("🔖");
         let [emoji1, emoji2] = args[0].split("+");
         let jsonData = await fetch(
           `https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(
@@ -318,7 +310,7 @@ module.exports = {
         ).then((res) => res.json());
 
         let imgUrl = jsonData.results[0].url;
-        console.log(imgUrl);
+        //console.log(imgUrl);
 
         let stcBuff = await getBuffer(imgUrl);
         fs.writeFileSync("emoji.png", stcBuff);

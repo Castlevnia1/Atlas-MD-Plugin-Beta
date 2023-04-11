@@ -16,10 +16,10 @@ module.exports = {
     start: async (Atlas, m, { inputCMD, text, doReact, prefix, pushName }) => {
         switch (inputCMD) {
             case "igdl":
-                doReact("📥");
                 if(!text) return reply(`Please provide a valid instagram Reel/Video link !\n\nExample: *${prefix}igdl https://www.instagram.com/p/CP7Y4Y8J8ZU/*`);
                 if(!text.includes("instagram")) return reply(`Please provide a valid instagram Reel/Video link !\n\nExample: *${prefix}igdl https://www.instagram.com/p/CP7Y4Y8J8ZU/*`);
-                reply("*Please wait, I'm downloading your video...*");
+                await doReact("📥");
+                await Atlas.sendMessage(m.from, { text: "*Please wait, I'm downloading your video...*",},{ quoted: m });
 
                 res = await axios.get("https://fantox001-scrappy-api.vercel.app/instadl?url=" + text)
                 scrappedURL = res.data.videoUrl
