@@ -309,21 +309,20 @@ module.exports = {
               prefix + command
             } 🦉+🤣`
           );
-          doReact("🔖");
-          let [emoji1, emoji2] = args[0].split("+");
-          let jsonData = await fetch(
-            `https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(
+        doReact("🔖");
+        let [emoji1, emoji2] = args[0].split("+");
+        let jsonData = await fetch(
+          `https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(
             emoji1
           )}_${encodeURIComponent(emoji2)}`
-          ).then((res) => res.json());
+        ).then((res) => res.json());
 
-          let imgUrl = jsonData.results[0].url;
-          console.log(imgUrl);
-          
-          let stcBuff = await getBuffer(imgUrl);
-          fs.writeFileSync("emoji.png", stcBuff);
+        let imgUrl = jsonData.results[0].url;
+        console.log(imgUrl);
 
-        
+        let stcBuff = await getBuffer(imgUrl);
+        fs.writeFileSync("emoji.png", stcBuff);
+
         let stickerMess2 = new Sticker("emoji.png", {
           pack: packname,
           author: pushName,
@@ -339,9 +338,8 @@ module.exports = {
           m.from,
           { sticker: stickerBuffer },
           { quoted: m }
-        )
+        );
         await fs.unlinkSync("emoji.png");
-
 
         break;
       default:
