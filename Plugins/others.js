@@ -3,6 +3,7 @@ const axios = require("axios");
 let mergedCommands = ["sc", "support", "supportgc","script"];
 
 module.exports = {
+  name: "others",
   alias: [...mergedCommands],
   description: "All miscleaneous commands",
   start: async (Atlas, m, { pushName, prefix, inputCMD }) => {
