@@ -1,10 +1,13 @@
 const fs = require("fs");
+const fetch = require("node-fetch");
 const axios = require("axios");
 const { Sticker, StickerTypes } = require("wa-sticker-formatter");
-const { getRandom } = require("../System/Function2.js");
-let { TelegraPh } = require("../System/Uploader.js")
-const Jimp = require("jimp");
-const moment = require("moment-timezone");
+let { TelegraPh } = require("../System/Uploader.js");
+const {
+  fetchJson,
+  getBuffer,
+  GIFBufferToVideoBuffer,
+} = require("../System/Function2.js");
 let mergedCommands = [
   "sticker",
   "s",
@@ -16,6 +19,7 @@ let mergedCommands = [
   "stickermeme",
   "quote",
   "q",
+  "emojimix",
 ];
 
 module.exports = {
@@ -180,7 +184,10 @@ module.exports = {
       case "stickermeme":
         doReact("📮");
         if (/image/.test(mime)) {
-          if(!text) return reply(`Please type *${prefix}smeme <text>* to create sticker meme.`)
+          if (!text)
+            return reply(
+              `Please type *${prefix}smeme <text>* to create sticker meme.`
+            );
           media = await Atlas.downloadAndSaveMediaMessage(quoted);
           mem = await TelegraPh(media);
           meme = `https://api.memegen.link/images/custom/-/${text}.png?background=${mem}`;
@@ -211,18 +218,17 @@ module.exports = {
 
       case "q":
       case "quote":
-    doReact("📮");
-      if (!text && !m.quoted)
-      return reply(`Please provide a text (Type or mention a message) !`)
-      
-        if (m.quoted){
+        doReact("📮");
+        if (!text && !m.quoted)
+          return reply(`Please provide a text (Type or mention a message) !`);
+
+        if (m.quoted) {
           try {
             userPfp = await Atlas.profilePictureUrl(m.quoted.sender, "image");
           } catch (e) {
             userPfp = botImage3;
           }
-        }
-        else{
+        } else {
           try {
             userPfp = await Atlas.profilePictureUrl(m.sender, "image");
           } catch (e) {
@@ -232,7 +238,7 @@ module.exports = {
         var waUserName = pushName;
 
         const quoteText = m.quoted ? m.quoted.msg : args ? args.join(" ") : "";
-    
+
         var quoteJson = {
           type: "quote",
           format: "png",
@@ -256,34 +262,88 @@ module.exports = {
             },
           ],
         };
-    
-        const quoteResponse = await axios
-          .post("https://bot.lyo.su/quote/generate", quoteJson, {
+
+        const quoteResponse = await axios.post(
+          "https://bot.lyo.su/quote/generate",
+          quoteJson,
+          {
             headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        fs.writeFileSync(
+          "quote.png",
+          quoteResponse.data.result.image,
+          "base64"
+        );
+
+        let stickerMess = new Sticker("quote.png", {
+          pack: packname,
+          author: pushName,
+          type: StickerTypes.FULL,
+          categories: ["🤩", "🎉"],
+          id: "12345",
+          quality: 70,
+          background: "transparent",
+        });
+
+        const stickerBuffer2 = await stickerMess.toBuffer();
+        await Atlas.sendMessage(
+          m.from,
+          { sticker: stickerBuffer2 },
+          { quoted: m }
+        )
+          .then((result) => {
+            fs.unlinkSync("quote.png");
           })
-    
-          fs.writeFileSync("quote.png", quoteResponse.data.result.image, "base64");
-    
-    
-          let stickerMess = new Sticker("quote.png", {
-            pack: packname,
-            author: pushName,
-            type: StickerTypes.FULL,
-            categories: ['🤩', '🎉'],
-            id: '12345',
-            quality: 70,
-            background: 'transparent'
-        });
-    
-        const stickerBuffer2 = await stickerMess.toBuffer()
-        await Atlas.sendMessage(m.from, {sticker:stickerBuffer2}, { quoted: m }).then((result) => {
-          fs.unlinkSync("quote.png");
-        }).catch((err) => {
-          reply("An error occurd!")
-        });
+          .catch((err) => {
+            reply("An error occurd!");
+          });
 
         break;
 
+      case "emojimix":
+        if (!args[0])
+          return reply(
+            `Please provide two emojis to combine! *Example :* ${
+              prefix + command
+            } 🦉+🤣`
+          );
+          doReact("🔖");
+          let [emoji1, emoji2] = args[0].split("+");
+          let jsonData = await fetch(
+            `https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(
+            emoji1
+          )}_${encodeURIComponent(emoji2)}`
+          ).then((res) => res.json());
+
+          let imgUrl = jsonData.results[0].url;
+          console.log(imgUrl);
+          
+          let stcBuff = await getBuffer(imgUrl);
+          fs.writeFileSync("emoji.png", stcBuff);
+
+        
+        let stickerMess2 = new Sticker("emoji.png", {
+          pack: packname,
+          author: pushName,
+          type: StickerTypes.FULL,
+          categories: ["🤩", "🎉"],
+          id: "12345",
+          quality: 70,
+          background: "transparent",
+        });
+
+        const stickerBuffer = await stickerMess2.toBuffer();
+        await Atlas.sendMessage(
+          m.from,
+          { sticker: stickerBuffer },
+          { quoted: m }
+        )
+        await fs.unlinkSync("emoji.png");
+
+
+        break;
       default:
         break;
     }
