@@ -96,7 +96,9 @@ module.exports = {
 
       case "steal":
       case "take":
-        if(!m.quoted) return reply(`Please meantion a sticker to steal it.`)
+        if(!m.quoted) {
+            await doReact("❌");
+            return reply(`Please meantion a sticker to steal it.`)}
         await doReact("🀄️");
         if (!args.join(" ")) {
           var packName = pushName;
@@ -171,10 +173,11 @@ module.exports = {
       case "smeme":
       case "stickermeme":
         if (/image/.test(mime)) {
-          if (!text)
+          if (!text){
+            await doReact("❌");
             return reply(
               `Please type *${prefix}smeme <text>* to create sticker meme.`
-            );
+            );}
           await doReact("📮");
           media = await Atlas.downloadAndSaveMediaMessage(quoted);
           mem = await TelegraPh(media);
