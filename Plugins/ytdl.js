@@ -54,7 +54,6 @@ module.exports = {
                                             externalAdReply: {
                                                 title: song.title.substr(0, 50),
                                                 body: `Downloaded by: ${botName}`,
-                                                //mediaType: 2,
                                                 thumbnail: thumbnailBuffer,
                                                 mediaType: 1,
                                                 mediaUrl: thumbAtlas,
@@ -69,7 +68,6 @@ module.exports = {
                                 fs.unlinkSync(outputPath);
                             })
 
-
                             .save(outputPath);
                     });
                 });
@@ -79,6 +77,8 @@ module.exports = {
 
             case "ytmp3":
             case "ytmusic":
+
+
                 break;
 
             case "ytmp4":
@@ -86,6 +86,31 @@ module.exports = {
                 break;
 
             case "video":
+                if (!text) {
+                    await doReact("❌");
+                    return reply(`Please provide an YouTube video name !\n\nExample: *${prefix}video dandilions*`);
+                }
+                await doReact("📥");
+
+                songInfo = await yts(text);
+                song = songInfo.videos[0];
+                videoUrl = song.url;
+                videoId = videoUrl.split("v=")[1];
+                result = await yts(videoId);
+
+                ttt = `_Downloading:_ *${song.title}*   ...`
+                await reply(ttt);
+
+                const ytaud = await YT.mp4(videoUrl);
+                Atlas.sendMessage(
+                    m.from,
+                    {
+                        video: { url: ytaud.videoUrl },
+                        caption: `${song.title} By: *${botName}*`,
+                    },
+                    { quoted: m }
+                );
+
                 break;
 
             default:
