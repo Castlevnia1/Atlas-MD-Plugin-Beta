@@ -8,7 +8,7 @@ const {
     GIFBufferToVideoBuffer,
 } = require("../System/Function2.js");
 
-let mergedCommands = ["play", "song", "ytmp3", "ytmusic", "ytmp4", "ytvideo", "video"];
+let mergedCommands = ["play", "song", "ytmp3", "ytmusic", "ytaudio", "yta", "ytmp4", "ytvideo","ytv", "video"];
 
 module.exports = {
     name: "mediaDownloader",
@@ -31,6 +31,13 @@ module.exports = {
                 videoId = videoUrl.split("v=")[1];
 
                 yts({ videoId }).then((result) => {
+                    var vlength = result.seconds;
+                    if (vlength >= 1800) {
+                        return m.reply(
+                          "Command Rejected! The audio is more than 30 minutes long !"
+                        );
+                      }
+                    
                     YT.mp3(videoId).then((file) => {
                         const inputPath = file.path;
                         const outputPath = inputPath + ".opus";
@@ -77,12 +84,43 @@ module.exports = {
 
             case "ytmp3":
             case "ytmusic":
+            case "ytaudio":
+            case "yta":
+                if (!text) {
+                    await doReact("❔");
+                    return reply(`Please provide a Youtubube Video link to download as audio !\n\nExample: *${prefix}ytmp3 put_link*`);
+                }
+                videoUrl = text;
+                videoId = videoUrl.split("v=")[1];
 
+                yts({ videoId }).then((result) => {
+                    var vlength = result.seconds;
+              
+                    if (vlength >= 2700) {
+                      return m.reply(
+                        "Command Rejected! The audio is more than 45 minutes long BAKA !"
+                      );
+                    } else {
+                      const ytaud =  YT.mp3(text).then((file) => {
+                        Atlas.sendMessage(
+                          m.from,
+                          {
+                            audio: fs.readFileSync(file.path),
+                            mimetype: "audio/mpeg",
+                          },
+                          { quoted: m }
+                        );
+                        fs.unlinkSync(file.path);
+                      });
+                      
+                    }
+                  });
 
                 break;
 
             case "ytmp4":
             case "ytvideo":
+            case "ytv":
                 break;
 
             case "video":
