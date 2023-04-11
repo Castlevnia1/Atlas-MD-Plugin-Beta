@@ -368,7 +368,7 @@ module.exports = {
           return Atlas.sendMessage(
             m.from,
             {
-              text: `Send/Reply Image With Caption ${prefix + "setgcpp"
+              text: `Send/reply Image With Caption ${prefix + "setgcpp"
                 } to change the Profile Pic of this group.`,
             },
             { quoted: m }

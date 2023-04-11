@@ -303,13 +303,13 @@ module.exports = {
         break;
 
       case "emojimix":
+        doReact("🔖");
         if (!args[0])
           return reply(
             `Please provide two emojis to combine! *Example :* ${
               prefix + command
             } 🦉+🤣`
           );
-        doReact("🔖");
         let [emoji1, emoji2] = args[0].split("+");
         let jsonData = await fetch(
           `https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(
