@@ -52,6 +52,9 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       : [];
     let botNumber = await Atlas.decodeJid(Atlas.user.id);
     let isBotAdmin = m.isGroup ? groupAdmin.includes(botNumber) : false;
+    const isCreator = [botNumber, ...global.owner]
+            .map((v) => v.replace(/[^0-9]/g, "") + "@s.whatsapp.net")
+            .includes(m.sender);
     let isAdmin = m.isGroup ? groupAdmin.includes(m.sender) : false;
     let messSender = m.sender;
     let itsMe = messSender.includes(botNumber) ? true : false;
@@ -129,6 +132,20 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     }
     if (body.startsWith(prefix) && !icmd)
       return Atlas.sendMessage(m.from, { text: "Baka no such command" });
+    
+    
+    // ------------------------DATABASE (Do not modify this part) ------------------------ //
+      const banData = (await db.get("ban")) || {};
+      const mods = (await db.get("mods")) || [];
+
+
+
+
+      if (!mods.includes(m.sender) && !isCreator && isCmd) {
+        const groupName = banData[m.sender]?.groupName;
+        const reason = banData[m.sender]?.reason;
+        if (banData.hasOwnProperty(m.sender)) return Atlas.sendMessage(m.from, { text: `You are banned from using commands in *${groupName}* for reason: *${reason}* ❌` }, { quoted: m });
+      }
 
     // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
 
@@ -188,6 +205,9 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       text,
       itsMe,
       doReact,
+      mods,
+      banData,
+      isCreator,
       quoted,
       mentionByTag,
       mime,
