@@ -30,6 +30,9 @@ module.exports = {
                 videoUrl = song.url;
                 videoId = videoUrl.split("v=")[1];
 
+                ttt = `*${song.title}*   _Downloading_ ...`
+                await reply(ttt);
+
                 yts({ videoId }).then((result) => {
                     var vlength = result.seconds;
                     if (vlength >= 1800) {
@@ -136,7 +139,7 @@ module.exports = {
                 videoId = videoUrl.split("v=")[1];
                 result = await yts(videoId);
 
-                ttt = `_Downloading:_ *${song.title}*   ...`
+                ttt = `*${song.title}*   _Downloading_ ...`
                 await reply(ttt);
 
                 const ytaud = await YT.mp4(videoUrl);

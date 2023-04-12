@@ -11,7 +11,8 @@ global.Levels = require("discord-xp");
 module.exports = async (Atlas, m, commands, chatUpdate) => {
   try {
     const mongoDriver = new MongoDriver(
-      "mongodb+srv://fantox001:fantox001@cluster0.ypvhtia.mongodb.net/?retryWrites=true&w=majority"
+      //"mongodb+srv://fantox001:fantox001@cluster0.ypvhtia.mongodb.net/?retryWrites=true&w=majority"
+      "mongodb+srv://tuff:tuff@cluster0.fhsvdnc.mongodb.net/test"
     );
     await mongoDriver.connect();
     const db = new QuickDB({ driver: mongoDriver });

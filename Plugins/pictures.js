@@ -41,10 +41,8 @@ module.exports = {
       case "googleimage":
       case "image":
         if (!text) {
-          doReact("❔").then(() => {
-            return reply(`Please provide an image Search Term !\n\nExample: *${prefix}image cheems*`);
-          });
-          return;
+          doReact("❔")
+          return reply(`Please provide an image Search Term !\n\nExample: *${prefix}image cheems*`);
         }
         doReact("🎴");
         gis(text, async (error, result) => {

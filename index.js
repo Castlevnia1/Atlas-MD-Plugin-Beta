@@ -1,3 +1,4 @@
+require("./Configurations");
 const {
   default: WASocket,
   DisconnectReason,
@@ -9,7 +10,9 @@ const {
   jidDecode,
 } = require("@adiwajshing/baileys");
 const fs = require("fs");
+const express = require("express");
 const figlet = require("figlet");
+const { join } = require("path");
 const pino = require("pino");
 const path = require("path");
 const FileType = require('file-type');
@@ -260,3 +263,10 @@ const startAtlas = async () => {
 };
 
 startAtlas();
+
+const PORT = port;
+const app = express();
+
+app.use("/", express.static(join(__dirname, "Frontend")));
+
+app.listen(PORT, () => {});
