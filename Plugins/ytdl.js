@@ -8,7 +8,7 @@ const {
     GIFBufferToVideoBuffer,
 } = require("../System/Function2.js");
 
-let mergedCommands = ["play", "song", "ytmp3", "ytmusic", "ytaudio", "yta", "ytmp4", "ytvideo","ytv", "video"];
+let mergedCommands = ["play", "song", "ytmp3", "mp3", "ytmusic", "ytaudio", "yta", "ytmp4", "mp4", "ytvideo","ytv", "video"];
 
 module.exports = {
     name: "mediaDownloader",
@@ -86,13 +86,12 @@ module.exports = {
                 break;
 
             case "ytmp3":
-            case "ytmusic":
-            case "ytaudio":
-            case "yta":
-                if (!text) {
-                    await doReact("❔");
-                    return reply(`Please provide a Youtubube Video link to download as audio !\n\nExample: *${prefix}ytmp3 put_link*`);
+            case "mp3":
+                if (!text || !text.includes("youtube.com/watch?v=") && !text.includes("youtu.be/")) {
+                    await doReact("❌");
+                    return reply(`Please provide a valid YouTube Video link to download as audio!\n\nExample: *${prefix}mp3 put_link*`);
                 }
+                await doReact("📥");
                 videoUrl = text;
                 videoId = videoUrl.split("v=")[1];
 
@@ -122,9 +121,43 @@ module.exports = {
                 break;
 
             case "ytmp4":
-            case "ytvideo":
-            case "ytv":
-                break;
+            case "mp4":
+                    if (!text || !text.includes("youtube.com/watch?v=") && !text.includes("youtu.be/")) {
+                        await doReact("❌");
+                        return reply(`Please provide a valid YouTube Video link to download as audio!\n\nExample: *${prefix}mp4 put_link*`);
+                    }
+                    await doReact("📥");
+                    videoUrl = text;
+                    videoId = videoUrl.split("v=")[1];
+                
+                    yts({ videoId }).then(async (result) => {
+                        var vlength = result.seconds;
+                
+                        if (vlength >= 2700) {
+                            return m.reply("Command Rejected! The audio is more than 45 minutes long BAKA!");
+                        } else {
+                            try {
+                                const ytvid = await YT.mp4(text);
+                                await Atlas.sendMessage(
+                                    m.from,
+                                    {
+                                        image: { url: ytvid.thumbnail },
+                                        caption: ``,
+                                        video: { url: ytvid.videoUrl },
+                                    },
+                                    { quoted: m }
+                                );
+                            } catch (err) {
+                                console.error(err);
+                                Atlas.sendMessage(
+                                    m.from,
+                                    { text: `Failed to play the song: ${err.message}` },
+                                    { quoted: m }
+                                );
+                            }
+                        }
+                    });
+                    break;
 
             case "video":
                 if (!text) {
@@ -153,6 +186,31 @@ module.exports = {
                 );
 
                 break;
+
+                case "yts":
+                case "ytsearch":
+    if (!args[0]) {
+        await doReact("❌");
+        return reply(`Please provide a search term!`);   
+    }
+    await doReact("📥");
+    let search = await yts(text);
+    let thumbnail = search.all[0].thumbnail;
+    let num = 1;
+
+    var txt = `*🏮 YouTube Search Engine 🏮*\n\n_🧩 Search Term:_ *${args.join(" ")}*\n\n*📌 Total Results:* *${search.all.length}*\n`;
+
+    for (let i of search.all) {
+        txt += `\n_Result:_ *${num++}*\n_🎀 Title:_ *${i.title}*\n_🔶 Duration:_ *${i.timestamp}*\n_🔷 Link:_ ${i.url}\n\n`;
+    }
+
+    let buttonMessage = {
+        image: { url: thumbnail },
+        caption: txt,
+    };
+
+    Atlas.sendMessage(m.from, buttonMessage, { quoted: m });
+    break;
 
             default:
                 break;
