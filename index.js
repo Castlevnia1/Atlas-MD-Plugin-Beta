@@ -218,6 +218,23 @@ const startAtlas = async () => {
       }
   }
 
+  Atlas.setStatus = (status) => {
+    Atlas.query({
+        tag: 'iq',
+        attrs: {
+            to: '@s.whatsapp.net',
+            type: 'set',
+            xmlns: 'status',
+        },
+        content: [{
+            tag: 'status',
+            attrs: {},
+            content: Buffer.from(status, 'utf-8')
+        }]
+    })
+    return status
+}
+
     Atlas.sendFile = async (jid, PATH, fileName, quoted = {}, options = {}) => {
     let types = await Atlas.getFile(PATH, true);
     let { filename, size, ext, mime, data } = types;
