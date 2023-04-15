@@ -30,6 +30,7 @@
     "fs-extra": "^11.1.1",
     "g-i-s": "^2.1.6",
     "google-it": "^1.6.4",
+    "google-tts-api": "^2.0.2",
     "got": "^11.8.2",
     "goto": "^0.2.0",
     "human-readable": "^0.2.1",
