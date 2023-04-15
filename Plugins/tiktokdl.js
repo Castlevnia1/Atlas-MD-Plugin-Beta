@@ -1,4 +1,3 @@
-const tts = require("google-tts-api");
 let mergedCommands = [
   "tiktok",
   "tiktokdl",
@@ -8,9 +7,9 @@ let mergedCommands = [
 ];
 
 module.exports = {
-  name: "texttospeech",
+  name: "tiktokDl",
   alias: [...mergedCommands],
-  description: "All Text to Speech Commands",
+  description: "All Tiktok Downloader Commands",
   start: async (
     Atlas,
     m,
@@ -38,7 +37,6 @@ module.exports = {
     switch (inputCMD) {
       case "tiktok":
       case "tiktokdl":
-        await doReact("🪄");
         await doReact("📥");
         let buttons = [
           {
@@ -76,7 +74,7 @@ module.exports = {
         break;
 
       case "tiktokmp3":
-        await doReact("🪄");
+        await doReact("📥");
 
         require("../System/Tiktokscraper")
           .Tiktok(args[0])
@@ -91,7 +89,7 @@ module.exports = {
         break;
 
       case "tiktokmp4":
-        await doReact("🪄");
+        await doReact("📥");
 
         require("../System/Tiktokscraper")
           .Tiktok(args[0])
@@ -109,7 +107,7 @@ module.exports = {
         break;
 
       case "tiktokdoc":
-        await doReact("🪄");
+        await doReact("📥");
 
         require("../System/Tiktokscraper")
           .Tiktok(args[0])
