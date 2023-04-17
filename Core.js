@@ -4,7 +4,7 @@ const { getBinaryNodeChild } = require("@adiwajshing/baileys");
 const chalk = require("chalk");
 const { color } = require("./System/color.js");
 const { readdirSync } = require("fs-extra");
-const prefix = "/";
+const prefix = global.prefa;
 const { QuickDB, MongoDriver } = require("quick.db");
 global.Levels = require("discord-xp");
 
@@ -192,16 +192,25 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     global.botImage5 = global[idConfig].botImage5;
     global.botImage6 = global[idConfig].botImage6;
 
-    const pad = (s) => (s < 10 ? "0" : "") + s;
-        const formatTime = (seconds) => {
-        const hours = Math.floor(seconds / (60 * 60));
-        const minutes = Math.floor((seconds % (60 * 60)) / 60);
-        const secs = Math.floor(seconds % 60);
-        return time = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
-        };
-        const uptime = () => formatTime(process.uptime());
+    /*const options = {
+      timeZone: "Asia/Kolkata", // set the time zone to Indian Standard Time (IST)
+      hour12: true, // set to 12-hour format (Set to false for 24-hour format)
+      hour: "numeric", // show only the hour
+      minute: "numeric", // show only the minute
+      second: "numeric", // show only the second
+    };
+    const timeString = now.toLocaleTimeString('en-US', options);*/
 
-    let upTxt = `${botName} is active since: ${uptime()}`
+    const pad = (s) => (s < 10 ? "0" : "") + s;
+    const formatTime = (seconds) => {
+      const hours = Math.floor(seconds / (60 * 60));
+      const minutes = Math.floor((seconds % (60 * 60)) / 60);
+      const secs = Math.floor(seconds % 60);
+      return (time = `${pad(hours)}:${pad(minutes)}:${pad(secs)}`);
+    };
+    const uptime = () => formatTime(process.uptime());
+
+    let upTxt = `〘  ${botName} ᴘᴇʀsᴏɴᴀʟ ᴇᴅɪᴛɪᴏɴ  〙  ϟ ᴜᴘᴛɪᴍᴇ: ${uptime()}`;
     Atlas.setStatus(upTxt);
 
     cmd.start(Atlas, m, {

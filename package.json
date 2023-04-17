@@ -37,6 +37,7 @@
     "hxz-api": "^1.0.1",
     "jimp": "^0.16.13",
     "moment-timezone": "^0.5.43",
+    "mumaker": "^1.0.0",
     "node-fetch": "^2.6.9",
     "node-id3": "^0.2.6",
     "path": "^0.12.7",
