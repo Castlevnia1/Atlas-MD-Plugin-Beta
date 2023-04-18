@@ -49,5 +49,10 @@
     "wa-sticker-formatter": "^4.4.4",
     "youtube-yts": "^2.0.0",
     "youtubedl-core": "^4.11.4"
+  },
+  "devDependencies": {
+    "@hapi/boom": "^10.0.1",
+    "pino": "^8.11.0",
+    "qrcode-terminal": "^0.12.0"
   }
 }
