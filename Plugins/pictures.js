@@ -22,7 +22,7 @@ module.exports = {
     switch (inputCMD) {
       case "ppcouple":
       case "couplepp":
-        doReact("❤️");
+       await doReact("❤️");
         let imgRes = await axios.get("https://zany-teal-alligator-suit.cyclic.app/couple");
         Atlas.sendMessage(
           m.from,
@@ -41,10 +41,10 @@ module.exports = {
       case "googleimage":
       case "image":
         if (!text) {
-          doReact("❔")
+          await doReact("❔");
           return reply(`Please provide an image Search Term !\n\nExample: *${prefix}image cheems*`);
         }
-        doReact("🎴");
+        await doReact("🎴");
         gis(text, async (error, result) => {
           n = result;
           let images = n[Math.floor(Math.random() * n.length)].url;
@@ -74,12 +74,10 @@ module.exports = {
       case "gif":
       case "gifsearch":
         if (!text) {
-          doReact("❔").then(() => {
+          await doReact("❔")
             return reply(`Please provide an Tenor gif Search Term !\n\nExample: *${prefix}gif cheems bonk*`);
-          });
-          return;
         }
-        doReact("🎴");
+        await doReact("🎴");
         let resGif = await axios.get(
           `https://tenor.googleapis.com/v2/search?q=${text}&key=${tenorApiKey}&client_key=my_project&limit=12&media_filter=mp4`
         );
@@ -99,12 +97,11 @@ module.exports = {
       case "pin":
       case "pinterest":
         if (!text) {
-          doReact("❔").then(() => {
+          await doReact("❔")
             return reply(`Please provide an Pinterest image Search Term !\n\nExample: *${prefix}pin cheems*`);
-          });
-          return;
+          
         }
-        doReact("📍");
+        await doReact("📍");
         hxzapi
           .pinterest(text)
           .then(async (res) => {
