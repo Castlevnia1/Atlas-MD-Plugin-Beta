@@ -15,7 +15,7 @@ const figlet = require("figlet");
 const { join } = require("path");
 const pino = require("pino");
 const path = require("path");
-const FileType = require("file-type");
+const FileType = require('file-type');
 const { Boom } = require("@hapi/boom");
 const Collections = require("./System/Collections");
 const { state, saveState } = useSingleFileAuthState("./session.json");
@@ -199,128 +199,43 @@ const startAtlas = async () => {
       }
     );
 
-  /**
-   *
-   * @param {*} jid
-   * @param {*} path
-   * @param {*} quoted
-   * @param {*} mime
-   * @param {*} options
-   * @returns
-   */
-  Atlas.sendAudio = async (jid, path, quoted = "", ptt = false, options) => {
-    let buffer = Buffer.isBuffer(path)
-      ? path
-      : /^data:.*?\/.*?;base64,/i.test(path)
-      ? Buffer.from(path.split`,`[1], "base64")
-      : /^https?:\/\//.test(path)
-      ? await await getBuffer(path)
-      : fs.existsSync(path)
-      ? fs.readFileSync(path)
-      : Buffer.alloc(0);
-    return await Atlas.sendMessage(
-      jid,
-      { audio: buffer, ptt: ptt, ...options },
-      { quoted }
-    );
-  };
+    Atlas.getFile = async (PATH, save) => {
+      let res
+      let data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,` [1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await getBuffer(PATH)) : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
 
-  Atlas.sendMedia = async (
-    jid,
-    path,
-    fileName = "",
-    caption = "",
-    quoted = "",
-    options = {}
-  ) => {
-    let types = await Atlas.getFile(path, true);
-    let { mime, ext, res, data, filename } = types;
-    if ((res && res.status !== 200) || file.length <= 65536) {
-      try {
-        throw { json: JSON.parse(file.toString()) };
-      } catch (e) {
-        if (e.json) throw e.json;
+      let type = await FileType.fromBuffer(data) || {
+          mime: 'application/octet-stream',
+          ext: '.bin'
       }
-    }
-    let type = "",
-      mimetype = mime,
-      pathFile = filename;
-    if (options.asDocument) type = "document";
-    if (options.asSticker || /webp/.test(mime)) {
-      let { writeExif } = require("./lib/exif");
-      let media = { mimetype: mime, data };
-      pathFile = await writeExif(media, {
-        packname: options.packname ? options.packname : global.packname,
-        author: options.author ? options.author : global.author,
-        categories: options.categories ? options.categories : [],
-      });
-      await fs.promises.unlink(filename);
-      type = "sticker";
-      mimetype = "image/webp";
-    } else if (/image/.test(mime)) type = "image";
-    else if (/video/.test(mime)) type = "video";
-    else if (/audio/.test(mime)) type = "audio";
-    else type = "document";
-    await Atlas.sendMessage(
-      jid,
-      { [type]: { url: pathFile }, caption, mimetype, fileName, ...options },
-      { quoted, ...options }
-    );
-    return fs.promises.unlink(pathFile);
-  };
-
-  Atlas.getFile = async (PATH, save) => {
-    let res;
-    let data = Buffer.isBuffer(PATH)
-      ? PATH
-      : /^data:.*?\/.*?;base64,/i.test(PATH)
-      ? Buffer.from(PATH.split`,`[1], "base64")
-      : /^https?:\/\//.test(PATH)
-      ? await (res = await getBuffer(PATH))
-      : fs.existsSync(PATH)
-      ? ((filename = PATH), fs.readFileSync(PATH))
-      : typeof PATH === "string"
-      ? PATH
-      : Buffer.alloc(0);
-
-    let type = (await FileType.fromBuffer(data)) || {
-      mime: "application/octet-stream",
-      ext: ".bin",
-    };
-    filename = path.join(
-      __filename,
-      "../src/" + new Date() * 1 + "." + type.ext
-    );
-    if (data && save) fs.promises.writeFile(filename, data);
-    return {
-      res,
-      filename,
-      size: await getSizeMedia(data),
-      ...type,
-      data,
-    };
-  };
+      filename = path.join(__filename, '../src/' + new Date * 1 + '.' + type.ext)
+      if (data && save) fs.promises.writeFile(filename, data)
+      return {
+          res,
+          filename,
+          size: await getSizeMedia(data),
+          ...type,
+          data
+      }
+  }
 
   Atlas.setStatus = (status) => {
     Atlas.query({
-      tag: "iq",
-      attrs: {
-        to: "@s.whatsapp.net",
-        type: "set",
-        xmlns: "status",
-      },
-      content: [
-        {
-          tag: "status",
-          attrs: {},
-          content: Buffer.from(status, "utf-8"),
+        tag: 'iq',
+        attrs: {
+            to: '@s.whatsapp.net',
+            type: 'set',
+            xmlns: 'status',
         },
-      ],
-    });
-    return status;
-  };
+        content: [{
+            tag: 'status',
+            attrs: {},
+            content: Buffer.from(status, 'utf-8')
+        }]
+    })
+    return status
+}
 
-  Atlas.sendFile = async (jid, PATH, fileName, quoted = {}, options = {}) => {
+    Atlas.sendFile = async (jid, PATH, fileName, quoted = {}, options = {}) => {
     let types = await Atlas.getFile(PATH, true);
     let { filename, size, ext, mime, data } = types;
     let type = "",
