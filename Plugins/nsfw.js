@@ -10,10 +10,10 @@ module.exports = {
 
     let commands = m.text.substring(prefix.length).split(" ")[0];
     
-    if (NSFWstatus == "false") return m.reply(`This group is not NSFW enabled!\n\nTo configure NSFW mode, type:\n\n*${prefix}nsfw*`);
+    if (NSFWstatus == "false") return reply(`This group is not NSFW enabled!\n\nTo configure NSFW mode, type:\n\n*${prefix}nsfw*`);
 
    
-    m.reply(mess.waiting)
+    reply(mess.waiting)
     
     let nekoo= await axios.get(`https://fantox-apis.vercel.app/${commands}`)
     let nekokun = nekoo.data.url
