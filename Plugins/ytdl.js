@@ -36,7 +36,7 @@ module.exports = {
                 yts({ videoId }).then((result) => {
                     var vlength = result.seconds;
                     if (vlength >= 1800) {
-                        return m.reply(
+                        return reply(
                           "Command Rejected! The audio is more than 30 minutes long !"
                         );
                       }
@@ -99,7 +99,7 @@ module.exports = {
                     var vlength = result.seconds;
               
                     if (vlength >= 2700) {
-                      return m.reply(
+                      return reply(
                         "Command Rejected! The audio is more than 45 minutes long BAKA !"
                       );
                     } else {
@@ -134,7 +134,7 @@ module.exports = {
                         var vlength = result.seconds;
                 
                         if (vlength >= 2700) {
-                            return m.reply("Command Rejected! The audio is more than 45 minutes long BAKA!");
+                            return reply("Command Rejected! The audio is more than 45 minutes long BAKA!");
                         } else {
                             try {
                                 const ytvid = await YT.mp4(text);

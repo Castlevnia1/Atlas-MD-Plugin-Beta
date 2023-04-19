@@ -167,7 +167,7 @@ module.exports = {
 ╰──────────────────╯\n\n
 🎀 Powered By: *FantoX APIs* 🎀\n\n*🧩 API link:* \n❖ https://github.com/FantoX001/Scrappy-API\n❖ https://fantox-api.vercel.app\n`;
 
-      await Atlas.sendMessage(
+      return Atlas.sendMessage(
         m.from,
         { image: { url: botImage5 }, caption: ntext },
         { quoted: m }
@@ -179,7 +179,7 @@ module.exports = {
     await doReact("🔞");
     //if (NSFWstatus == "false") return reply(`This group is not NSFW enabled!\n\nTo configure NSFW mode, type:\n\n*${prefix}nsfw*`);
 
-    reply(mess.waiting);
+    reply("Chotto Matte...");
 
     let res = await axios.get(`https://fantox-apis.vercel.app/${commands}`);
     let hUrl = res.data.url;

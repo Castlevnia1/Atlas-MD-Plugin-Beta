@@ -15,7 +15,8 @@ global.prefa = process.env.PREFIX || "-";
 global.tenorApiKey = process.env.TENOR_API_KEY || "AIzaSyCyouca1_KKy4W_MG1xsPzuku5oa8W358c";
 global.packname = process.env.PACKNAME || `Atlas Bot`;
 global.author = process.env.AUTHOR || "by: Team Atlas";
-global.port = process.env.PORT || "8000";
+global.port = process.env.PORT || "10000";
+global.openAiAPI = process.env.OPENAI_API || "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";
 
 module.exports = {
   mongodb: global.mongodb,

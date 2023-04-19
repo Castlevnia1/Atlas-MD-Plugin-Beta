@@ -25,7 +25,8 @@ commands.prefix = "/";
 
 const store = makeInMemoryStore({
   logger: pino().child({
-    level: "silent",
+    //level: "silent",
+    level: "debug",
     stream: "store",
   }),
 });
