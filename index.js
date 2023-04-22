@@ -1,8 +1,7 @@
 require("./Configurations");
 const {
-  default: WASocket,
+  default: atlasConnect,
   DisconnectReason,
-  delay,
   fetchLatestBaileysVersion,
   useSingleFileAuthState,
   downloadContentFromMessage,
@@ -21,12 +20,16 @@ const Collections = require("./System/Collections");
 const { state, saveState } = useSingleFileAuthState("./session.json");
 const commands = new Collections();
 const { serialize, WAConnection } = require("./System/whatsapp.js");
-commands.prefix = "/";
+commands.prefix = global.prefa;
+const {
+  smsg,
+  getBuffer,
+  getSizeMedia
+} = require("./System/Function2");
 
 const store = makeInMemoryStore({
   logger: pino().child({
-    //level: "silent",
-    level: "debug",
+    level: "silent",
     stream: "store",
   }),
 });
@@ -46,19 +49,22 @@ readcommands();
 
 // Atlas Server configuration
 
-console.log(
-  figlet.textSync("ATLAS", {
-    font: "Standard",
-    horizontalLayout: "default",
-    vertivalLayout: "default",
-    width: 100,
-    whitespaceBreak: true,
-  })
-);
-console.log(`\n`);
 
 const startAtlas = async () => {
-  const options = {
+  console.log(
+    figlet.textSync("ATLAS", {
+      font: "Standard",
+      horizontalLayout: "default",
+      vertivalLayout: "default",
+      width: 100,
+      whitespaceBreak: true,
+    })
+  );
+  console.log(`\n`);
+
+  let { version, isLatest } = await fetchLatestBaileysVersion();
+
+  /*const options = {
     version: (await fetchLatestBaileysVersion()).version,
     printQRInTerminal: true,
     auth: state,
@@ -67,7 +73,21 @@ const startAtlas = async () => {
     }),
     browser: ["Atlas", "Safari", "1.0.0"],
   };
-  const Atlas = new WAConnection(WASocket(options));
+  //const Atlas = new WAConnection(atlasConnect(options));*/
+
+  const Atlas = atlasConnect({
+    logger: pino({ level: "silent" }),
+    printQRInTerminal: true,
+    browser: ["Atlas", "Safari", "1.0.0"],
+    auth: state,
+    version,
+  });
+
+  store.bind(Atlas.ev);
+
+
+  Atlas.public = true;
+
   Atlas.ev.on("creds.update", saveState);
 
   Atlas.ev.on("connection.update", async (update) => {
