@@ -18,6 +18,10 @@ global.author = process.env.AUTHOR || "by: Team Atlas";
 global.port = process.env.PORT || "10000";
 global.openAiAPI = process.env.OPENAI_API || "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";
 
+
+global.useMongodb = false;
+
 module.exports = {
   mongodb: global.mongodb,
+  useMongodb: global.useMongodb,
 };
