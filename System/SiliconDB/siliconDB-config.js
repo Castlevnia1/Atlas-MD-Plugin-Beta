@@ -86,6 +86,105 @@ async function fetchBannedUsers() {
   }
 }
 
+async function setUserBankWallet(userID, bank, wallet) {
+  try {
+    await axios.post(`${baseURL}`, {
+      id: userID,
+      bank: bank,
+      wallet: wallet,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function getUserBankWallet(userID) {
+  try {
+    const response = await axios.get(`${baseURL}/${userID}`);
+    if (response.status === 404 || !response.data) {
+      return null;
+    }
+    return {
+      bank: response.data.bank,
+      wallet: response.data.wallet,
+    };
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+async function updateUserBankWallet(userID, bank, wallet) {
+  try {
+    await axios.put(`${baseURL}/${userID}`, {
+      bank: bank,
+      wallet: wallet,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function getUser(userID) {
+  const userBankWallet = await getUserBankWallet(userID);
+
+  if (!userBankWallet) {
+    // Set the user's bank and wallet balance to 0 if they are not in the database.
+    await setUserBankWallet(userID, 0, 0);
+    return { wallet: 0, bank: 0 };
+  }
+
+  return { wallet: userBankWallet.wallet, bank: userBankWallet.bank };
+}
+
+async function setGold(userID, amount, field = "wallet") {
+  try {
+    const userBankWallet = await getUserBankWallet(userID);
+
+    if (!userBankWallet) {
+      // Set the user's bank and wallet balance to 0 if they are not in the database.
+      await setUserBankWallet(userID, 0, 0);
+    }
+
+    let newBankValue = userBankWallet.bank;
+    let newWalletValue = userBankWallet.wallet;
+
+    if (field === "bank") {
+      newBankValue += amount;
+    } else if (field === "wallet") {
+      newWalletValue += amount;
+    } else {
+      throw new Error("Invalid field specified for setGold function.");
+    }
+
+    await updateUserBankWallet(userID, newBankValue, newWalletValue);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function getLastDailyClaim(userID) {
+  try {
+    const response = await axios.get(`${baseURL}/daily/${userID}`);
+    if (response.status === 404 || !response.data) {
+      return null;
+    }
+    return response.data.lastClaim;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+async function updateLastDailyClaim(userID, timestamp) {
+  try {
+    await axios.put(`${baseURL}/daily/${userID}`, {
+      lastClaim: timestamp,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 module.exports = {
   banUser,
@@ -96,4 +195,9 @@ module.exports = {
   checkMod,
   fetchMods,
   fetchBannedUsers,
+  getUser,
+  setGold,
+  getLastDailyClaim,
+  updateLastDailyClaim,
+
 };
