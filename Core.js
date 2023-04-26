@@ -72,6 +72,11 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     let text = (q = args.join(" "));
     global.suppL = "https://cutt.ly/AtlasBotSupport";
     let inputCMD = body.slice(1).trim().split(/ +/).shift().toLowerCase();
+    const {
+      banUser,
+      checkBan,
+      unbanUser,
+    } = require("./System/SiliconDB/siliconDB-config");
     async function doReact(emoji) {
       let reactm = {
         react: {
@@ -153,6 +158,23 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
           { quoted: m }
         );
     }
+
+
+    const isbannedUser = await checkBan(m.sender);
+
+    if (isCmd){
+      if (isbannedUser) {
+        return Atlas.sendMessage(
+          m.from,
+          {
+            text: `You are banned from using commands !`,
+          },
+          { quoted: m }
+        );
+      }
+    }
+    
+
 
     // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
 

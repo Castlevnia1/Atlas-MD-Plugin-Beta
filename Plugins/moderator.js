@@ -1,6 +1,12 @@
 const fs = require("fs");
 const Jimp = require("jimp");
-const moment = require('moment-timezone');
+const moment = require("moment-timezone");
+const {
+  banUser,
+  checkBan,
+  unbanUser,
+} = require("../System/SiliconDB/siliconDB-config");
+
 let mergedCommands = [
   "addmod",
   "setmod",
@@ -12,20 +18,47 @@ let mergedCommands = [
   "banuser",
   "unban",
   "unbanuser",
-  "banlist", 
-  "listbans", 
+  "banlist",
+  "listbans",
 ];
 
 module.exports = {
   name: "moderators",
   alias: [...mergedCommands],
   description: "All Moderator-related Commands",
-  start: async (Atlas, m, { inputCMD, text, mods, groupName, isCreator, banData, prefix, db, doReact, args, itsMe, participants, metadata, mentionByTag, mime, isMedia, quoted, botNumber, isBotAdmin, groupAdmin, isAdmin, pushName }) => {
+  start: async (
+    Atlas,
+    m,
+    {
+      inputCMD,
+      text,
+      mods,
+      groupName,
+      isCreator,
+      banData,
+      prefix,
+      db,
+      doReact,
+      args,
+      itsMe,
+      participants,
+      metadata,
+      mentionByTag,
+      mime,
+      isMedia,
+      quoted,
+      botNumber,
+      isBotAdmin,
+      groupAdmin,
+      isAdmin,
+      pushName,
+    }
+  ) => {
     const mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
     const userId = mentionedUser;
-    
+
     switch (inputCMD) {
-      case "addmod":
+      /*case "addmod":
       case "setmod":
         // Only allow the creator to use this command
         if (!isCreator) return Atlas.sendMessage(m.from, { text: 'Sorry, only my *Owner* can use this command !' }, { quoted: m });
@@ -89,11 +122,11 @@ module.exports = {
                   } catch (err) {
                     console.log(err);
                   }
-                  break;
+                  break;*/
 
-                  case "ban":
-                    case "banuser":
-                      if (!mods.includes(m.sender) && !isCreator) return Atlas.sendMessage(m.from, { text: "Sorry, only my *Devs* and *Mods* can use this command !" }, { quoted: m });
+      case "ban":
+      case "banuser":
+        /*if (!mods.includes(m.sender) && !isCreator) return Atlas.sendMessage(m.from, { text: "Sorry, only my *Devs* and *Mods* can use this command !" }, { quoted: m });
                       if (!text && !m.quoted) return Atlas.sendMessage(m.from, { text: `Please tag a user to *Ban*!` }, { quoted: m });
               
 
@@ -118,28 +151,90 @@ module.exports = {
                         mentions: [mentionedUser],
                       },
                       { quoted: m }
-                    );
-                    break;
-                   
-                    case "unban":
-                    case "unbanuser":
-                   if (!mods.includes(m.sender) && !isCreator) return Atlas.sendMessage(m.from, { text: "Sorry, only my *Devs* and *Mods* can use this command !" }, { quoted: m });
-                  if (!text && !m.quoted) return Atlas.sendMessage(m.from, { text: `Please tag a user to *Unban*!` }, { quoted: m });
-
-                  if (!userId) return reply("Please mention a valid user to unban!");
-                  if (!banData.hasOwnProperty(userId)) return Atlas.sendMessage(m.from, { text: `@${mentionedUser.split("@")[0]} is not banned`, mentions: [mentionedUser], quoted: m });
-
-                  delete banData[userId];
-                  await db.set("ban", banData);
-                  Atlas.sendMessage(m.from, { text: `@${
-                 mentionedUser.split("@")[0]
-                 } has been *Unbanned* Successfully by *${pushName}*`,
-                 mentions: [mentionedUser],
-                 },
-               { quoted: m }
+                    );*/
+        if (!text && !m.quoted)
+          return Atlas.sendMessage(
+            m.from,
+            { text: `Please tag a user to *Ban*!` },
+            { quoted: m }
           );
-         break;
-         case "banlist":
+        chechBanStatus = await checkBan(userId);
+        if (chechBanStatus) {
+          return Atlas.sendMessage(m.from, {
+            text: `@${mentionedUser.split("@")[0]} is already *Banned* !`,
+            mentions: [mentionedUser],
+            quoted: m,
+          });
+        } else {
+          banUser(userId).then(async () => {
+            await Atlas.sendMessage(
+              m.from,
+              {
+                text: `@${
+                  mentionedUser.split("@")[0]
+                } has been *Banned* Successfully by *${pushName}*`,
+                mentions: [mentionedUser],
+              },
+              { quoted: m }
+            );
+          });
+        }
+
+        break;
+
+      case "unban":
+      case "unbanuser":
+        //if (!mods.includes(m.sender) && !isCreator) return Atlas.sendMessage(m.from, { text: "Sorry, only my *Devs* and *Mods* can use this command !" }, { quoted: m });
+        /*if (!text && !m.quoted)
+          return Atlas.sendMessage(
+            m.from,
+            { text: `Please tag a user to *Unban*!` },
+            { quoted: m }
+          );
+
+        if (!userId) return reply("Please mention a valid user to unban!");
+        if (!banData.hasOwnProperty(userId))
+          return Atlas.sendMessage(m.from, {
+            text: `@${mentionedUser.split("@")[0]} is not banned`,
+            mentions: [mentionedUser],
+            quoted: m,
+          });
+
+        delete banData[userId];
+        await db.set("ban", banData);
+        Atlas.sendMessage(
+          m.from,
+          {
+            text: `@${
+              mentionedUser.split("@")[0]
+            } has been *Unbanned* Successfully by *${pushName}*`,
+            mentions: [mentionedUser],
+          },
+          { quoted: m }
+        );*/
+        chechBanStatus = await checkBan(userId);
+        if (chechBanStatus) {
+          unbanUser(userId).then(async () => {
+            await Atlas.sendMessage(
+              m.from,
+              {
+                text: `@${
+                  mentionedUser.split("@")[0]
+                } has been *Un-Banned* Successfully by *${pushName}*`,
+                mentions: [mentionedUser],
+              },
+              { quoted: m }
+            );
+          });
+        } else {
+          return Atlas.sendMessage(m.from, {
+            text: `@${mentionedUser.split("@")[0]} is not *Banned* !`,
+            mentions: [mentionedUser],
+            quoted: m,
+          });
+        }
+        break;
+      /*case "banlist":
           case "listbans":
             try {
               if (Object.keys(banData).length === 0) {
@@ -155,10 +250,10 @@ module.exports = {
             } catch (err) {
               console.log(err);
             }
-            break;
-    
-          default:
-            break;
-        }
-      },
-    };
+            break;*/
+
+      default:
+        break;
+    }
+  },
+};
