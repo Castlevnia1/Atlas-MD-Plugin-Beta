@@ -76,6 +76,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       banUser,
       checkBan,
       unbanUser,
+      checkMod
     } = require("./System/SiliconDB/siliconDB-config");
     async function doReact(emoji) {
       let reactm = {
@@ -143,24 +144,8 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       return Atlas.sendMessage(m.from, { text: "Baka no such command" });
 
     // ------------------------DATABASE (Do not modify this part) ------------------------ //
-    const banData = (await db.get("ban")) || {};
-    const mods = (await db.get("mods")) || [];
-
-    if (!mods.includes(m.sender) && !isCreator && isCmd) {
-      const groupName = banData[m.sender]?.groupName;
-      const reason = banData[m.sender]?.reason;
-      if (banData.hasOwnProperty(m.sender))
-        return Atlas.sendMessage(
-          m.from,
-          {
-            text: `You are banned from using commands in *${groupName}* for reason: *${reason}* ❌`,
-          },
-          { quoted: m }
-        );
-    }
-
-
     const isbannedUser = await checkBan(m.sender);
+    const modcheck = await checkMod(m.sender);
 
     if (isCmd){
       if (isbannedUser) {
@@ -255,8 +240,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       text,
       itsMe,
       doReact,
-      mods,
-      banData,
+      modcheck,
       isCreator,
       quoted,
       mentionByTag,
