@@ -77,7 +77,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       checkBan,
       unbanUser,
       checkMod,
-      getChar
+      getChar,
     } = require("./System/SiliconDB/siliconDB-config");
     async function doReact(emoji) {
       let reactm = {
@@ -148,7 +148,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     const isbannedUser = await checkBan(m.sender);
     const modcheck = await checkMod(m.sender);
 
-    if (isCmd){
+    if (isCmd) {
       if (isbannedUser) {
         return Atlas.sendMessage(
           m.from,
@@ -159,52 +159,24 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
         );
       }
     }
-    
-
 
     // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
 
     let char = "0"; // default one
     CharacterSelection = "0"; // user selected character
 
-    try{
+    try {
       let charx = await getChar();
       CharacterSelection = charx;
-    }
-    catch(e){
-      CharacterSelection = "0"
-    }
-
-    if(CharacterSelection == char){
-      CharacterSelection = "0"
-    }else{
-      CharacterSelection = CharacterSelection
+    } catch (e) {
+      CharacterSelection = "0";
     }
 
-    /*let character = await mkchar.findOne({
-      id: "1",
-    });
-    if (character) {
-      CharacterSelection = character.seletedCharacter;
+    if (CharacterSelection == char) {
+      CharacterSelection = "0";
     } else {
-      let newCharacter = new mkchar({
-        id: "1",
-        seletedCharacter: "0",
-      });
-      await newCharacter.save();
+      CharacterSelection = CharacterSelection;
     }
-
-    await mkchar
-      .findOne({
-        id: "1",
-      })
-      .then(async (res) => {
-        if (res.seletedCharacter != char) {
-          CharacterSelection = res.seletedCharacter;
-        } else {
-          CharacterSelection = char;
-        }
-      });*/
 
     let idConfig = "charID" + CharacterSelection;
 
