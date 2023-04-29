@@ -1,14 +1,7 @@
+const fs = require("fs");
+const Jimp = require("jimp");
+const moment = require("moment-timezone");
 const {
-<<<<<<< Updated upstream
-  banUser,
-  checkBan,
-  unbanUser,
-  setMod,
-  removeMod,
-  checkMod,
-  fetchMods,
-  fetchBannedUsers
-=======
   banUser, //----------------------- BAN
   checkBan, // --------------------- CHECK BAN STATUS
   unbanUser, // -------------------- UNBAN
@@ -20,56 +13,61 @@ const {
   activateChatBot, // -------------- ACTIVATE PM CHATBOT
   checkPmChatbot, // --------------- CHECK PM CHATBOT STATUS
   deactivateChatBot,
->>>>>>> Stashed changes
 } = require("../System/SiliconDB/siliconDB-config");
 
-let mergedCommands = ["addmod", "setmod", "delmod", "removemod", "modlist", "mods", "ban", "banuser", "unban", "unbanuser", "banlist", "listbans"];
+let mergedCommands = [
+  "addmod",
+  "setmod",
+  "delmod",
+  "removemod",
+  "modlist",
+  "mods",
+  "ban",
+  "banuser",
+  "unban",
+  "unbanuser",
+  "banlist",
+  "listbans",
+];
 
 module.exports = {
   name: "moderators",
   alias: [...mergedCommands],
   description: "All Moderator-related Commands",
-  start: async (Atlas, m, { inputCMD, text, modcheck, isCreator, mentionByTag, quoted, pushName }) => {
-    if (!modcheck && !isCreator) return reply(`*Only mods can use this command!*`);
+  start: async (
+    Atlas,
+    m,
+    {
+      inputCMD,
+      text,
+      mods,
+      groupName,
+      isCreator,
+      banData,
+      prefix,
+      db,
+      doReact,
+      args,
+      itsMe,
+      participants,
+      metadata,
+      mentionByTag,
+      mime,
+      isMedia,
+      quoted,
+      botNumber,
+      isBotAdmin,
+      groupAdmin,
+      isAdmin,
+      pushName,
+    }
+  ) => {
     const mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
     const userId = mentionedUser;
 
     switch (inputCMD) {
       case "addmod":
       case "setmod":
-<<<<<<< Updated upstream
-        if (!(await checkMod(userId))) {
-          await setMod(userId);
-          await Atlas.sendMessage(m.from, { text: `@${mentionedUser.split("@")[0]} has been promoted to *Mod* by *${pushName}*`, mentions: [mentionedUser] }, { quoted: m });
-        } else {
-          await Atlas.sendMessage(m.from, { text: `@${mentionedUser.split("@")[0]} is already a *Mod*`, mentions: [mentionedUser] }, { quoted: m });
-        }
-        break;
-
-      case "removemod":
-      case "delmod":
-        if (await checkMod(userId)) {
-          await removeMod(userId);
-          await Atlas.sendMessage(m.from, { text: `@${mentionedUser.split("@")[0]} has been demoted from *Mod* by *${pushName}*`, mentions: [mentionedUser] }, { quoted: m });
-        } else {
-          await Atlas.sendMessage(m.from, { text: `@${mentionedUser.split("@")[0]} is not a *Mod*`, mentions: [mentionedUser] }, { quoted: m });
-        }
-        break;
-
-      case "modlist":
-      case "mods":
-        const mods = await fetchMods();
-        let modListText = mods.length === 0 ? "There are no moderators registered currently." : "*List of Moderators:*\n\n" + mods.map(mod => `@${mod.split("@")[0]}`).join('\n');
-        Atlas.sendMessage(m.from, { text: modListText, mentions: mods }, { quoted: m });
-        break;
-
-      case "ban":
-      case "banuser":
-        if (!text && !m.quoted) return;
-        if (!(await checkBan(userId))) {
-          await banUser(userId);
-          await Atlas.sendMessage(m.from, { text: `@${mentionedUser.split("@")[0]} has been *Banned* Successfully by *${pushName}*`, mentions: [mentionedUser] }, { quoted: m });
-=======
         // Only allow the creator to use this command
         if (!isCreator)
           return Atlas.sendMessage(
@@ -211,19 +209,25 @@ module.exports = {
             mentions: [mentionedUser],
             quoted: m,
           });
->>>>>>> Stashed changes
         } else {
-          await Atlas.sendMessage(m.from, { text: `@${mentionedUser.split("@")[0]} is already *Banned*`, mentions: [mentionedUser] }, { quoted: m });
+          banUser(userId).then(async () => {
+            await Atlas.sendMessage(
+              m.from,
+              {
+                text: `@${
+                  mentionedUser.split("@")[0]
+                } has been *Banned* Successfully by *${pushName}*`,
+                mentions: [mentionedUser],
+              },
+              { quoted: m }
+            );
+          });
         }
+
         break;
 
       case "unban":
       case "unbanuser":
-<<<<<<< Updated upstream
-        if (await checkBan(userId)) {
-          await unbanUser(userId);
-          await Atlas.sendMessage(m.from, { text: `@${mentionedUser.split("@")[0]} has been *Un-Banned* Successfully by *${pushName}*`, mentions: [mentionedUser] }, { quoted: m });
-=======
         if (!text && !m.quoted)
           return Atlas.sendMessage(
             m.from,
@@ -244,16 +248,31 @@ module.exports = {
               { quoted: m }
             );
           });
->>>>>>> Stashed changes
         } else {
-          await Atlas.sendMessage(m.from, { text: `@${mentionedUser.split("@")[0]} is not *Banned*`, mentions: [mentionedUser] }, { quoted: m });
+          return Atlas.sendMessage(m.from, {
+            text: `@${mentionedUser.split("@")[0]} is not *Banned* !`,
+            mentions: [mentionedUser],
+            quoted: m,
+          });
         }
         break;
-        case "banlist":
-        const bannedUsers = await fetchBannedUsers();
-        let banListText = bannedUsers.length === 0 ? "There are no banned users currently." : "*List of Banned Users:*\n\n" + bannedUsers.map(user => `@${user.split("@")[0]}`).join('\n');
-        Atlas.sendMessage(m.from, { text: banListText, mentions: bannedUsers }, { quoted: m });
-        break;
+      /*case "banlist":
+          case "listbans":
+            try {
+              if (Object.keys(banData).length === 0) {
+                return Atlas.sendMessage(m.from, { text: "There are no banned users currently." }, { quoted: m });
+              }
+    
+              let banListText = "*List of Banned Users:*\n\n";
+              for (const userId in banData) {
+                banListText += `\n╭─────────────◆\n│ *⚜️ User:-*@${userId.split("@")[0]}\n│ *👥 Group:* ${banData[userId].groupName}\n│ *❗ Reason:* ${banData[userId].reason}\n╰─────────────◆\n\n`;
+              }
+    
+              Atlas.sendMessage(m.from, { text: banListText, mentions: Object.keys(banData) }, { quoted: m });
+            } catch (err) {
+              console.log(err);
+            }
+            break;*/
 
       default:
         break;
