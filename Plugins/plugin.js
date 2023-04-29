@@ -1,48 +1,77 @@
 const got = require("got");
 const fs = require("fs");
 const path = require("path");
+const { readcommands } = require("../System/ReadCommands.js");
+const { exec } = require("child_process");
+const {
+  pushPlugin, // -------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
+  getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
+  delPlugin, // --------------------- DELETE A PLUGIN FROM THE DATABASE
+} = require("../System/SiliconDB/siliconDB-config");
 
+let mergedCommands = ["install", "uninstall", "plugins"];
 module.exports = {
   name: "plugins",
-  alias: ["install"],
-  description: "Say hi to the bot",
-  category: "fun",
-  usage: "hi",
-  start: async (client, m, { text, args, pushName, prefix }) => {
-    try {
-      var url = new URL(text);
-    } catch (e) {
-      console.log(e);
-      return await client.sendMessage(
-        m.from,
-        { text: `Invalid URL` },
-        { quoted: m }
-      );
-    }
+  alias: [...mergedCommands],
+  description: "Install, Uninstall, List plugins",
+  start: async (Atlas, m, { text, args, pushName, prefix, inputCMD }) => {
+    switch (inputCMD) {
+      case "install":
+        try {
+          var url = new URL(text);
+        } catch (e) {
+          console.log(e);
+          return await client.sendMessage(
+            m.from,
+            { text: `Invalid URL !` },
+            { quoted: m }
+          );
+        }
 
-    if (url.host === "gist.github.com") {
-      url.host = "gist.githubusercontent.com";
-      url = url.toString() + "/raw";
-    } else {
-      url = url.toString();
-    }
-    var { body, statusCode } = await got(url);
-    if (statusCode == 200) {
-      try {
-        var folderName = 'Plugins';
-        var fileName = path.basename(url);
-        var filePath = path.join(folderName, fileName);
-        fs.writeFileSync(filePath, body);
-        console.log('File saved successfully!');
-      } catch (error) {
-        console.log('Error:', error);
-      }
+        if (url.host === "gist.github.com") {
+          url.host = "gist.githubusercontent.com";
+          url = url.toString() + "/raw";
+        } else {
+          url = url.toString();
+        }
+        var { body, statusCode } = await got(url);
+        if (statusCode == 200) {
+          try {
+            var folderName = "Plugins";
+            var fileName = path.basename(url);
+            chackInstallationArray = await getPlugin(fileName);
+            // check if plugin is already installed and present in that array
+            if (chackInstallationArray.includes(fileName)) {
+              return reply(`*${fileName}* plugin is already installed !`);
+            }
+            // Check if that file is present in same directory
+            if (!fs.existsSync(`./Plugins/${fileName}`)) {
+              return reply(`*${fileName}* plugin is already installed !`);
+            }
 
-      return await client.sendMessage(
-        m.from,
-        { text: `Plugin installed` },
-        { quoted: m }
-      );
+            
+            var filePath = path.join(folderName, fileName);
+            fs.writeFileSync(filePath, body);
+            console.log("Plugin saved successfully!");
+          } catch (error) {
+            console.log("Error:", error);
+          }
+
+          await pushPlugin(fileName);
+          await reply(`Installing *${fileName}*... `);
+          await readcommands();
+          await reply(`*${fileName}* Installed Successfully !`);
+        }
+        break;
+
+      case "uninstall":
+        break;
+
+      case "plugins":
+        break;
+
+      default:
+        break;
     }
   },
 };

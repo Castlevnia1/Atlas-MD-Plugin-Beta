@@ -8,7 +8,6 @@ const prefix = global.prefa;
 //const { QuickDB, MongoDriver } = require("quick.db");
 const { QuickDB, JSONDriver } = require("quick.db");
 global.Levels = require("discord-xp");
-
 module.exports = async (Atlas, m, commands, chatUpdate) => {
   try {
     /*const mongoDriver = new MongoDriver(

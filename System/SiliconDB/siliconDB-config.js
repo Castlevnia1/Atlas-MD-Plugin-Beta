@@ -1,7 +1,6 @@
 const axios = require("axios");
 
 // Ban an user
-// Ban an user
 async function banUser(userID) {
   try {
     const response = await axios.get(
@@ -287,8 +286,72 @@ async function deactivateChatBot() {
   }
 }
 
-// Ban a Group
+// Push Installation of plugin name in an array
+async function pushPlugin(newPlugin) {
+  try {
+    const response = await axios.get(
+      "https://silicondb.32-pratyushprat.repl.co/api/data/plugins"
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: "plugins",
+        plugins: [newPlugin],
+      });
+    } else {
+      const oldData = response.data;
+      const newData = { ...oldData, plugins: [...oldData.plugins, newPlugin] };
+      await axios.put(
+        "https://silicondb.32-pratyushprat.repl.co/api/data/plugins",
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      id: "plugins",
+      plugins: [newPlugin],
+    });
+  }
+}
 
+// Pull all plugins name as an array
+async function getPlugin() {
+  try {
+    const response = await axios.get(
+      "https://silicondb.32-pratyushprat.repl.co/api/data/plugins"
+    );
+    if (response.status == 404 || !response.data) {
+      return undefined;
+    } else {
+      return response.data.plugins;
+    }
+  } catch (err) {
+    return undefined;
+  }
+}
+
+// Delete a plugin name from the array
+async function delPlugin(delPlugin) {
+  try {
+    const response = await axios.get(
+      "https://silicondb.32-pratyushprat.repl.co/api/data/plugins"
+    );
+    if (response.status == 404 || !response.data) {
+      return console.log("No plugin found to delete !");
+    } else {
+      const oldData = response.data;
+      const newData = {
+        ...oldData,
+        plugins: oldData.plugins.filter((plugin) => plugin != delPlugin),
+      };
+      await axios.put(
+        "https://silicondb.32-pratyushprat.repl.co/api/data/plugins",
+        newData
+      );
+    }
+  } catch (err) {
+    return console.log("No installed plugin found to delete !");
+  }
+}
 
 
 
@@ -308,6 +371,9 @@ module.exports = {
   activateChatBot, // -------------- ACTIVATE PM CHATBOT
   checkPmChatbot, // --------------- CHECK PM CHATBOT STATUS
   deactivateChatBot, // ------------ DEACTIVATE PM CHATBOT
+  pushPlugin, // -------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
+  getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
+  delPlugin, // --------------------- DELETE A PLUGIN FROM THE DATABASE
 };
 
 

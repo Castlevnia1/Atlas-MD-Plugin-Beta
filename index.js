@@ -9,24 +9,19 @@ const {
   jidDecode,
 } = require("@adiwajshing/baileys");
 const fs = require("fs");
-const express = require("express");
 const figlet = require("figlet");
 const { join } = require("path");
 const pino = require("pino");
 const path = require("path");
-const FileType = require('file-type');
+const FileType = require("file-type");
 const { Boom } = require("@hapi/boom");
 const Collections = require("./System/Collections");
 const { state, saveState } = useSingleFileAuthState("./session.json");
-const commands = new Collections();
 const { serialize, WAConnection } = require("./System/whatsapp.js");
+const { smsg, getBuffer, getSizeMedia } = require("./System/Function2");
+const e = require("express");
+const {readcommands, commands} = require('./System/ReadCommands.js')
 commands.prefix = global.prefa;
-const {
-  smsg,
-  getBuffer,
-  getSizeMedia
-} = require("./System/Function2");
-
 const store = makeInMemoryStore({
   logger: pino().child({
     level: "silent",
@@ -34,21 +29,7 @@ const store = makeInMemoryStore({
   }),
 });
 
-//Reading command files
-
-const readcommands = async () => {
-  const cmdfile = fs
-    .readdirSync("./Plugins")
-    .filter((file) => file.endsWith(".js"));
-  for (const file of cmdfile) {
-    const cmdfiles = require(`./Plugins/${file}`);
-    commands.set(cmdfiles.name, cmdfiles);
-  }
-};
-readcommands();
-
 // Atlas Server configuration
-
 
 const startAtlas = async () => {
   console.log(
@@ -64,17 +45,6 @@ const startAtlas = async () => {
 
   let { version, isLatest } = await fetchLatestBaileysVersion();
 
-  /*const options = {
-    version: (await fetchLatestBaileysVersion()).version,
-    printQRInTerminal: true,
-    auth: state,
-    logger: pino({
-      level: "silent",
-    }),
-    browser: ["Atlas", "Safari", "1.0.0"],
-  };
-  //const Atlas = new WAConnection(atlasConnect(options));*/
-
   const Atlas = atlasConnect({
     logger: pino({ level: "silent" }),
     printQRInTerminal: true,
@@ -83,12 +53,15 @@ const startAtlas = async () => {
     version,
   });
 
-  store.bind(Atlas.ev);
+  await readcommands();
 
+  store.bind(Atlas.ev);
 
   Atlas.public = true;
 
   Atlas.ev.on("creds.update", saveState);
+
+ 
 
   Atlas.ev.on("connection.update", async (update) => {
     const { lastDisconnect, connection } = update;
@@ -220,43 +193,58 @@ const startAtlas = async () => {
       }
     );
 
-    Atlas.getFile = async (PATH, save) => {
-      let res
-      let data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,` [1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await getBuffer(PATH)) : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
+  Atlas.getFile = async (PATH, save) => {
+    let res;
+    let data = Buffer.isBuffer(PATH)
+      ? PATH
+      : /^data:.*?\/.*?;base64,/i.test(PATH)
+      ? Buffer.from(PATH.split`,`[1], "base64")
+      : /^https?:\/\//.test(PATH)
+      ? await (res = await getBuffer(PATH))
+      : fs.existsSync(PATH)
+      ? ((filename = PATH), fs.readFileSync(PATH))
+      : typeof PATH === "string"
+      ? PATH
+      : Buffer.alloc(0);
 
-      let type = await FileType.fromBuffer(data) || {
-          mime: 'application/octet-stream',
-          ext: '.bin'
-      }
-      filename = path.join(__filename, '../src/' + new Date * 1 + '.' + type.ext)
-      if (data && save) fs.promises.writeFile(filename, data)
-      return {
-          res,
-          filename,
-          size: await getSizeMedia(data),
-          ...type,
-          data
-      }
-  }
+    let type = (await FileType.fromBuffer(data)) || {
+      mime: "application/octet-stream",
+      ext: ".bin",
+    };
+    filename = path.join(
+      __filename,
+      "../src/" + new Date() * 1 + "." + type.ext
+    );
+    if (data && save) fs.promises.writeFile(filename, data);
+    return {
+      res,
+      filename,
+      size: await getSizeMedia(data),
+      ...type,
+      data,
+    };
+  };
 
   Atlas.setStatus = (status) => {
     Atlas.query({
-        tag: 'iq',
-        attrs: {
-            to: '@s.whatsapp.net',
-            type: 'set',
-            xmlns: 'status',
+      tag: "iq",
+      attrs: {
+        to: "@s.whatsapp.net",
+        type: "set",
+        xmlns: "status",
+      },
+      content: [
+        {
+          tag: "status",
+          attrs: {},
+          content: Buffer.from(status, "utf-8"),
         },
-        content: [{
-            tag: 'status',
-            attrs: {},
-            content: Buffer.from(status, 'utf-8')
-        }]
-    })
-    return status
-}
+      ],
+    });
+    return status;
+  };
 
-    Atlas.sendFile = async (jid, PATH, fileName, quoted = {}, options = {}) => {
+  Atlas.sendFile = async (jid, PATH, fileName, quoted = {}, options = {}) => {
     let types = await Atlas.getFile(PATH, true);
     let { filename, size, ext, mime, data } = types;
     let type = "",
@@ -302,9 +290,3 @@ const startAtlas = async () => {
 
 startAtlas();
 
-const PORT = port;
-const app = express();
-
-app.use("/", express.static(join(__dirname, "Frontend")));
-
-app.listen(PORT, () => {});
