@@ -20,6 +20,7 @@ global.openAiAPI = process.env.OPENAI_API || "sk-RtqE8plBGirrUs4JjyLHT3BlbkFJsdS
 
 
 global.useMongodb = false;
+global.owner =["918101187835"]
 
 module.exports = {
   mongodb: global.mongodb,
