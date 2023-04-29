@@ -76,7 +76,8 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       banUser,
       checkBan,
       unbanUser,
-      checkMod
+      checkMod,
+      getChar
     } = require("./System/SiliconDB/siliconDB-config");
     async function doReact(emoji) {
       let reactm = {
@@ -164,7 +165,21 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
 
     let char = "0"; // default one
-    let CharacterSelection = "10"; // user selected character
+    CharacterSelection = "0"; // user selected character
+
+    try{
+      let charx = await getChar();
+      CharacterSelection = charx;
+    }
+    catch(e){
+      CharacterSelection = "0"
+    }
+
+    if(CharacterSelection == char){
+      CharacterSelection = "0"
+    }else{
+      CharacterSelection = CharacterSelection
+    }
 
     /*let character = await mkchar.findOne({
       id: "1",

@@ -202,12 +202,12 @@ async function getChar() {
       !response.data ||
       response.data.charno == undefined
     ) {
-      return 0;
+      return '0';
     } else {
       return response.data.charno;
     }
   } catch (err) {
-    return 0;
+    return '0';
   }
 }
 
@@ -287,6 +287,14 @@ async function deactivateChatBot() {
   }
 }
 
+// Ban a Group
+
+
+
+
+
+
+
 // Exporting the functions
 module.exports = {
   banUser, //----------------------- BAN
@@ -301,3 +309,33 @@ module.exports = {
   checkPmChatbot, // --------------- CHECK PM CHATBOT STATUS
   deactivateChatBot, // ------------ DEACTIVATE PM CHATBOT
 };
+
+
+
+/*
+
+ module.exports = {
+    banGroup,
+    unbanGroup,
+    updateBanGroup,
+    updateUnbanGroup,
+    botMode,
+    antilinkOn,
+    antilinkOff,
+    updateAntilinkOn,
+    updateAntilinkOff,
+    chatbotGcOn,
+    chatbotGcOff,
+    updateChatbotGcOn,
+    updateChatbotGcOff,
+    nsfwOn,
+    nsfwOff,
+    updateNsfwOn,
+    updateNsfwOff,
+    welcomeOn,
+    welcomeOff,
+    updateWelcomeOn,
+    updateWelcomeOff,
+  };
+
+*/
