@@ -19,9 +19,12 @@ const Collections = require("./System/Collections");
 const { state, saveState } = useSingleFileAuthState("./session.json");
 const { serialize, WAConnection } = require("./System/whatsapp.js");
 const { smsg, getBuffer, getSizeMedia } = require("./System/Function2");
-const e = require("express");
+const express = require("express");
 const {readcommands, commands} = require('./System/ReadCommands.js')
 commands.prefix = global.prefa;
+const {
+  getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
+} = require("./System/SiliconDB/siliconDB-config");
 const store = makeInMemoryStore({
   logger: pino().child({
     level: "silent",
@@ -52,6 +55,9 @@ const startAtlas = async () => {
     auth: state,
     version,
   });
+
+  // Checking and installing plugins in startup
+  const chackInstallationArray = await getPlugin(fileName);
 
   await readcommands();
 

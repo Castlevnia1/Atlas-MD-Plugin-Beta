@@ -40,7 +40,7 @@ module.exports = {
             var folderName = "Plugins";
             var fileName = path.basename(url);
             chackInstallationArray = await getPlugin(fileName);
-            // check if plugin is already installed and present in that array
+            // check if plugin is already installed and present in that Database array
             if (chackInstallationArray.includes(fileName)) {
               return reply(`*${fileName}* plugin is already installed !`);
             }
@@ -49,17 +49,16 @@ module.exports = {
               return reply(`*${fileName}* plugin is already installed !`);
             }
 
-            
+
             var filePath = path.join(folderName, fileName);
             fs.writeFileSync(filePath, body);
             console.log("Plugin saved successfully!");
           } catch (error) {
             console.log("Error:", error);
           }
-
-          await pushPlugin(fileName);
           await reply(`Installing *${fileName}*... `);
           await readcommands();
+          await pushPlugin(fileName);
           await reply(`*${fileName}* Installed Successfully !`);
         }
         break;
