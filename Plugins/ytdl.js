@@ -35,11 +35,11 @@ module.exports = {
 
                 yts({ videoId }).then((result) => {
                     var vlength = result.seconds;
-                    if (vlength >= 1800) {
+                    /*if (vlength >= 1800) {
                         return reply(
                           "Command Rejected! The audio is more than 30 minutes long !"
                         );
-                      }
+                      }*/
                     
                     YT.mp3(videoId).then((file) => {
                         const inputPath = file.path;
