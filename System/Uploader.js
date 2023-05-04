@@ -7,7 +7,7 @@ let cheerio = require('cheerio')
 
 
 
-function TelegraPh (Path) {
+function GraphOrg (Path) {
 	return new Promise (async (resolve, reject) => {
 		if (!fs.existsSync(Path)) return reject(new Error("File not Found"))
 		try {
@@ -84,4 +84,4 @@ function webp2mp4File(path) {
 	})
 }
 
-module.exports = { TelegraPh, UploadFileUgu, webp2mp4File }
+module.exports = { GraphOrg, UploadFileUgu, webp2mp4File }

@@ -7,7 +7,7 @@ const {
   pushPlugin, // -------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
   getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
   delPlugin, // --------------------- DELETE A PLUGIN FROM THE DATABASE
-} = require("../System/SiliconDB/siliconDB-config");
+} = require("../System/SiliconDB/siliconDB-config.js");
 
 let mergedCommands = ["install", "uninstall", "plugins"];
 module.exports = {
