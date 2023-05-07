@@ -45,13 +45,13 @@ module.exports = {
             if (chackInstallationArray != undefined) {
               for (let i = 0; i < chackInstallationArray.length; i++) {
                 if (chackInstallationArray[i].name == fileName) {
-                  return reply(`*${fileName}* plugin is already installed !`);
+                  return m.reply(`*${fileName}* plugin is already installed !`);
                 }
               }
             }
             // Check if that file is present in same directory
             if (fs.existsSync(`./Plugins/${fileName}`)) {
-              return reply(`*${fileName}* plugin is already Present Locally !`);
+              return m.reply(`*${fileName}* plugin is already Present Locally !`);
             }
 
             var filePath = path.join(folderName, fileName);
@@ -60,10 +60,10 @@ module.exports = {
           } catch (error) {
             console.log("Error:", error);
           }
-          await reply(`Installing *${fileName}*... `);
+          await m.reply(`Installing *${fileName}*... `);
           await readcommands();
           await pushPlugin(fileName, text);
-          await reply(`*${fileName}* Installed Successfully !`);
+          await m.reply(`*${fileName}* Installed Successfully !`);
         }
         break;
 
@@ -92,7 +92,7 @@ module.exports = {
 
       case "uninstall":
         if (!text) {
-          return await reply(
+          return await m.reply(
             `Please provide a plugin name !\n\nExample: *${prefix}uninstall* audioEdit.js`
           );
         }
@@ -105,7 +105,7 @@ module.exports = {
               fs.unlinkSync(`./Plugins/${fileName}`);
               await delPlugin(fileName);
               await readcommands();
-              await reply(`*${fileName}* plugin uninstalled successfully !`);
+              await m.reply(`*${fileName}* plugin uninstalled successfully !\n\nPlease restart the bot to clear cache !`);
             } else {
               return Atlas.sendMessage(
                 m.from,

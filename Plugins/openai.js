@@ -52,7 +52,7 @@ module.exports = {
 
     if (global.openAiAPI == null) {
       await doReact("❌");
-      return reply(
+      return m.reply(
         "Please put your OpenAI API Key in the *.env* or in *Configuration* file !"
       );
     }
@@ -62,7 +62,7 @@ module.exports = {
       case "ai":
         if (!args.join(" ")) {
           await doReact("❔");
-          return reply(`Please provide a message!`);
+          return m.reply(`Please provide a message!`);
         }
 
         const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -85,7 +85,7 @@ module.exports = {
             ) {
               const retryAfter =
                 error.response.headers["retry-after"] * 1000 || 5000;
-              reply(
+              m.reply(
                 `Rate limit exceeded. Retrying in ${
                   retryAfter / 1000
                 } seconds...`
@@ -112,7 +112,7 @@ module.exports = {
       case "dalle":
         if (!args.join(" ")) {
           await doReact("❔");
-          return reply(`Please provide a prompt for image generation!`);
+          return m.reply(`Please provide a prompt for image generation!`);
         }
 
         async function generateImage(prompt) {
@@ -144,7 +144,7 @@ module.exports = {
         generateImage(text)
           .then((imageUrl) => {
             if (!imageUrl) {
-              return reply("Failed to generate an image. Please try again.");
+              return m.reply("Failed to generate an image. Please try again.");
             }
             Atlas.sendMessage(
               m.from,
@@ -162,7 +162,7 @@ module.exports = {
       case "aivoice":
         if (!args.join(" ")) {
           await doReact("❔");
-          return reply(`Please provide a message!`);
+          return m.reply(`Please provide a message!`);
         }
 
         var sleep2 = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -185,7 +185,7 @@ module.exports = {
             ) {
               const retryAfter =
                 error.response.headers["retry-after"] * 1000 || 5000;
-              reply(
+              m.reply(
                 `Rate limit exceeded. Retrying in ${
                   retryAfter / 1000
                 } seconds...`

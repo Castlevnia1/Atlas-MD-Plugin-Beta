@@ -28,7 +28,7 @@ module.exports = {
       case "search":
         if (!text) {
           doReact("❔").then(() => {
-            return reply(`Please provide an image Search Term !\n\nExample: *${prefix}search Free Web development Course*`);
+            return m.reply(`Please provide an image Search Term !\n\nExample: *${prefix}search Free Web development Course*`);
           });
           return;
         }
@@ -56,7 +56,7 @@ module.exports = {
       case "lyrics":
         if (!text) {
           doReact("❔").then(() => {
-            return reply(`Please provide an lyrics Search Term !\n\nExample: *${prefix}lyrics Heat waves*`);
+            return m.reply(`Please provide an lyrics Search Term !\n\nExample: *${prefix}lyrics Heat waves*`);
           });
           return;
         }
@@ -85,7 +85,7 @@ module.exports = {
       case "youtubesearch":
         if (!text) {
           doReact("❔").then(() => {
-            return reply(`Please provide an Youtube Search Term !\n\nExample: *${prefix}yts Despacito*`);
+            return m.reply(`Please provide an Youtube Search Term !\n\nExample: *${prefix}yts Despacito*`);
           });
           return;
         }
@@ -132,7 +132,7 @@ module.exports = {
       case "ringtone":
         if (!text) {
           doReact("❔").then(() => {
-            return reply(`Please provide an ringtone Search Term !\n\nExample: *${prefix}ringtone iphone*`);
+            return m.reply(`Please provide an ringtone Search Term !\n\nExample: *${prefix}ringtone iphone*`);
           });
           return;
         }
@@ -153,7 +153,7 @@ module.exports = {
       case "weather":
         if (!text) {
             doReact("❔").then(() => {
-              return reply(`Please provide an ringtone Search Term !\n\n*${prefix}weather Kolkata*`);
+              return m.reply(`Please provide an ringtone Search Term !\n\n*${prefix}weather Kolkata*`);
             });
             return;
           }
@@ -181,7 +181,7 @@ module.exports = {
       case "getsticker":
         if (!text) {
             doReact("❔").then(() => {
-              return reply(`Please provide a sticker Search Term !\n\n*${prefix}stickersearch Cheems bonk*`);
+              return m.reply(`Please provide a sticker Search Term !\n\n*${prefix}stickersearch Cheems bonk*`);
             });
             return;
           }
@@ -214,7 +214,7 @@ module.exports = {
       case "github":
         if (!text) {
             doReact("❔").then(() => {
-              return reply(`Please provide a valid *Github* username!\n\nExample: *${prefix}gh FantoX001*`);
+              return m.reply(`Please provide a valid *Github* username!\n\nExample: *${prefix}gh FantoX001*`);
             });
             return;
           }

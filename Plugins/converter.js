@@ -30,7 +30,7 @@ module.exports = {
       case "toimage":
         if (!m.quoted && !/webp/.test(mime)) {
           await doReact("❔");
-          return reply(
+          return m.reply(
             `Please reply to a *Non-animated* sticker to convert it to image`
           );
         }
@@ -84,7 +84,7 @@ module.exports = {
       case "togif":
         if (!m.quoted && !/webp/.test(mime)) {
           await doReact("❔");
-          return reply(
+          return m.reply(
             `Please reply to an *Animated* sticker to convert it to gif !`
           );
         }
@@ -108,7 +108,7 @@ module.exports = {
       case "tomp3":
         if (/document/.test(mime)) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Send/Reply Video/Audio You Want To Convert Into MP3 With Caption *${prefix}tomp3*`
           );
         }
@@ -120,7 +120,7 @@ module.exports = {
         }
         if (!m.quoted) {
           await doReact("❔");
-          return reply(
+          return m.reply(
             `Send/Reply Video/Audio You Want To Convert Into MP3 With Caption ${prefix}tomp3`
           );
         }
@@ -142,19 +142,19 @@ module.exports = {
       case "toaudio":
         if (/document/.test(mime)) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Send/Reply Video/Audio You Want To Convert Into MP3 With Caption *${prefix}tomp3*`
           );
         }
         if (!/video/.test(mime) && !/audio/.test(mime)) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Send/Reply Video/Audio You Want To Convert Into MP3 With Caption *${prefix}tomp3*`
           );
         }
         if (!m.quoted) {
           await doReact("❔");
-          return reply(
+          return m.reply(
             `Send/Reply Video/Audio You Want To Convert Into MP3 With Caption ${prefix}tomp3`
           );
         }
@@ -171,7 +171,7 @@ module.exports = {
       case "tourl":
         if (!m.quoted) {
             await doReact("❔");
-            return reply(
+            return m.reply(
               `Plese provide an *Image* / *Video* to generate a link! With Caption ${prefix}tourl`
             );
           }
@@ -179,12 +179,12 @@ module.exports = {
         if (/image/.test(mime)) {
           await doReact("🔗");
           let anu = await GraphOrg(media5);
-          reply(`*Generated Image URL:* \n\n${util.format(anu)}\n`);
+          m.reply(`*Generated Image URL:* \n\n${util.format(anu)}\n`);
         } else if (/video/.test(mime)) {
           await doReact("▶️");
           try {
             let anu = await GraphOrg(media5);
-            reply(`*Generated Video URL:* \n\n${util.format(anu)}\n`);
+            m.reply(`*Generated Video URL:* \n\n${util.format(anu)}\n`);
           } catch (e) {
             await doReact("❌");
             await fs.unlinkSync(media5);
@@ -196,7 +196,7 @@ module.exports = {
           }
         } else {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Plese provide an *Image* / *Video* to generate a link!`
           );
         }

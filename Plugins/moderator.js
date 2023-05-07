@@ -86,7 +86,7 @@ module.exports = {
             { text: `Please tag a user to make *mod*!` },
             { quoted: m }
           );
-        if (!userId) return reply("Please mention a valid user to ban!");
+        if (!userId) return m.reply("Please mention a valid user to ban!");
 
         try {
           const isUsermod = await checkMod(userId);
@@ -141,7 +141,7 @@ module.exports = {
             { text: `Please tag a user to make *mod*!` },
             { quoted: m }
           );
-        if (!userId) return reply("Please mention a valid user to ban!");
+        if (!userId) return m.reply("Please mention a valid user to ban!");
 
         try {
           const isUsermod = await checkMod(userId);

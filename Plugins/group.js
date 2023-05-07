@@ -73,15 +73,15 @@ module.exports = {
       case "setgcname":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
         if (!text) {
           await doReact("❔");
-          return reply(
+          return m.reply(
             `Please provide a new group name !\n\nExample: *${prefix}setgcname Bot Testing*`
           );
         }
@@ -113,16 +113,16 @@ module.exports = {
       case "del":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!m.quoted) {
           await doReact("❔");
-          return reply(`Please *Reply* to a message to delete it !`);
+          return m.reply(`Please *Reply* to a message to delete it !`);
         }
         if (!isBotAdmin) {
           if (!m.quoted.sender.includes(botNumber)) {
             await doReact("❌");
-            return reply(
+            return m.reply(
               `Sorry, Without *Admin* permission, I can only delete my own messages !`
             );
           }
@@ -136,7 +136,7 @@ module.exports = {
         } else {
           if (!isAdmin) {
             await doReact("❌");
-            return reply(`Sorry, only *Admins* can delete other's messages !`);
+            return m.reply(`Sorry, only *Admins* can delete other's messages !`);
           }
           key = {
             remoteJid: m.from,
@@ -153,24 +153,24 @@ module.exports = {
       case "demote":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
         if (quotedsender.includes(m.sender)) {
           await doReact("❌");
-          return reply(`You can't demote yourself !`);
+          return m.reply(`You can't demote yourself !`);
         }
         if (quotedsender.includes(botNumber)) {
           await doReact("❌");
-          return reply(`Sorry, I can't demote myself !`);
+          return m.reply(`Sorry, I can't demote myself !`);
         }
 
         if (!text && !m.quoted) {
           await doReact("❔");
-          return reply(`Please tag an user to *Demote*!`);
+          return m.reply(`Please tag an user to *Demote*!`);
         } else if (m.quoted) {
           mentionedUser = m.quoted.sender;
         } else {
@@ -227,7 +227,7 @@ module.exports = {
       case "grouplink":
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
         await doReact("🧩");
         let link = await Atlas.groupInviteCode(m.from);
@@ -261,21 +261,21 @@ module.exports = {
       case "gc":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
         await doReact("⚜️");
 
         if (text === "close") {
           await Atlas.groupSettingUpdate(m.from, "announcement").then((res) =>
-            reply(`Group has been closed!`)
+            m.reply(`Group has been closed!`)
           );
         } else if (text === "open") {
           await Atlas.groupSettingUpdate(m.from, "not_announcement").then(
-            (res) => reply(`Group has been opened!`)
+            (res) => m.reply(`Group has been opened!`)
           );
         } else {
           await Atlas.sendMessage(
@@ -294,7 +294,7 @@ module.exports = {
       case "gcinfo":
         if (!m.isGroup) {
           await doReact("❌");
-          return reply(`This command can only be used in groups!`);
+          return m.reply(`This command can only be used in groups!`);
         }
         await doReact("🎊");
         try {
@@ -333,7 +333,7 @@ module.exports = {
       case "htag":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isMedia) {
           message2 = m.quoted
@@ -357,7 +357,7 @@ module.exports = {
       case "leave":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         await doReact("👋");
         await Atlas.sendMessage(m.from, {
@@ -379,24 +379,24 @@ module.exports = {
       case "promote":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
         if (quotedsender.includes(m.sender)) {
           await doReact("❌");
-          return reply(`You are already an *Admin* of this group!`);
+          return m.reply(`You are already an *Admin* of this group!`);
         }
         if (quotedsender.includes(botNumber)) {
           await doReact("❌");
-          return reply(`I am already an *Admin* of this group!`);
+          return m.reply(`I am already an *Admin* of this group!`);
         }
 
         if (!text && !m.quoted) {
           await doReact("❔");
-          return reply(`Please tag an user to *Promote*!`);
+          return m.reply(`Please tag an user to *Promote*!`);
         } else if (m.quoted) {
           mentionedUser = m.quoted.sender;
         } else {
@@ -451,19 +451,19 @@ module.exports = {
       case "remove":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
         if (quotedsender.includes(m.sender)) {
           await doReact("❌");
-          return reply(`You cannot *Remove* yourself from this group !`);
+          return m.reply(`You cannot *Remove* yourself from this group !`);
         }
         if (quotedsender.includes(botNumber)) {
           await doReact("❌");
-          return reply(`I cannot *Remove* myself from this group !`);
+          return m.reply(`I cannot *Remove* myself from this group !`);
         }
 
         if (!text && !m.quoted) {
@@ -513,11 +513,11 @@ module.exports = {
       case "setppgc":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
 
         if (!/image/.test(mime)) {
@@ -573,11 +573,11 @@ module.exports = {
       case "setgcdesc":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
 
         if (!text && !m.quoted) {
@@ -615,16 +615,16 @@ module.exports = {
       case "revoke":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
 
         if (m.from == "120363040838753957@g.us") {
           await doReact("❌");
-          return reply(
+          return m.reply(
             "Sorry, this command is not allowed in *Atlas Support Group* !\n\nYou are not allowed to change support group link !"
           );
         }
@@ -643,11 +643,11 @@ module.exports = {
       case "tagall":
         if (!isAdmin) {
           await doReact("❌");
-          return reply(`*You* must be *Admin* in order to use this Command!`);
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
         }
         if (!isBotAdmin) {
           await doReact("❌");
-          return reply(`*Bot* must be *Admin* in order to use this Command!`);
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
         }
         if (!isMedia) {
           var message2 = m.quoted

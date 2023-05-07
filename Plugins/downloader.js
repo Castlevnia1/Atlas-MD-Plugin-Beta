@@ -18,13 +18,13 @@ module.exports = {
       case "instadl":
         if (!text) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide a valid instagram Reel/Video link !\n\nExample: *${prefix}igdl https://www.instagram.com/p/CP7Y4Y8J8ZU/*`
           );
         }
         if (!text.includes("instagram")) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide a valid instagram Reel/Video link !\n\nExample: *${prefix}igdl https://www.instagram.com/p/CP7Y4Y8J8ZU/*`
           );
         }
@@ -51,7 +51,7 @@ module.exports = {
           );
         } catch (err) {
           await doReact("❌");
-          await reply(`Video access denied ! It's private or has some other restrictions.`);
+          await m.reply(`Video access denied ! It's private or has some other restrictions.`);
         }
         break;
 
@@ -59,13 +59,13 @@ module.exports = {
       case "mediafire":
         if (!text) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide a valid Mediafire link !\n\nExample: *${prefix}mediafire put_link*`
           );
         }
         if (!text.includes("mediafire.com")) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide a valid Mediafire link !\n\nExample: *${prefix}mediafire put_link*`
           );
         }
@@ -83,7 +83,7 @@ module.exports = {
 Downloading...`;
 
         await doReact("📥");
-        await reply(txt);
+        await m.reply(txt);
 
         Atlas.sendMessage(
           m.from,
@@ -100,19 +100,19 @@ Downloading...`;
       case "facebookdl":
         if (!text) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide a valid Facebook link !\n\nExample: *${prefix}fbdl put_link*`
           );
         }
         if (!text.includes("fb") && !text.includes("facebook")) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide a valid Facebook link !\n\nExample: *${prefix}fbdl put_link*`
           );
         }
 
         await doReact("📥");
-        await reply(`Please wait, I'm downloading your video...`);
+        await m.reply(`Please wait, I'm downloading your video...`);
         try {
           const res = await axios.get(
             "https://fantox001-scrappy-api.vercel.app/fbdl?url=" + text
@@ -129,7 +129,7 @@ Downloading...`;
           );
         } catch (err) {
           await doReact("❌");
-          await reply(`Video access denied ! It's private or only owner's friends can view it.`);
+          await m.reply(`Video access denied ! It's private or only owner's friends can view it.`);
         }
 
         break;

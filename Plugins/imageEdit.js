@@ -18,7 +18,7 @@ module.exports = {
     switch (inputCMD) {
       case "blur":
         if (!m.quoted && !/image/.test(mime))
-          return reply("Please tag someone ! or mention a picture !");
+          return m.reply("Please tag someone ! or mention a picture !");
 
         if (/image/.test(mime)) {
           userPfp = await quoted.download();
@@ -26,12 +26,12 @@ module.exports = {
           try {
             userPfp = await Atlas.profilePictureUrl(m.quoted.sender, "image");
           } catch (e) {
-            return reply(
+            return m.reply(
               "User profile pic is Private ! or User doesn't have any profile picture !"
             );
           }
         } else {
-          return reply("Please tag someone ! or mention a picture !");
+          return m.reply("Please tag someone ! or mention a picture !");
         }
 
         let level = text.split(" ")[1] || 5;
@@ -47,7 +47,7 @@ module.exports = {
             );
           } else {
             console.error(err);
-            reply("An error occurd !");
+            m.reply("An error occurd !");
           }
         });
         break;
@@ -82,7 +82,7 @@ module.exports = {
 
       case "jail":
         if (!m.quoted && !/image/.test(mime))
-          return reply("Please tag someone ! or mention a picture !");
+          return m.reply("Please tag someone ! or mention a picture !");
 
         if (/image/.test(mime)) {
           userPfp = await quoted.download();
@@ -90,12 +90,12 @@ module.exports = {
           try {
             userPfp = await Atlas.profilePictureUrl(m.quoted.sender, "image");
           } catch (e) {
-            return reply(
+            return m.reply(
               "User profile pic is Private ! or User doesn't have any profile picture !"
             );
           }
         } else {
-          return reply("Please tag someone ! or mention a picture !");
+          return m.reply("Please tag someone ! or mention a picture !");
         }
 
         const result = await Canvacord.Canvacord.jail(userPfp, false);
@@ -109,11 +109,11 @@ module.exports = {
 
       case "removebg":
         if (!m.quoted || !/image/.test(mime))
-          return reply(
+          return m.reply(
             `Send/Reply Image With Caption *${prefix}removebg* to remove background of an image`
           );
         if (/webp/.test(mime))
-          return reply(
+          return m.reply(
             `Send/Reply Image With Caption *${prefix}removebg* to remove background of an image`
           );
 

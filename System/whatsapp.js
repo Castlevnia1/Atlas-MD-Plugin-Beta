@@ -160,7 +160,7 @@ exports.serialize = (Atlas, m, options = {}) => {
     m.message?.[m.type]?.selectedDisplayText ||
     m.message?.[m.type]?.title ||
     "";
-  reply = (text, chatId = m.from, options = {}) =>
+  m.reply = (text, chatId = m.from, options = {}) =>
     Buffer.isBuffer(text)
       ? Atlas.sendFile(chatId, text, "file", "", m, { ...options })
       : Atlas.sendText(chatId, text, m, { ...options });

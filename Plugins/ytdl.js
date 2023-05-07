@@ -33,7 +33,7 @@ module.exports = {
       case "song":
         if (!text) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide a song name !\n\nExample: *${prefix}song despacito*`
           );
         }
@@ -46,7 +46,7 @@ module.exports = {
         videoId = videoUrl.split("v=")[1];
 
         ttt = `*${song.title}*   _Downloading_ ...`;
-        await reply(ttt);
+        await m.reply(ttt);
 
         yts({ videoId }).then((result) => {
           var vlength = result.seconds;
@@ -102,7 +102,7 @@ module.exports = {
             !text.includes("youtu.be/"))
         ) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide a valid YouTube Video link to download as audio!\n\nExample: *${prefix}mp3 put_link*`
           );
         }
@@ -134,7 +134,7 @@ module.exports = {
             !text.includes("youtu.be/"))
         ) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide a valid YouTube Video link to download as audio!\n\nExample: *${prefix}mp4 put_link*`
           );
         }
@@ -168,7 +168,7 @@ module.exports = {
       case "video":
         if (!text) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide an YouTube video name !\n\nExample: *${prefix}video dandilions*`
           );
         }
@@ -181,7 +181,7 @@ module.exports = {
         result = await yts(videoId);
 
         ttt = `*${song.title}*   _Downloading_ ...`;
-        await reply(ttt);
+        await m.reply(ttt);
 
         const ytaud = await YT.mp4(videoUrl);
         Atlas.sendMessage(
@@ -199,7 +199,7 @@ module.exports = {
       case "ytsearch":
         if (!args[0]) {
           await doReact("❌");
-          return reply(`Please provide a search term!`);
+          return m.reply(`Please provide a search term!`);
         }
         await doReact("📥");
         let search = await yts(text);

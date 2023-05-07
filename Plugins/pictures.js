@@ -42,7 +42,7 @@ module.exports = {
       case "image":
         if (!text) {
           await doReact("❔");
-          return reply(`Please provide an image Search Term !\n\nExample: *${prefix}image cheems*`);
+          return m.reply(`Please provide an image Search Term !\n\nExample: *${prefix}image cheems*`);
         }
         await doReact("🎴");
         gis(text, async (error, result) => {
@@ -75,7 +75,7 @@ module.exports = {
       case "gifsearch":
         if (!text) {
           await doReact("❔")
-            return reply(`Please provide an Tenor gif Search Term !\n\nExample: *${prefix}gif cheems bonk*`);
+            return m.reply(`Please provide an Tenor gif Search Term !\n\nExample: *${prefix}gif cheems bonk*`);
         }
         await doReact("🎴");
         let resGif = await axios.get(
@@ -98,7 +98,7 @@ module.exports = {
       case "pinterest":
         if (!text) {
           await doReact("❔")
-            return reply(`Please provide an Pinterest image Search Term !\n\nExample: *${prefix}pin cheems*`);
+            return m.reply(`Please provide an Pinterest image Search Term !\n\nExample: *${prefix}pin cheems*`);
           
         }
         await doReact("📍");

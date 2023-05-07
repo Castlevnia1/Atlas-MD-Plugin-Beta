@@ -25,13 +25,13 @@ module.exports = {
   ) => {
     if (!text) {
       await doReact("❌");
-      return reply(
+      return m.reply(
         `Please provide a Toktok video link !\n\nExample: ${prefix}say Atlas MD is OP`
       );
     }
     if (!text.includes("tiktok")) {
       await doReact("❌");
-      return reply("Please provide a valid Tiktok link!");
+      return m.reply("Please provide a valid Tiktok link!");
     }
 
     switch (inputCMD) {

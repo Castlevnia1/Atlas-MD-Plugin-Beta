@@ -37,7 +37,7 @@ module.exports = {
     let sayMess;
     if (!text && !m.quoted) {
       await doReact("❌");
-      return reply(
+      return m.reply(
         `Please provide a text (Type or mention a message) !\n\nExample: ${prefix}say Atlas MD is OP`
       );
     }
@@ -49,7 +49,7 @@ module.exports = {
         : "No text found";
     } else {
       await doReact("❌");
-      return reply(
+      return m.reply(
         `Please provide a text (Type or mention a message) !\n\nExample: ${prefix}say Atlas MD is OP`
       );
     }
@@ -69,7 +69,7 @@ module.exports = {
           { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
-          reply(`An error Occurd !`);
+          m.reply(`An error Occurd !`);
         });
 
         break;
@@ -88,7 +88,7 @@ module.exports = {
           { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
-          reply(`An error Occurd !`);
+          m.reply(`An error Occurd !`);
         });
 
         break;
@@ -106,7 +106,7 @@ module.exports = {
           { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
-          reply(`An error Occurd !`);
+          m.reply(`An error Occurd !`);
         });
 
         break;
@@ -125,7 +125,7 @@ module.exports = {
           { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
-          reply(`An error Occurd !`);
+          m.reply(`An error Occurd !`);
         });
         break;
 
@@ -142,7 +142,7 @@ module.exports = {
           { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
-          reply(`An error Occurd !`);
+          m.reply(`An error Occurd !`);
         });
         break;
 
@@ -159,7 +159,7 @@ module.exports = {
           { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
-          reply(`An error Occurd !`);
+          m.reply(`An error Occurd !`);
         });
 
         break;
@@ -178,7 +178,7 @@ module.exports = {
           { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
-          reply(`An error Occurd !`);
+          m.reply(`An error Occurd !`);
         });
 
         break;

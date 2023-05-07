@@ -90,7 +90,7 @@ module.exports = {
           Atlas.sendMessage(m.from, { sticker: stickerBuffer2 }, { quoted: m });
         } else {
           await doReact("❌");
-          reply(`Please mention an *image/video* and type *${prefix}s* to create sticker.`)
+          m.reply(`Please mention an *image/video* and type *${prefix}s* to create sticker.`)
         }
         break;
 
@@ -98,7 +98,7 @@ module.exports = {
       case "take":
         if(!m.quoted) {
             await doReact("❌");
-            return reply(`Please meantion a sticker to steal it.`)}
+            return m.reply(`Please meantion a sticker to steal it.`)}
         await doReact("🀄️");
         if (!args.join(" ")) {
           var packName = pushName;
@@ -125,7 +125,7 @@ module.exports = {
           Atlas.sendMessage(m.from, { sticker: stickerBuffer }, { quoted: m });
         } else {
           await doReact("❌");
-          reply(`Please mention a *Sticker* and type *${prefix}steal <packname , authorname>* to create sticker with your name.`,)
+          m.reply(`Please mention a *Sticker* and type *${prefix}steal <packname , authorname>* to create sticker with your name.`,)
         }
 
         break;
@@ -151,7 +151,7 @@ module.exports = {
           let mediaMess = await quoted.download();
           if ((quoted.msg || quoted).seconds > 15) {
             await doReact("❌");
-            return reply("Please send video less than 15 seconds.")
+            return m.reply("Please send video less than 15 seconds.")
           }
           let stickerMess = new Sticker(mediaMess, {
             pack: packname,
@@ -166,7 +166,7 @@ module.exports = {
           Atlas.sendMessage(m.from, { sticker: stickerBuffer2 }, { quoted: m });
         } else {
           await doReact("❌");
-          reply(`Please mention an *imade/video* and type *${prefix}s* to create cropped sticker.`)
+          m.reply(`Please mention an *imade/video* and type *${prefix}s* to create cropped sticker.`)
         }
         break;
 
@@ -175,7 +175,7 @@ module.exports = {
         if (/image/.test(mime)) {
           if (!text){
             await doReact("❌");
-            return reply(
+            return m.reply(
               `Please type *${prefix}smeme <text>* to create sticker meme.`
             );}
           await doReact("📮");
@@ -202,7 +202,7 @@ module.exports = {
           fs.unlinkSync(media);
         } else {
           await doReact("❌");
-          reply(
+          m.reply(
             `Please mention an *image* and type *${prefix}smeme* to create sticker meme.`
           );
         }
@@ -212,7 +212,7 @@ module.exports = {
       case "quote":
         if (!text && !m.quoted) {
           await doReact("❌");
-          return reply(`Please provide a text (Type or mention a message) !\n\nExample: ${prefix}q Atlas MD is OP`);
+          return m.reply(`Please provide a text (Type or mention a message) !\n\nExample: ${prefix}q Atlas MD is OP`);
         }
 
         if (m.quoted) {
@@ -291,7 +291,7 @@ module.exports = {
             fs.unlinkSync("quote.png");
           })
           .catch((err) => {
-            reply("An error occurd!");
+            m.reply("An error occurd!");
           });
 
         break;
@@ -299,7 +299,7 @@ module.exports = {
       case "emojimix":
         if (!args[0]) {
           await doReact("❌");
-          return reply(
+          return m.reply(
             `Please provide two emojis to combine! *Example :* ${prefix + "emojimix"
             } 🦉+🤣`
           );

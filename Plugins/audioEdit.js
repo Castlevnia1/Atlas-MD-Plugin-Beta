@@ -19,7 +19,7 @@ module.exports = {
   start: async (Atlas, m, { inputCMD, text, doReact, mime, quoted }) => {
     if (!/audio/.test(mime)) {
       doReact("❌").then(() => {
-        return reply(`Please mention an audio file !`);
+        return m.reply(`Please mention an audio file !`);
       });
       return;
     }
@@ -32,7 +32,7 @@ module.exports = {
         try {
           exec(`ffmpeg -i ${media} ${set} ${ran}`, (err, stderr, stdout) => {
             fs.unlinkSync(media);
-            if (err) return reply("An error Occurd !");
+            if (err) return m.reply("An error Occurd !");
             let buff = fs.readFileSync(ran);
             Atlas.sendMessage(
               m.from,
@@ -43,7 +43,7 @@ module.exports = {
           });
         } catch (e) {
           doReact("❌");
-          reply("An error Occurd ! Please mention an Audio!");
+          m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
 
@@ -55,7 +55,7 @@ module.exports = {
         try {
           exec(`ffmpeg -i ${media3} ${set3} ${ran3}`, (err, stderr, stdout) => {
             fs.unlinkSync(media3);
-            if (err) return reply("An error Occurd !");
+            if (err) return m.reply("An error Occurd !");
             let buff = fs.readFileSync(ran3);
             Atlas.sendMessage(
               m.from,
@@ -66,7 +66,7 @@ module.exports = {
           });
         } catch (e) {
           doReact("❌");
-          reply("An error Occurd ! Please mention an Audio!");
+          m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
 
@@ -78,7 +78,7 @@ module.exports = {
         try {
           exec(`ffmpeg -i ${media2} ${set2} ${ran2}`, (err, stderr, stdout) => {
             fs.unlinkSync(media2);
-            if (err) return reply("An error Occurd !");
+            if (err) return m.reply("An error Occurd !");
             let buff = fs.readFileSync(ran2);
             Atlas.sendMessage(
               m.from,
@@ -89,7 +89,7 @@ module.exports = {
           });
         } catch (e) {
           doReact("❌");
-          reply("An error Occurd ! Please mention an Audio!");
+          m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
 
@@ -101,7 +101,7 @@ module.exports = {
         try {
           exec(`ffmpeg -i ${media4} ${set4} ${ran4}`, (err, stderr, stdout) => {
             fs.unlinkSync(media4);
-            if (err) return reply("An error Occurd !");
+            if (err) return m.reply("An error Occurd !");
             let buff = fs.readFileSync(ran4);
             Atlas.sendMessage(
               m.from,
@@ -112,7 +112,7 @@ module.exports = {
           });
         } catch (e) {
           doReact("❌");
-          reply("An error Occurd ! Please mention an Audio!");
+          m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
 
@@ -125,7 +125,7 @@ module.exports = {
         try {
           exec(`ffmpeg -i ${media5} ${set5} ${ran5}`, (err, stderr, stdout) => {
             fs.unlinkSync(media5);
-            if (err) return reply("An error Occurd !");
+            if (err) return m.reply("An error Occurd !");
             let buff = fs.readFileSync(ran5);
             Atlas.sendMessage(
               m.from,
@@ -136,7 +136,7 @@ module.exports = {
           });
         } catch (e) {
           doReact("❌");
-          reply("An error Occurd ! Please mention an Audio!");
+          m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
 
@@ -148,7 +148,7 @@ module.exports = {
         try {
           exec(`ffmpeg -i ${media6} ${set6} ${ran6}`, (err, stderr, stdout) => {
             fs.unlinkSync(media6);
-            if (err) return reply("An error Occurd !");
+            if (err) return m.reply("An error Occurd !");
             let buff = fs.readFileSync(ran6);
             Atlas.sendMessage(
               m.from,
@@ -159,7 +159,7 @@ module.exports = {
           });
         } catch (e) {
           doReact("❌");
-          reply("An error Occurd ! Please mention an Audio!");
+          m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
 
@@ -172,7 +172,7 @@ module.exports = {
         try {
           exec(`ffmpeg -i ${media7} ${set7} ${ran7}`, (err, stderr, stdout) => {
             fs.unlinkSync(media7);
-            if (err) return reply("An error Occurd !");
+            if (err) return m.reply("An error Occurd !");
             let buff = fs.readFileSync(ran7);
             Atlas.sendMessage(
               m.from,
@@ -183,7 +183,7 @@ module.exports = {
           });
         } catch (e) {
           doReact("❌");
-          reply("An error Occurd ! Please mention an Audio!");
+          m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
 
@@ -195,7 +195,7 @@ module.exports = {
         try {
           exec(`ffmpeg -i ${media8} ${set8} ${ran8}`, (err, stderr, stdout) => {
             fs.unlinkSync(media8);
-            if (err) return reply("An error Occurd !");
+            if (err) return m.reply("An error Occurd !");
             let buff = fs.readFileSync(ran8);
             Atlas.sendMessage(
               m.from,
@@ -206,7 +206,7 @@ module.exports = {
           });
         } catch (e) {
           doReact("❌");
-          reply("An error Occurd ! Please mention an Audio!");
+          m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
       default:

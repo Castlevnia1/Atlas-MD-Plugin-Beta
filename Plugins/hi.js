@@ -4,6 +4,6 @@ module.exports = {
   description: "Say hi to the bot",
   start: async (Atlas, m, { pushName, prefix }) => {
     txt = `Hi ${pushName}! I am ${botName}!`;
-    reply(txt)
+    m.reply(txt)
   },
 };

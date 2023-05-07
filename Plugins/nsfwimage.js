@@ -177,9 +177,9 @@ module.exports = {
 
     let commands = inputCMD;
     await doReact("🔞");
-    //if (NSFWstatus == "false") return reply(`This group is not NSFW enabled!\n\nTo configure NSFW mode, type:\n\n*${prefix}nsfw*`);
+    //if (NSFWstatus == "false") return m.reply(`This group is not NSFW enabled!\n\nTo configure NSFW mode, type:\n\n*${prefix}nsfw*`);
 
-    reply("Chotto Matte...");
+    m.reply("Chotto Matte...");
 
     let res = await axios.get(`https://fantox-apis.vercel.app/${commands}`);
     let hUrl = res.data.url;
