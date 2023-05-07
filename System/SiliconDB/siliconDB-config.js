@@ -287,73 +287,81 @@ async function deactivateChatBot() {
 async function pushPlugin(newPlugin, url) {
   try {
     const response = await axios.get(
-      "https://silicondb.32-pratyushprat.repl.co/api/data/plugins"
+      "https://silicondb.32-pratyushprat.repl.co/api/data"
     );
-    const dataPlugin = [
-      {
-        name: newPlugin,
-        url: url,
-      },
-    ];
-    if (response.status == 404 || !response.data) {
+    const pluginsData = response.data.find((item) => item.id === "plugin");
+    const dataPlugin = {
+      name: newPlugin,
+      url: url,
+    };
+    if (!pluginsData) {
       await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-        id: "plugins",
-        plugins: dataPlugin,
+        id: "plugin",
+        plugins: [dataPlugin],
       });
     } else {
-      const oldData = response.data;
-      const newData = { ...oldData, plugins: [...oldData.plugins, dataPlugin] };
+      const oldPlugins = pluginsData.plugins || [];
+      const newPlugins = [...oldPlugins, dataPlugin];
+      const newData = {
+        ...pluginsData,
+        plugins: newPlugins,
+      };
       await axios.put(
-        "https://silicondb.32-pratyushprat.repl.co/api/data/plugins",
+        `https://silicondb.32-pratyushprat.repl.co/api/data/plugin`,
         newData
       );
     }
   } catch (err) {
-    const dataPlugin = [
-      {
-        name: newPlugin,
-        url: url,
-      },
-    ];
+    const dataPlugin = {
+      name: newPlugin,
+      url: url,
+    };
     await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-      id: "plugins",
-      plugins: dataPlugin,
+      id: "plugin",
+      plugins: [dataPlugin],
     });
   }
 }
+
 
 // Pull all plugins name as an array
 async function getPlugin() {
   try {
     const response = await axios.get(
-      "https://silicondb.32-pratyushprat.repl.co/api/data/plugins"
+      "https://silicondb.32-pratyushprat.repl.co/api/data"
     );
-    if (response.status == 404 || !response.data) {
+    const pluginsData = response.data.find((item) => item.id === "plugin");
+    if (!pluginsData) {
       return undefined;
     } else {
-      return response.data.plugins;
+      return pluginsData.plugins.map((plugin) => ({
+        name: plugin.name,
+        url: plugin.url,
+      }));
     }
   } catch (err) {
     return undefined;
   }
 }
 
-// Delete a plugin name from the array updated which will delete the plugin and url 
+
 async function delPlugin(pluginName) {
   try {
     const response = await axios.get(
-      "https://silicondb.32-pratyushprat.repl.co/api/data/plugins"
+      "https://silicondb.32-pratyushprat.repl.co/api/data"
     );
-    if (response.status == 404 || !response.data) {
+    const pluginsData = response.data.find((item) => item.id === "plugin");
+    if (!pluginsData) {
       return undefined;
     } else {
-      const oldData = response.data;
+      const oldPlugins = pluginsData.plugins || [];
+      const newPlugins = oldPlugins.filter((plugin) => plugin.name !== pluginName);
       const newData = {
-        ...oldData,
-        plugins: oldData.plugins.filter((plugin) => plugin.name != pluginName),
+        ...pluginsData,
+        plugins: newPlugins,
       };
       await axios.put(
-        "https://silicondb.32-pratyushprat.repl.co/api/data/plugins",
+        "https://silicondb.32-pratyushprat.repl.co/api/data/plugin",
         newData
       );
     }
@@ -361,6 +369,7 @@ async function delPlugin(pluginName) {
     return undefined;
   }
 }
+
 
 
 // Exporting the functions

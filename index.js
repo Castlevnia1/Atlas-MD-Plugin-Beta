@@ -11,6 +11,7 @@ const {
 const fs = require("fs");
 const figlet = require("figlet");
 const { join } = require("path");
+const got = require("got");
 const pino = require("pino");
 const path = require("path");
 const FileType = require("file-type");
@@ -20,11 +21,12 @@ const { state, saveState } = useSingleFileAuthState("./session.json");
 const { serialize, WAConnection } = require("./System/whatsapp.js");
 const { smsg, getBuffer, getSizeMedia } = require("./System/Function2");
 const express = require("express");
-const {readcommands, commands} = require('./System/ReadCommands.js')
+const { readcommands, commands } = require("./System/ReadCommands.js");
 commands.prefix = global.prefa;
 const {
   getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
 } = require("./System/SiliconDB/siliconDB-config");
+const chalk = require("chalk");
 const store = makeInMemoryStore({
   logger: pino().child({
     level: "silent",
@@ -46,6 +48,8 @@ const startAtlas = async () => {
   );
   console.log(`\n`);
 
+  await installPlugin();
+
   let { version, isLatest } = await fetchLatestBaileysVersion();
 
   const Atlas = atlasConnect({
@@ -56,12 +60,32 @@ const startAtlas = async () => {
     version,
   });
 
-  //Checking and installing plugins in startup
-  /*const chackInstallationArray = await getPlugin();
-  if (chackInstallationArray.length > 0) {
-    
-  }*/
+  async function installPlugin() {
+    console.log(chalk.yellow("Checking for Plugins...\n"));
+    const installedPlugins = await getPlugin();
+    if (installedPlugins != undefined) {
+      console.log(chalk.greenBright(installedPlugins.length+" Plugins found ! Installing...\n"));
+      for (let i = 0; i < installedPlugins.length; i++) {
+        const pgUrl = installedPlugins[i].url;
 
+        var { body, statusCode } = await got(pgUrl);
+        if (statusCode == 200) {
+          try {
+            var folderName = "Plugins";
+            var fileName = path.basename(pgUrl);
+
+            var filePath = path.join(folderName, fileName);
+            fs.writeFileSync(filePath, body);
+          } catch (error) {
+            console.log("Error:", error);
+          }
+        }
+      }
+      console.log(chalk.greenBright("All Plugins Installed Successfully ! Starting Atlas...\n"));
+    } else {
+      console.log(chalk.redBright("No Plugins Installed ! Starting Atlas...\n"));
+    }
+  }
   await readcommands();
 
   store.bind(Atlas.ev);
@@ -69,8 +93,6 @@ const startAtlas = async () => {
   Atlas.public = true;
 
   Atlas.ev.on("creds.update", saveState);
-
- 
 
   Atlas.ev.on("connection.update", async (update) => {
     const { lastDisconnect, connection } = update;
@@ -115,6 +137,7 @@ const startAtlas = async () => {
       }
     }
   });
+
 
   Atlas.ev.on("messages.upsert", async (chatUpdate) => {
     m = serialize(Atlas, chatUpdate.messages[0]);
@@ -298,4 +321,3 @@ const startAtlas = async () => {
 };
 
 startAtlas();
-
