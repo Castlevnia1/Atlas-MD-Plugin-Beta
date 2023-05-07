@@ -56,8 +56,11 @@ const startAtlas = async () => {
     version,
   });
 
-  // Checking and installing plugins in startup
-  //const chackInstallationArray = await getPlugin(fileName);
+  //Checking and installing plugins in startup
+  /*const chackInstallationArray = await getPlugin();
+  if (chackInstallationArray.length > 0) {
+    
+  }*/
 
   await readcommands();
 

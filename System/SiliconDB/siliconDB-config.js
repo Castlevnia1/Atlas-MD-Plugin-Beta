@@ -41,10 +41,9 @@ async function checkBan(userID) {
     ) {
       return false;
     } else {
-      if(response.data.ban == true){
+      if (response.data.ban == true) {
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     }
@@ -95,7 +94,7 @@ async function addMod(userID) {
     }
     if (response.data) {
       const oldData = response.data;
-      const newData = { ...oldData, mod: true, };
+      const newData = { ...oldData, mod: true };
       await axios.put(
         `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`,
         newData
@@ -122,10 +121,9 @@ async function checkMod(userID) {
     ) {
       return false;
     } else {
-      if(response.data.mod == true){
+      if (response.data.mod == true) {
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     }
@@ -148,7 +146,7 @@ async function delMod(userID) {
     }
     if (response.data) {
       const oldData = response.data;
-      const newData = { ...oldData, mod: false, };
+      const newData = { ...oldData, mod: false };
       await axios.put(
         `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`,
         newData
@@ -201,12 +199,12 @@ async function getChar() {
       !response.data ||
       response.data.charno == undefined
     ) {
-      return '0';
+      return "0";
     } else {
       return response.data.charno;
     }
   } catch (err) {
-    return '0';
+    return "0";
   }
 }
 
@@ -247,10 +245,9 @@ async function checkPmChatbot() {
     if (response.status == 404 || !response.data) {
       return false;
     } else {
-      if(response.data.pmchatbot == true){
+      if (response.data.pmchatbot == true) {
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     }
@@ -287,28 +284,40 @@ async function deactivateChatBot() {
 }
 
 // Push Installation of plugin name in an array
-async function pushPlugin(newPlugin) {
+async function pushPlugin(newPlugin, url) {
   try {
     const response = await axios.get(
       "https://silicondb.32-pratyushprat.repl.co/api/data/plugins"
     );
+    const dataPlugin = [
+      {
+        name: newPlugin,
+        url: url,
+      },
+    ];
     if (response.status == 404 || !response.data) {
       await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
         id: "plugins",
-        plugins: [newPlugin],
+        plugins: dataPlugin,
       });
     } else {
       const oldData = response.data;
-      const newData = { ...oldData, plugins: [...oldData.plugins, newPlugin] };
+      const newData = { ...oldData, plugins: [...oldData.plugins, dataPlugin] };
       await axios.put(
         "https://silicondb.32-pratyushprat.repl.co/api/data/plugins",
         newData
       );
     }
   } catch (err) {
+    const dataPlugin = [
+      {
+        name: newPlugin,
+        url: url,
+      },
+    ];
     await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
       id: "plugins",
-      plugins: [newPlugin],
+      plugins: dataPlugin,
     });
   }
 }
@@ -329,19 +338,19 @@ async function getPlugin() {
   }
 }
 
-// Delete a plugin name from the array
-async function delPlugin(delPlugin) {
+// Delete a plugin name from the array updated which will delete the plugin and url 
+async function delPlugin(pluginName) {
   try {
     const response = await axios.get(
       "https://silicondb.32-pratyushprat.repl.co/api/data/plugins"
     );
     if (response.status == 404 || !response.data) {
-      return console.log("No plugin found to delete !");
+      return undefined;
     } else {
       const oldData = response.data;
       const newData = {
         ...oldData,
-        plugins: oldData.plugins.filter((plugin) => plugin != delPlugin),
+        plugins: oldData.plugins.filter((plugin) => plugin.name != pluginName),
       };
       await axios.put(
         "https://silicondb.32-pratyushprat.repl.co/api/data/plugins",
@@ -349,13 +358,9 @@ async function delPlugin(delPlugin) {
       );
     }
   } catch (err) {
-    return console.log("No installed plugin found to delete !");
+    return undefined;
   }
 }
-
-
-
-
 
 
 // Exporting the functions
@@ -375,8 +380,6 @@ module.exports = {
   getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
   delPlugin, // --------------------- DELETE A PLUGIN FROM THE DATABASE
 };
-
-
 
 /*
 

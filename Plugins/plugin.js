@@ -41,8 +41,10 @@ module.exports = {
             var fileName = path.basename(url);
             chackInstallationArray = await getPlugin(fileName);
             // check if plugin is already installed and present in that Database array
-            if (chackInstallationArray.includes(fileName)) {
-              return reply(`*${fileName}* plugin is already installed !`);
+            if (chackInstallationArray != undefined){
+              if (chackInstallationArray.includes(fileName)) {
+                return reply(`*${fileName}* plugin is already installed !`);
+              }
             }
             // Check if that file is present in same directory
             if (!fs.existsSync(`./Plugins/${fileName}`)) {
@@ -58,7 +60,7 @@ module.exports = {
           }
           await reply(`Installing *${fileName}*... `);
           await readcommands();
-          await pushPlugin(fileName);
+          await pushPlugin(fileName, text);
           await reply(`*${fileName}* Installed Successfully !`);
         }
         break;
