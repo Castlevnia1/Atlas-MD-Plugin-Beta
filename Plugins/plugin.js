@@ -70,7 +70,7 @@ module.exports = {
       case "pluginlist":
       case "plugins":
         installedPlugins = await getPlugin();
-        if (installedPlugins != undefined) {
+        if (installedPlugins != undefined && installedPlugins.length > 0) {
           let txt = "";
           for (let i = 0; i < installedPlugins.length; i++) {
             txt += "*『    Installed Plugins List    』*\n\n";
