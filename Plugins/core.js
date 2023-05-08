@@ -1,7 +1,7 @@
 const fs = require("fs");
 const axios = require("axios");
 const path = require("path");
-let mergedCommands = ["help", "menu", "sc", "support", "supportgc", "script"];
+let mergedCommands = ["help","h", "menu", "sc", "support", "supportgc", "script"];
 
 module.exports = {
   name: "others",
@@ -36,6 +36,7 @@ module.exports = {
         break;
 
       case "help":
+      case "h":
       case "menu":
         function readUniqueCommands(dirPath) {
           const allCommands = [];
@@ -94,8 +95,8 @@ module.exports = {
               file.replace(".js", "").charAt(0).toUpperCase() +
               file.replace(".js", "").slice(1);
 
-            formatted += `🔖 *${capitalizedFile}* 🔖\n`;
-            formatted += `${commands.join(", ")}\n\n`;
+            formatted += `╟   🏮 *${capitalizedFile}* 🏮   ╢\n\n`;
+            formatted += `\`\`\`${commands.join(", ")}\`\`\`\n\n\n`;
           }
 
           return formatted.trim();
@@ -105,7 +106,7 @@ module.exports = {
 
         const allCommands = readUniqueCommands(pluginsDir);
         const formattedCommands = formatCommands(allCommands);
-        var helpText = `*🧣 ${botName}'s Help Menu 🧣*\n\n*🔖 Prefix:* ${prefix}\n\n\n${formattedCommands}\n\n*©️ Team ATLAS- 2023*`;
+        var helpText = `\nKonnichiwa *${pushName}* Senpai,\n\nI am *${botName}*, a WhatsApp bot built to take your boring WhatsApp experience into next level.\n\n*🔖 My Prefix is:*  ${prefix}\n\n${formattedCommands}\n\n\n*©️ Team ATLAS- 2023*`;
         await Atlas.sendMessage(m.from, { image: {url:botImage1}, caption: helpText }, { quoted: m });
 
         break;
