@@ -25,6 +25,15 @@ let mergedCommands = [
 module.exports = {
   name: "stickerformat",
   alias: [...mergedCommands],
+  uniquecommands: [
+    "sticker",
+    "steal",
+    "scrop",
+    "smeme",
+    "stickermeme",
+    "q",
+    "emojimix",
+  ],
   description: "All Sticker formatting Commands",
   start: async (
     Atlas,

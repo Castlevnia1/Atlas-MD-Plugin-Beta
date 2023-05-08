@@ -15,6 +15,7 @@ let mergedCommands = [
 module.exports = {
   name: "audioedit",
   alias: [...mergedCommands],
+  uniquecommands:["bass", "deep", "nightcore", "reverse", "robot", "slow", "smooth", "tempo"],
   description: "All Audio Editing Commands",
   start: async (Atlas, m, { inputCMD, text, doReact, mime, quoted }) => {
     if (!/audio/.test(mime)) {

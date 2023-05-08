@@ -17,6 +17,17 @@ let mergedCommands = [
 module.exports = {
   name: "texttospeech",
   alias: [...mergedCommands],
+  uniquecommands: [
+    "say",
+    "speak",
+    "tts",
+    "saybengali",
+    "sayhindi",
+    "sayjapanese",
+    "saykorean",
+    "saychinese",
+    "sayindo",
+  ],
   description: "All Text to Speech Commands",
   start: async (
     Atlas,

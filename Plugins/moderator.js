@@ -34,6 +34,7 @@ let mergedCommands = [
 module.exports = {
   name: "moderators",
   alias: [...mergedCommands],
+  uniquecommands:[ "addmod", "delmod", "mods", "ban", "unban", "banlist", "setchar"],
   description: "All Moderator-related Commands",
   start: async (
     Atlas,

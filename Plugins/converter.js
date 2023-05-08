@@ -19,6 +19,7 @@ let mergedCommands = [
 module.exports = {
   name: "converters",
   alias: [...mergedCommands],
+  uniquecommands:["toimg", "togif", "tomp4", "tomp3", "toaudio", "tourl"],
   description: "All converter related commands",
   start: async (
     Atlas,

@@ -9,6 +9,7 @@ let mergedCommands = [
 module.exports = {
   name: "tiktokDl",
   alias: [...mergedCommands],
+  uniquecommands: ["tiktok", "tiktokmp3", "tiktokmp4", "tiktokdoc"],
   description: "All Tiktok Downloader Commands",
   start: async (
     Atlas,

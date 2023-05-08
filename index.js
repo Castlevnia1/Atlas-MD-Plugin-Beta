@@ -64,7 +64,11 @@ const startAtlas = async () => {
     console.log(chalk.yellow("Checking for Plugins...\n"));
     const installedPlugins = await getPlugin();
     if (installedPlugins != undefined && installedPlugins.length > 0) {
-      console.log(chalk.greenBright(installedPlugins.length+" Plugins found ! Installing...\n"));
+      console.log(
+        chalk.greenBright(
+          installedPlugins.length + " Plugins found ! Installing...\n"
+        )
+      );
       for (let i = 0; i < installedPlugins.length; i++) {
         const pgUrl = installedPlugins[i].url;
 
@@ -81,12 +85,43 @@ const startAtlas = async () => {
           }
         }
       }
-      console.log(chalk.greenBright("All Plugins Installed Successfully ! Starting Atlas...\n"));
+      console.log(
+        chalk.greenBright(
+          "All Plugins Installed Successfully ! Starting Atlas...\n"
+        )
+      );
     } else {
-      console.log(chalk.redBright("No Extra Plugins Installed ! Starting Atlas...\n"));
+      console.log(
+        chalk.redBright("No Extra Plugins Installed ! Starting Atlas...\n")
+      );
     }
   }
   await readcommands();
+
+  /* function readUniqueCommands(dirPath) {
+    const allCommands = [];
+
+    const files = fs.readdirSync(dirPath);
+
+    for (const file of files) {
+      const filePath = path.join(dirPath, file);
+      const stat = fs.statSync(filePath);
+
+      if (stat.isDirectory()) {
+        const subCommands = readUniqueCommands(filePath);
+        allCommands.push(...subCommands);
+      } else if (stat.isFile() && file.endsWith(".js")) {
+        const command = require(filePath);
+
+        if (Array.isArray(command.uniquecommands)) {
+          allCommands.push(...command.uniquecommands);
+        }
+      }
+    }
+
+    return allCommands;
+  }*/
+ 
 
   store.bind(Atlas.ev);
 
@@ -137,7 +172,6 @@ const startAtlas = async () => {
       }
     }
   });
-
 
   Atlas.ev.on("messages.upsert", async (chatUpdate) => {
     m = serialize(Atlas, chatUpdate.messages[0]);
@@ -321,3 +355,9 @@ const startAtlas = async () => {
 };
 
 startAtlas();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+app.use("/", express.static(join(__dirname, "Frontend")));
+
+app.listen(PORT);

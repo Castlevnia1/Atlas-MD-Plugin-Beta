@@ -21,6 +21,15 @@ let mergedCommands = [
 module.exports = {
   name: "searches",
   alias: [...mergedCommands],
+  uniquecommands: [
+    "google",
+    "lyrics",
+    "yts",
+    "ringtone",
+    "stickersearch",
+    "weather",
+    "github",
+  ],
   description: "All picture related commands",
   start: async (Atlas, m, { inputCMD, text, doReact,prefix,pushName }) => {
     switch (inputCMD) {

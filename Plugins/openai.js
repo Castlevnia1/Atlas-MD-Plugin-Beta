@@ -8,14 +8,13 @@ let mergedCommands = [
   "ai",
   "imagegen",
   "dalle",
-  "voicegpt",
-  "voiceai",
-  "aivoice",
+  "imagetogpt",
 ];
 
 module.exports = {
   name: "apenai",
   alias: [...mergedCommands],
+  uniquecommands:["ai","dalle","imagetogpt"],
   description: "AI Commands",
   start: async (
     Atlas,
@@ -23,26 +22,8 @@ module.exports = {
     {
       inputCMD,
       text,
-      mods,
-      groupName,
-      isCreator,
-      db,
-      bans,
-      prefix,
       doReact,
       args,
-      itsMe,
-      participants,
-      metadata,
-      mentionByTag,
-      mime,
-      isMedia,
-      quoted,
-      botNumber,
-      isBotAdmin,
-      groupAdmin,
-      isAdmin,
-      pushName,
     }
   ) => {
     const configuration = new Configuration({
@@ -156,68 +137,6 @@ module.exports = {
             console.error("Error getting image:", error);
           });
         break;
-
-      case "voicegpt":
-      case "voiceai":
-      case "aivoice":
-        if (!args.join(" ")) {
-          await doReact("❔");
-          return m.reply(`Please provide a message!`);
-        }
-
-        var sleep2 = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-        async function generateResponse2(prompt, retries = 2) {
-          try {
-            const completion = await openai.createChatCompletion({
-              model: "gpt-3.5-turbo",
-              messages: [{ role: "user", content: prompt }],
-            });
-
-            console.log("API Key:", global.openAiAPI);
-
-            return completion.data.choices[0].message.content.trim();
-          } catch (error) {
-            if (
-              error.response &&
-              error.response.status === 429 &&
-              retries > 0
-            ) {
-              const retryAfter =
-                error.response.headers["retry-after"] * 1000 || 5000;
-              m.reply(
-                `Rate limit exceeded. Retrying in ${
-                  retryAfter / 1000
-                } seconds...`
-              );
-              await sleep(retryAfter);
-              return generateResponse2(prompt, retries - 1);
-            } else {
-              console.error(error);
-              return "Error occurred while generating response";
-            }
-          }
-        }
-
-        generateResponse2(text)
-          .then((response) => {
-            tts
-              .getAudioUrl(response, {
-                lang: "en",
-                slow: false,
-                host: "https://translate.google.com",
-              })
-              .then((url) => {
-                Atlas.sendMessage(
-                  m.from,
-                  { audio: { url: url } },
-                  { quoted: m }
-                );
-              });
-          })
-          .catch((error) => {
-            console.error("Error getting response:", error);
-          });
 
       default:
         break;

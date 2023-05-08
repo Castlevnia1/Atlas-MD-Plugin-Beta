@@ -11,6 +11,7 @@ let mergedCommands = [
 module.exports = {
   name: "downloader",
   alias: [...mergedCommands],
+  uniquecommands:["igdl", "fbdl", "mediafiredl"],
   description: "All file dowloader commands",
   start: async (Atlas, m, { inputCMD, text, doReact, prefix, pushName }) => {
     switch (inputCMD) {

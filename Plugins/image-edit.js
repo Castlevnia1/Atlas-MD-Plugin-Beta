@@ -12,6 +12,7 @@ let mergedCommands = [
 
 module.exports = {
   name: "audioedit",
+  uniquecommands:["blur", "circle", "jail", "removebg"],
   alias: [...mergedCommands],
   description: "All Image Editing Commands",
   start: async (Atlas, m, { inputCMD, text, doReact, mime, quoted }) => {

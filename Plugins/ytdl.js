@@ -13,7 +13,6 @@ let mergedCommands = [
   "song",
   "ytmp3",
   "mp3",
-  "ytmusic",
   "ytaudio",
   "yta",
   "ytmp4",
@@ -26,6 +25,12 @@ let mergedCommands = [
 module.exports = {
   name: "mediaDownloader",
   alias: [...mergedCommands],
+  uniquecommands: [
+    "song",
+    "video",
+    "ytmp3",
+    "ytmp4",
+  ],
   description: "All file dowloader commands",
   start: async (Atlas, m, { inputCMD, text, doReact, prefix, pushName }) => {
     switch (inputCMD) {
@@ -96,6 +101,7 @@ module.exports = {
 
       case "ytmp3":
       case "mp3":
+      case "ytaudio":
         if (
           !text ||
           (!text.includes("youtube.com/watch?v=") &&
@@ -128,6 +134,7 @@ module.exports = {
 
       case "ytmp4":
       case "mp4":
+      case "ytvideo":
         if (
           !text ||
           (!text.includes("youtube.com/watch?v=") &&

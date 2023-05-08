@@ -28,6 +28,24 @@ let mergedCommands = [
 module.exports = {
   name: "groupanagement",
   alias: [...mergedCommands],
+  uniquecommands: [
+    "admins",
+    "setgcname",
+    "delete",
+    "demote",
+    "gclink",
+    "group",
+    "gc",
+    "gcinfo",
+    "tagall",
+    "hidetag",
+    "leave",
+    "promote",
+    "remove",
+    "revoke",
+    "setgcdesc",
+    "setppgc",
+  ],
   description: "All Audio Editing Commands",
   start: async (
     Atlas,
@@ -64,10 +82,10 @@ module.exports = {
         }
         await doReact("🏅");
         Atlas.sendMessage(
-            m.from,
-            { text: message, mentions: groupAdmin },
-            { quoted: m }
-          );
+          m.from,
+          { text: message, mentions: groupAdmin },
+          { quoted: m }
+        );
         break;
 
       case "setgcname":
@@ -136,7 +154,9 @@ module.exports = {
         } else {
           if (!isAdmin) {
             await doReact("❌");
-            return m.reply(`Sorry, only *Admins* can delete other's messages !`);
+            return m.reply(
+              `Sorry, only *Admins* can delete other's messages !`
+            );
           }
           key = {
             remoteJid: m.from,
@@ -348,10 +368,10 @@ module.exports = {
 
         await doReact("🎌");
         Atlas.sendMessage(
-            m.from,
-            { text: message2, mentions: participants.map((a) => a.id) },
-            { quoted: m }
-          );
+          m.from,
+          { text: message2, mentions: participants.map((a) => a.id) },
+          { quoted: m }
+        );
         break;
 
       case "leave":

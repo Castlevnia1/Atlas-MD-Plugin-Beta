@@ -13,6 +13,7 @@ let mergedCommands = ["install", "uninstall", "plugins", "pluginlist"];
 module.exports = {
   name: "plugininstaller",
   alias: [...mergedCommands],
+  uniquecommands: ["install", "uninstall", "pluginlist"],
   description: "Install, Uninstall, List plugins",
   start: async (Atlas, m, { text, args, pushName, prefix, inputCMD }) => {
     switch (inputCMD) {
