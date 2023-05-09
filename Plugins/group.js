@@ -1,11 +1,24 @@
 const fs = require("fs");
 const Jimp = require("jimp");
 const moment = require("moment-timezone");
+const {
+  setWelcome, // ------------------- SET WELCOME MESSAGE
+  checkWelcome, // ----------------- CHECK WELCOME MESSAGE STATUS
+  delWelcome, // ------------------- DELETE WELCOME MESSAGE
+  setAntilink, // ------------------ SET ANTILINK
+  checkAntilink, // ---------------- CHECK ANTILINK STATUS
+  delAntilink, // ------------------ DELETE ANTILINK
+  setGroupChatbot, // -------------- SET GROUP CHATBOT
+  checkGroupChatbot, // ------------ CHECK GROUP CHATBOT STATUS
+  delGroupChatbot,
+} = require("../System/SiliconDB/siliconDB-config");
 let mergedCommands = [
   "admins",
   "admin",
   "setgcname",
   "delete",
+  "antilink",
+  "welcome",
   "del",
   "demote",
   "gclink",
@@ -23,6 +36,9 @@ let mergedCommands = [
   "setgcdesc",
   "setppgc",
   "tagall",
+  "chatbotgc",
+  "antilink",
+  "welcome",
 ];
 
 module.exports = {
@@ -34,6 +50,8 @@ module.exports = {
     "delete",
     "demote",
     "gclink",
+    "antilink",
+    "welcome",
     "group",
     "gc",
     "gcinfo",
@@ -45,6 +63,7 @@ module.exports = {
     "revoke",
     "setgcdesc",
     "setppgc",
+    "chatbotgc",
   ],
   description: "All Audio Editing Commands",
   start: async (
@@ -696,6 +715,136 @@ module.exports = {
           { text: mess, mentions: participants.map((a) => a.id) },
           { quoted: m }
         );
+
+        break;
+
+      case "chatbotgc":
+        if (!isAdmin) {
+          await doReact("❌");
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
+        }
+
+        if (!text) {
+          await doReact("❔");
+          return m.reply(
+            `Please provide On / Off action !\n\n*Example:*\n\n${prefix}chatbotgc on`
+          );
+        }
+        chatbotGCStatus = await checkGroupChatbot(m.from);
+        if (args[0] == "on") {
+          if (chatbotGCStatus) {
+            await doReact("❌");
+            return m.reply(`*Group Chatbot* is already *Enabled* !`);
+          }
+          await doReact("🧩");
+          await setGroupChatbot(m.from);
+          await m.reply(
+            `*Group Chatbot* has been *Enabled* Successfully ! \n\nBot will not reply to messages where bot is mentioned!`
+          );
+        } else if (args[0] == "off") {
+          if (!chatbotGCStatus) {
+            await doReact("❌");
+            return m.reply(`*Group Chatbot* is already *Disabled* !`);
+          }
+          await doReact("🧩");
+          await delGroupChatbot(m.from);
+          await m.reply(`*Group Chatbot* has been *Disabled* Successfully !`);
+        } else {
+          await doReact("❔");
+          return m.reply(
+            `Please provide On / Off action !\n\n*Example:*\n\n${prefix}chatbotgc on`
+          );
+        }
+
+        break;
+
+      case "antilink":
+        if (!isAdmin) {
+          await doReact("❌");
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
+        }
+        if (!isBotAdmin) {
+          await doReact("❌");
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
+        }
+
+        if (!text) {
+          await doReact("❔");
+          return m.reply(
+            `Please provide On / Off action !\n\n*Example:*\n\n${prefix}antilink on`
+          );
+        }
+        antilinkStatus = await checkAntilink(m.from);
+        if (args[0] == "on") {
+          if (antilinkStatus) {
+            await doReact("❌");
+            return m.reply(`*Antilink* is already *Enabled* !`);
+          }
+          await doReact("⚜️");
+          await setAntilink(m.from);
+          await m.reply(
+            `*Antilink* has been *Enabled* Successfully ! \n\nBot will remove all links from messages!`
+          );
+        } else if (args[0] == "off") {
+          if (!antilinkStatus) {
+            await doReact("❌");
+            return m.reply(`*Antilink* is already *Disabled* !`);
+          }
+          await doReact("⚜️");
+          await delAntilink(m.from);
+          await m.reply(`*Antilink* has been *Disabled* Successfully !`);
+        } else {
+          await doReact("❔");
+          return m.reply(
+            `Please provide On / Off action !\n\n*Example:*\n\n${prefix}antilink on`
+          );
+        }
+
+        break;
+
+      case "welcome":
+        if (!isAdmin) {
+          await doReact("❌");
+          return m.reply(`*You* must be *Admin* in order to use this Command!`);
+        }
+        if (!isBotAdmin) {
+          await doReact("❌");
+          return m.reply(`*Bot* must be *Admin* in order to use this Command!`);
+        }
+
+        if (!text) {
+          await doReact("❔");
+          return m.reply(
+            `Please provide On / Off action !\n\n*Example:*\n\n${prefix}welcome on`
+          );
+        }
+        welcomeStatus = await checkWelcome(m.from);
+        if (args[0] == "on") {
+          if (welcomeStatus) {
+            await doReact("❌");
+            return m.reply(`*Welcome* is already *Enabled* !`);
+          }
+          await doReact("🎀");
+          await setWelcome(m.from);
+          await m.reply(
+            `*Welcome/Goodbye* messages are *Enabled* Successfully !`
+          );
+        } else if (args[0] == "off") {
+          if (!welcomeStatus) {
+            await doReact("❌");
+            return m.reply(`*Welcome* is already *Disabled* !`);
+          }
+          await doReact("🎀");
+          await delWelcome(m.from);
+          await m.reply(
+            `*Welcome/Goodbye* messages are *Disabled* Successfully !`
+          );
+        } else {
+          await doReact("❔");
+          return m.reply(
+            `Please provide On / Off action !\n\n*Example:*\n\n${prefix}welcome on`
+          );
+        }
 
         break;
 

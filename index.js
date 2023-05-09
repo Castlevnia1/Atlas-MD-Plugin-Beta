@@ -21,6 +21,7 @@ const { state, saveState } = useSingleFileAuthState("./session.json");
 const { serialize, WAConnection } = require("./System/whatsapp.js");
 const { smsg, getBuffer, getSizeMedia } = require("./System/Function2");
 const express = require("express");
+const welcomeLeft = require('./System/Welcome.js');
 const { readcommands, commands } = require("./System/ReadCommands.js");
 commands.prefix = global.prefa;
 const {
@@ -98,31 +99,6 @@ const startAtlas = async () => {
   }
   await readcommands();
 
-  /* function readUniqueCommands(dirPath) {
-    const allCommands = [];
-
-    const files = fs.readdirSync(dirPath);
-
-    for (const file of files) {
-      const filePath = path.join(dirPath, file);
-      const stat = fs.statSync(filePath);
-
-      if (stat.isDirectory()) {
-        const subCommands = readUniqueCommands(filePath);
-        allCommands.push(...subCommands);
-      } else if (stat.isFile() && file.endsWith(".js")) {
-        const command = require(filePath);
-
-        if (Array.isArray(command.uniquecommands)) {
-          allCommands.push(...command.uniquecommands);
-        }
-      }
-    }
-
-    return allCommands;
-  }*/
- 
-
   store.bind(Atlas.ev);
 
   Atlas.public = true;
@@ -171,6 +147,10 @@ const startAtlas = async () => {
         );
       }
     }
+  });
+
+  Atlas.ev.on("group-participants.update", async (m) => {
+    welcomeLeft(Atlas, m);
   });
 
   Atlas.ev.on("messages.upsert", async (chatUpdate) => {

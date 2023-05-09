@@ -323,7 +323,6 @@ async function pushPlugin(newPlugin, url) {
   }
 }
 
-
 // Pull all plugins name as an array
 async function getPlugin() {
   try {
@@ -344,7 +343,6 @@ async function getPlugin() {
   }
 }
 
-
 async function delPlugin(pluginName) {
   try {
     const response = await axios.get(
@@ -355,7 +353,9 @@ async function delPlugin(pluginName) {
       return undefined;
     } else {
       const oldPlugins = pluginsData.plugins || [];
-      const newPlugins = oldPlugins.filter((plugin) => plugin.name !== pluginName);
+      const newPlugins = oldPlugins.filter(
+        (plugin) => plugin.name !== pluginName
+      );
       const newData = {
         ...pluginsData,
         plugins: newPlugins,
@@ -369,6 +369,343 @@ async function delPlugin(pluginName) {
     return undefined;
   }
 }
+
+// Turning on the Welcome message
+async function setWelcome(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: groupID,
+        welcome: true,
+      });
+    }
+    if (response.data) {
+      const oldData = response.data;
+      const newData = { ...oldData, welcome: true };
+      await axios.put(
+        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      id: groupID,
+      welcome: true,
+    });
+  }
+}
+
+// Checking the status of Welcome message
+async function checkWelcome(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      return false;
+    }
+    if (response.data) {
+      return response.data.welcome;
+    }
+  } catch (err) {
+    return false;
+  }
+}
+
+// Turning off the Welcome message
+async function delWelcome(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: groupID,
+        welcome: false,
+      });
+    }
+    if (response.data) {
+      const oldData = response.data;
+      const newData = { ...oldData, welcome: false };
+      await axios.put(
+        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      id: groupID,
+      welcome: false,
+    });
+  }
+}
+
+// Turning on the Antilink
+async function setAntilink(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: groupID,
+        antilink: true,
+      });
+    }
+    if (response.data) {
+      const oldData = response.data;
+      const newData = { ...oldData, antilink: true };
+      await axios.put(
+        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      id: groupID,
+      antilink: true,
+    });
+  }
+}
+
+// Checking the status of Antilink
+async function checkAntilink(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      return false;
+    }
+    if (response.data) {
+      return response.data.antilink;
+    }
+  } catch (err) {
+    return false;
+  }
+}
+
+// Turning off the Antilink
+async function delAntilink(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: groupID,
+        antilink: false,
+      });
+    }
+    if (response.data) {
+      const oldData = response.data;
+      const newData = { ...oldData, antilink: false };
+      await axios.put(
+        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      id: groupID,
+      antilink: false,
+    });
+  }
+}
+
+// Turning on the Group Chatbot
+async function setGroupChatbot(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: groupID,
+        chatbotgc: true,
+      });
+    }
+    if (response.data) {
+      const oldData = response.data;
+      const newData = { ...oldData, chatbotgc: true };
+      await axios.put(
+        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      id: groupID,
+      chatbotgc: true,
+    });
+  }
+}
+
+// Checking the status of Group Chatbot
+async function checkGroupChatbot(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      return false;
+    }
+    if (response.data) {
+      return response.data.chatbotgc;
+    }
+  } catch (err) {
+    return false;
+  }
+}
+
+// Turning off the Group Chatbot
+async function delGroupChatbot(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: groupID,
+        chatbotgc: false,
+      });
+    }
+    if (response.data) {
+      const oldData = response.data;
+      const newData = { ...oldData, chatbotgc: false };
+      await axios.put(
+        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      id: groupID,
+      chatbotgc: false,
+    });
+  }
+}
+
+// Setting bot working mode
+async function setBotMode(mode) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/mode`
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: "mode",
+        mode: mode,
+      });
+    }
+    if (response.data) {
+      const oldData = response.data;
+      const newData = { ...oldData, mode: mode };
+      await axios.put(
+        `https://silicondb.32-pratyushprat.repl.co/api/data/mode`,
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      mode: mode,
+    });
+  }
+}
+
+// Getting bot working mode
+async function getBotMode() {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data`
+    );
+    if (response.status == 404 || !response.data) {
+      return "public";
+    }
+    if (response.data) {
+      return response.data.mode;
+    }
+  } catch (err) {
+    return "public";
+  }
+}
+
+// Banning a group
+async function banGroup(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: groupID,
+        ban: true,
+      });
+    }
+    if (response.data) {
+      const oldData = response.data;
+      const newData = { ...oldData, ban: true };
+      await axios.put(
+        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      id: groupID,
+      ban: true,
+    });
+  }
+}
+
+// Checking the ban status of a group
+async function checkBanGroup(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      return false;
+    }
+    if (response.data) {
+      return response.data.ban;
+    }
+  } catch (err) {
+    return false;
+  }
+}
+
+// Unbanning a group
+async function unbanGroup(groupID) {
+  try {
+    const response = await axios.get(
+      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+    );
+    if (response.status == 404 || !response.data) {
+      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+        id: groupID,
+        ban: false,
+      });
+    }
+    if (response.data) {
+      const oldData = response.data;
+      const newData = { ...oldData, ban: false };
+      await axios.put(
+        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        newData
+      );
+    }
+  } catch (err) {
+    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      id: groupID,
+      ban: false,
+    });
+  }
+}
+
 
 
 
@@ -385,9 +722,23 @@ module.exports = {
   activateChatBot, // -------------- ACTIVATE PM CHATBOT
   checkPmChatbot, // --------------- CHECK PM CHATBOT STATUS
   deactivateChatBot, // ------------ DEACTIVATE PM CHATBOT
-  pushPlugin, // -------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
-  getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
-  delPlugin, // --------------------- DELETE A PLUGIN FROM THE DATABASE
+  pushPlugin, // ------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
+  getPlugin, // -------------------- GET ALL PLUGIN NAMES AS AN ARRAY
+  delPlugin, // -------------------- DELETE A PLUGIN FROM THE DATABASE
+  setWelcome, // ------------------- SET WELCOME MESSAGE
+  checkWelcome, // ----------------- CHECK WELCOME MESSAGE STATUS
+  delWelcome, // ------------------- DELETE WELCOME MESSAGE
+  setAntilink, // ------------------ SET ANTILINK
+  checkAntilink, // ---------------- CHECK ANTILINK STATUS
+  delAntilink, // ------------------ DELETE ANTILINK
+  setGroupChatbot, // -------------- SET GROUP CHATBOT
+  checkGroupChatbot, // ------------ CHECK GROUP CHATBOT STATUS
+  delGroupChatbot, // -------------- DELETE GROUP CHATBOT
+  setBotMode, // ------------------- SET BOT MODE
+  getBotMode, // ------------------- GET BOT MODE
+  banGroup, // --------------------- BAN GROUP
+  checkBanGroup, //----------------- CHECK BAN STATUS OF A GROUP
+  unbanGroup, // ------------------- UNBAN GROUP
 };
 
 /*
