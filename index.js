@@ -26,6 +26,7 @@ const { readcommands, commands } = require("./System/ReadCommands.js");
 commands.prefix = global.prefa;
 const {
   getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
+  checkWelcome, // ------------------ CHECK IF WELCOME IS ENABLED
 } = require("./System/SiliconDB/siliconDB-config");
 const chalk = require("chalk");
 const store = makeInMemoryStore({
@@ -149,6 +150,10 @@ const startAtlas = async () => {
     }
   });
 
+ 
+  Atlas.ev.on("group-participants.update", async (m) => {
+    welcomeLeft(Atlas, m);
+  });
 
   Atlas.ev.on("messages.upsert", async (chatUpdate) => {
     m = serialize(Atlas, chatUpdate.messages[0]);
@@ -329,10 +334,6 @@ const startAtlas = async () => {
     );
     return fs.promises.unlink(pathFile);
   };
-
-  Atlas.ev.on("group-participants.update", async (m) => {
-    welcomeLeft(Atlas, m);
-  });
 };
 
 startAtlas();

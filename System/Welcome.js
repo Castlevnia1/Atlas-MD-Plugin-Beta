@@ -15,12 +15,7 @@ module.exports = async (Atlas, anu) => {
       }
 
       if (anu.action == "add") {
-        let WELstatus = await checkWelcome(m.from);
-
-        var WelcomeFeature = "false";
-        if (WELstatus) {
-          WelcomeFeature = WELstatus || "false";
-        }
+        const WELstatus = await checkWelcome(anu.id);
         let WAuserName = num;
         console.log(
           `\n+${WAuserName.split("@")[0]} Joined/Got Added in: ${
@@ -38,20 +33,15 @@ ${desc}
 
 *Thank You.*
   `;
-        if (WelcomeFeature == "true") {
-          Atlas.sendMessage(anu.id, {
+        if (WELstatus) {
+          await Atlas.sendMessage(anu.id, {
             image: { url: ppuser },
             caption: Atlastext,
             mentions: [num],
           });
         }
       } else if (anu.action == "remove") {
-        let WELstatus = await checkWelcome(m.from);
-
-        var WelcomeFeature = "false";
-        if (WELstatus) {
-          WelcomeFeature = WELstatus || "false";
-        }
+        const WELstatus = await checkWelcome(anu.id);
         let WAuserName = num;
         console.log(
           `\n+${WAuserName.split("@")[0]} Left/Got Removed from: ${
@@ -61,8 +51,8 @@ ${desc}
         Atlastext = `
   @${WAuserName.split("@")[0]} Senpai left the group.
   `;
-        if (WelcomeFeature == "true") {
-          Atlas.sendMessage(anu.id, {
+        if (WELstatus) {
+          await Atlas.sendMessage(anu.id, {
             image: { url: ppuser },
             caption: Atlastext,
             mentions: [num],

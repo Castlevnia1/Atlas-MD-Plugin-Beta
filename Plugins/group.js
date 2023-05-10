@@ -818,7 +818,7 @@ module.exports = {
             `Please provide On / Off action !\n\n*Example:*\n\n${prefix}welcome on`
           );
         }
-        welcomeStatus = await checkWelcome(m.from);
+        const welcomeStatus = await checkWelcome(m.from);
         if (args[0] == "on") {
           if (welcomeStatus) {
             await doReact("❌");

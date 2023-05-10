@@ -46,38 +46,40 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
         ? body
         : "";
 
-    let metadata = m.isGroup ? await Atlas.groupMetadata(from) : {};
-    let pushname = m.pushName || "NO name";
-    let participants = m.isGroup ? metadata.participants : [sender];
-    let quoted = m.quoted ? m.quoted : m;
-    let groupAdmin = m.isGroup
+    const metadata = m.isGroup ? await Atlas.groupMetadata(from) : {};
+    const pushname = m.pushName || "NO name";
+    const participants = m.isGroup ? metadata.participants : [sender];
+    const quoted = m.quoted ? m.quoted : m;
+    const groupAdmin = m.isGroup
       ? participants.filter((v) => v.admin !== null).map((v) => v.id)
       : [];
-    let botNumber = await Atlas.decodeJid(Atlas.user.id);
-    let isBotAdmin = m.isGroup ? groupAdmin.includes(botNumber) : false;
+    const botNumber = await Atlas.decodeJid(Atlas.user.id);
+    const isBotAdmin = m.isGroup ? groupAdmin.includes(botNumber) : false;
     const isCreator = [botNumber, ...global.owner]
       .map((v) => v.replace(/[^0-9]/g, "") + "@s.whatsapp.net")
       .includes(m.sender);
-    let isAdmin = m.isGroup ? groupAdmin.includes(m.sender) : false;
-    let messSender = m.sender;
-    let itsMe = messSender.includes(botNumber) ? true : false;
+    const isAdmin = m.isGroup ? groupAdmin.includes(m.sender) : false;
+    const messSender = m.sender;
+    const itsMe = messSender.includes(botNumber) ? true : false;
 
-    let isCmd = body.startsWith(prefix);
-    let mime = (quoted.msg || m.msg).mimetype || " ";
-    let isMedia = /image|video|sticker|audio/.test(mime);
-    let budy = typeof m.text == "string" ? m.text : "";
-    let args = body.trim().split(/ +/).slice(1);
-    let ar = args.map((v) => v.toLowerCase());
-    let text = (q = args.join(" "));
+    const isCmd = body.startsWith(prefix);
+    const mime = (quoted.msg || m.msg).mimetype || " ";
+    const isMedia = /image|video|sticker|audio/.test(mime);
+    const budy = typeof m.text == "string" ? m.text : "";
+    const args = body.trim().split(/ +/).slice(1);
+    const ar = args.map((v) => v.toLowerCase());
+    const text = (q = args.join(" "));
     global.suppL = "https://cutt.ly/AtlasBotSupport";
-    let inputCMD = body.slice(1).trim().split(/ +/).shift().toLowerCase();
+    const inputCMD = body.slice(1).trim().split(/ +/).shift().toLowerCase();
     const {
-      banUser,
       checkBan,
-      unbanUser,
       checkMod,
       getChar,
-      
+      checkPmChatbot,
+      getBotMode,
+      checkBanGroup,
+      checkAntilink,
+      checkGroupChatbot,
     } = require("./System/SiliconDB/siliconDB-config");
     async function doReact(emoji) {
       let reactm = {
@@ -110,10 +112,22 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       m.message.extendedTextMessage.contextInfo != null
         ? m.message.extendedTextMessage.contextInfo.mentionedJid
         : [];
-    if (body.startsWith(prefix) && !icmd)
-      return Atlas.sendMessage(m.from, { text: "Baka no such command" });
-    if (budy.startsWith("hi"))
-      return Atlas.sendMessage(m.from, { text: "Baka no such command" });
+
+    if (body == prefix) {
+      await doReact("❌");
+      return m.reply(
+        `Bot is active, type *${prefix}help* to see the list of commands.`
+      );
+    }
+    if (body.startsWith(prefix) && !icmd) {
+      await doReact("❌");
+      return m.reply(
+        `*${budy.replace(
+          prefix,
+          ""
+        )}* - Command not found or plug-in not installed !\n\nIf you want to see the list of commands, type:    *_${prefix}help_*\n\nOr type:  *_${prefix}pluginlist_* to see installable plug-in list.`
+      );
+    }
 
     if (m.message && isGroup) {
       console.log(
@@ -144,11 +158,17 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     if (body.startsWith(prefix) && !icmd)
       return Atlas.sendMessage(m.from, { text: "Baka no such command" });
 
-    // ------------------------DATABASE (Do not modify this part) ------------------------ //
+    // ----------------------------- System Configuration (Do not modify this part) ---------------------------- //
+
     const isbannedUser = await checkBan(m.sender);
     const modcheck = await checkMod(m.sender);
+    const isBannedGroup = await checkBanGroup(m.from);
+    const isAntilinkOn = await checkAntilink(m.from);
+    const isPmChatbotOn = await checkPmChatbot();
+    const isGroupChatbotOn = await checkGroupChatbot(m.from);
+    const botWorkMode = await getBotMode();
 
-    if (isCmd) {
+    if (isCmd || icmd) {
       if (isbannedUser) {
         return Atlas.sendMessage(
           m.from,
@@ -157,6 +177,30 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
           },
           { quoted: m }
         );
+      }
+    }
+
+    if (isAntilinkOn && m.isGroup && !isAdmin && !isCreator && isBotAdmin) {
+      const linkgce = await Atlas.groupInviteCode(from);
+      if (budy.includes(`https://chat.whatsapp.com/${linkgce}`)) {
+        return;
+      } else if (budy.includes(`https://chat.whatsapp`)) {
+        const bvl = `\`\`\`「  Antilink System  」\`\`\`\n\n*⚠️ Group link detected !*\n\n*🚫 You are not allowed to send group links in this group !*\n`;
+        await Atlas.sendMessage(
+          from,
+          {
+            delete: {
+              remoteJid: m.from,
+              fromMe: false,
+              id: m.id,
+              participant: m.sender,
+            },
+          },
+          {
+            quoted: m,
+          }
+        );
+        return m.reply(bvl);
       }
     }
 
@@ -188,15 +232,6 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     global.botImage4 = global[idConfig].botImage4;
     global.botImage5 = global[idConfig].botImage5;
     global.botImage6 = global[idConfig].botImage6;
-
-    /*const options = {
-      timeZone: "Asia/Kolkata", // set the time zone to Indian Standard Time (IST)
-      hour12: true, // set to 12-hour format (Set to false for 24-hour format)
-      hour: "numeric", // show only the hour
-      minute: "numeric", // show only the minute
-      second: "numeric", // show only the second
-    };
-    const timeString = now.toLocaleTimeString('en-US', options);*/
 
     const pad = (s) => (s < 10 ? "0" : "") + s;
     const formatTime = (seconds) => {
