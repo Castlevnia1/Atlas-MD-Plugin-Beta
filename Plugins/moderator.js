@@ -68,7 +68,6 @@ module.exports = {
       inputCMD,
       text,
       mods,
-      groupName,
       isCreator,
       banData,
       prefix,
@@ -87,6 +86,7 @@ module.exports = {
       groupAdmin,
       isAdmin,
       pushName,
+      groupName,
     }
   ) => {
     const mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
@@ -495,7 +495,7 @@ module.exports = {
           await doReact("🧩");
           await banGroup(m.from);
           await m.reply(
-            `*${m.sender.pushname}* has been *Banned* Successfully !`
+            `*${groupName}* has been *Banned* Successfully !`
           );
         }
 
@@ -528,7 +528,7 @@ module.exports = {
           await doReact("🧩");
           await unbanGroup(m.from);
           await m.reply(
-            `*${m.sender.pushname}* has been *Unbanned* Successfully !`
+            `*${groupName}* has been *Unbanned* Successfully !`
           );
         }
 

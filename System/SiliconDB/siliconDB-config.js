@@ -1,13 +1,15 @@
-const axios = require("axios");
+const axios = require(`axios`);
+
+const siliconDBUrl = 'https://silicondb.32-pratyushprat.repl.co'
 
 // Ban an user
 async function banUser(userID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`
+      `${siliconDBUrl}/api/data/${userID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: userID,
         ban: true,
       });
@@ -16,12 +18,12 @@ async function banUser(userID) {
       const oldData = response.data;
       const newData = { ...oldData, ban: true };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`,
+        `${siliconDBUrl}/api/data/${userID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: userID,
       ban: true,
     });
@@ -32,7 +34,7 @@ async function banUser(userID) {
 async function checkBan(userID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`
+      `${siliconDBUrl}/api/data/${userID}`
     );
     if (
       response.status == 404 ||
@@ -56,10 +58,10 @@ async function checkBan(userID) {
 async function unbanUser(userID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`
+      `${siliconDBUrl}/api/data/${userID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: userID,
         ban: false,
       });
@@ -68,12 +70,12 @@ async function unbanUser(userID) {
       const oldData = response.data;
       const newData = { ...oldData, ban: false };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`,
+        `${siliconDBUrl}/api/data/${userID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: userID,
       ban: false,
     });
@@ -84,10 +86,10 @@ async function unbanUser(userID) {
 async function addMod(userID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`
+      `${siliconDBUrl}/api/data/${userID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: userID,
         mod: true,
       });
@@ -96,12 +98,12 @@ async function addMod(userID) {
       const oldData = response.data;
       const newData = { ...oldData, mod: true };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`,
+        `${siliconDBUrl}/api/data/${userID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: userID,
       mod: true,
     });
@@ -112,7 +114,7 @@ async function addMod(userID) {
 async function checkMod(userID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`
+      `${siliconDBUrl}/api/data/${userID}`
     );
     if (
       response.status == 404 ||
@@ -136,10 +138,10 @@ async function checkMod(userID) {
 async function delMod(userID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`
+      `${siliconDBUrl}/api/data/${userID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: userID,
         mod: false,
       });
@@ -148,12 +150,12 @@ async function delMod(userID) {
       const oldData = response.data;
       const newData = { ...oldData, mod: false };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${userID}`,
+        `${siliconDBUrl}/api/data/${userID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: userID,
       mod: false,
     });
@@ -164,25 +166,25 @@ async function delMod(userID) {
 async function setChar(charID) {
   try {
     const response = await axios.get(
-      "https://silicondb.32-pratyushprat.repl.co/api/data/char"
+      `${siliconDBUrl}/api/data/char`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-        id: "char",
+      await axios.post(`${siliconDBUrl}/api/data`, {
+        id: `char`,
         charno: charID,
       });
     } else {
       await axios.put(
-        "https://silicondb.32-pratyushprat.repl.co/api/data/char",
+        `${siliconDBUrl}/api/data/char`,
         {
-          id: "char",
+          id: `char`,
           charno: charID,
         }
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-      id: "char",
+    await axios.post(`${siliconDBUrl}/api/data`, {
+      id: `char`,
       charno: charID,
     });
   }
@@ -192,19 +194,19 @@ async function setChar(charID) {
 async function getChar() {
   try {
     const response = await axios.get(
-      "https://silicondb.32-pratyushprat.repl.co/api/data/char"
+      `${siliconDBUrl}/api/data/char`
     );
     if (
       response.status == 404 ||
       !response.data ||
       response.data.charno == undefined
     ) {
-      return "0";
+      return `0`;
     } else {
       return response.data.charno;
     }
   } catch (err) {
-    return "0";
+    return `0`;
   }
 }
 
@@ -212,25 +214,25 @@ async function getChar() {
 async function activateChatBot() {
   try {
     const response = await axios.get(
-      "https://silicondb.32-pratyushprat.repl.co/api/data/pmchatbot"
+      `${siliconDBUrl}/api/data/pmchatbot`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-        id: "pmchatbot",
+      await axios.post(`${siliconDBUrl}/api/data`, {
+        id: `pmchatbot`,
         pmchatbot: true,
       });
     } else {
       await axios.put(
-        "https://silicondb.32-pratyushprat.repl.co/api/data/pmchatbot",
+        `${siliconDBUrl}/api/data/pmchatbot`,
         {
-          id: "pmchatbot",
+          id: `pmchatbot`,
           pmchatbot: true,
         }
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-      id: "pmchatbot",
+    await axios.post(`${siliconDBUrl}/api/data`, {
+      id: `pmchatbot`,
       pmchatbot: true,
     });
   }
@@ -240,7 +242,7 @@ async function activateChatBot() {
 async function checkPmChatbot() {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/pmchatbot`
+      `${siliconDBUrl}/api/data/pmchatbot`
     );
     if (response.status == 404 || !response.data) {
       return false;
@@ -259,25 +261,25 @@ async function checkPmChatbot() {
 async function deactivateChatBot() {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/pmchatbot`
+      `${siliconDBUrl}/api/data/pmchatbot`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-        id: "pmchatbot",
+      await axios.post(`${siliconDBUrl}/api/data`, {
+        id: `pmchatbot`,
         pmchatbot: false,
       });
     } else {
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/pmchatbot`,
+        `${siliconDBUrl}/api/data/pmchatbot`,
         {
-          id: "pmchatbot",
+          id: `pmchatbot`,
           pmchatbot: false,
         }
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-      id: "pmchatbot",
+    await axios.post(`${siliconDBUrl}/api/data`, {
+      id: `pmchatbot`,
       pmchatbot: false,
     });
   }
@@ -287,16 +289,16 @@ async function deactivateChatBot() {
 async function pushPlugin(newPlugin, url) {
   try {
     const response = await axios.get(
-      "https://silicondb.32-pratyushprat.repl.co/api/data"
+      `${siliconDBUrl}/api/data`
     );
-    const pluginsData = response.data.find((item) => item.id === "plugin");
+    const pluginsData = response.data.find((item) => item.id === `plugin`);
     const dataPlugin = {
       name: newPlugin,
       url: url,
     };
     if (!pluginsData) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-        id: "plugin",
+      await axios.post(`${siliconDBUrl}/api/data`, {
+        id: `plugin`,
         plugins: [dataPlugin],
       });
     } else {
@@ -307,7 +309,7 @@ async function pushPlugin(newPlugin, url) {
         plugins: newPlugins,
       };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/plugin`,
+        `${siliconDBUrl}/api/data/plugin`,
         newData
       );
     }
@@ -316,8 +318,8 @@ async function pushPlugin(newPlugin, url) {
       name: newPlugin,
       url: url,
     };
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-      id: "plugin",
+    await axios.post(`${siliconDBUrl}/api/data`, {
+      id: `plugin`,
       plugins: [dataPlugin],
     });
   }
@@ -327,9 +329,9 @@ async function pushPlugin(newPlugin, url) {
 async function getPlugin() {
   try {
     const response = await axios.get(
-      "https://silicondb.32-pratyushprat.repl.co/api/data"
+      `${siliconDBUrl}/api/data`
     );
-    const pluginsData = response.data.find((item) => item.id === "plugin");
+    const pluginsData = response.data.find((item) => item.id === `plugin`);
     if (!pluginsData) {
       return undefined;
     } else {
@@ -346,9 +348,9 @@ async function getPlugin() {
 async function delPlugin(pluginName) {
   try {
     const response = await axios.get(
-      "https://silicondb.32-pratyushprat.repl.co/api/data"
+      `${siliconDBUrl}/api/data`
     );
-    const pluginsData = response.data.find((item) => item.id === "plugin");
+    const pluginsData = response.data.find((item) => item.id === `plugin`);
     if (!pluginsData) {
       return undefined;
     } else {
@@ -361,7 +363,7 @@ async function delPlugin(pluginName) {
         plugins: newPlugins,
       };
       await axios.put(
-        "https://silicondb.32-pratyushprat.repl.co/api/data/plugin",
+        `${siliconDBUrl}/api/data/plugin`,
         newData
       );
     }
@@ -374,10 +376,10 @@ async function delPlugin(pluginName) {
 async function setWelcome(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: groupID,
         welcome: true,
       });
@@ -386,12 +388,12 @@ async function setWelcome(groupID) {
       const oldData = response.data;
       const newData = { ...oldData, welcome: true };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        `${siliconDBUrl}/api/data/${groupID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: groupID,
       welcome: true,
     });
@@ -402,7 +404,7 @@ async function setWelcome(groupID) {
 async function checkWelcome(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
       return false;
@@ -419,10 +421,10 @@ async function checkWelcome(groupID) {
 async function delWelcome(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: groupID,
         welcome: false,
       });
@@ -431,12 +433,12 @@ async function delWelcome(groupID) {
       const oldData = response.data;
       const newData = { ...oldData, welcome: false };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        `${siliconDBUrl}/api/data/${groupID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: groupID,
       welcome: false,
     });
@@ -447,10 +449,10 @@ async function delWelcome(groupID) {
 async function setAntilink(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: groupID,
         antilink: true,
       });
@@ -459,12 +461,12 @@ async function setAntilink(groupID) {
       const oldData = response.data;
       const newData = { ...oldData, antilink: true };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        `${siliconDBUrl}/api/data/${groupID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: groupID,
       antilink: true,
     });
@@ -475,7 +477,7 @@ async function setAntilink(groupID) {
 async function checkAntilink(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
       return false;
@@ -492,10 +494,10 @@ async function checkAntilink(groupID) {
 async function delAntilink(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: groupID,
         antilink: false,
       });
@@ -504,12 +506,12 @@ async function delAntilink(groupID) {
       const oldData = response.data;
       const newData = { ...oldData, antilink: false };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        `${siliconDBUrl}/api/data/${groupID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: groupID,
       antilink: false,
     });
@@ -520,10 +522,10 @@ async function delAntilink(groupID) {
 async function setGroupChatbot(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: groupID,
         chatbotgc: true,
       });
@@ -532,12 +534,12 @@ async function setGroupChatbot(groupID) {
       const oldData = response.data;
       const newData = { ...oldData, chatbotgc: true };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        `${siliconDBUrl}/api/data/${groupID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: groupID,
       chatbotgc: true,
     });
@@ -548,7 +550,7 @@ async function setGroupChatbot(groupID) {
 async function checkGroupChatbot(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
       return false;
@@ -565,10 +567,10 @@ async function checkGroupChatbot(groupID) {
 async function delGroupChatbot(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: groupID,
         chatbotgc: false,
       });
@@ -577,12 +579,12 @@ async function delGroupChatbot(groupID) {
       const oldData = response.data;
       const newData = { ...oldData, chatbotgc: false };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        `${siliconDBUrl}/api/data/${groupID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: groupID,
       chatbotgc: false,
     });
@@ -593,11 +595,11 @@ async function delGroupChatbot(groupID) {
 async function setBotMode(mode) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/mode`
+      `${siliconDBUrl}/api/data/mode`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
-        id: "mode",
+      await axios.post(`${siliconDBUrl}/api/data`, {
+        id: `mode`,
         mode: mode,
       });
     }
@@ -605,12 +607,12 @@ async function setBotMode(mode) {
       const oldData = response.data;
       const newData = { ...oldData, mode: mode };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/mode`,
+        `${siliconDBUrl}/api/data/mode`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       mode: mode,
     });
   }
@@ -620,16 +622,16 @@ async function setBotMode(mode) {
 async function getBotMode() {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data`
+      `${siliconDBUrl}/api/data`
     );
     if (response.status == 404 || !response.data) {
-      return "public";
+      return `public`;
     }
     if (response.data) {
       return response.data.mode;
     }
   } catch (err) {
-    return "public";
+    return `public`;
   }
 }
 
@@ -637,10 +639,10 @@ async function getBotMode() {
 async function banGroup(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: groupID,
         ban: true,
       });
@@ -649,12 +651,12 @@ async function banGroup(groupID) {
       const oldData = response.data;
       const newData = { ...oldData, ban: true };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        `${siliconDBUrl}/api/data/${groupID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: groupID,
       ban: true,
     });
@@ -665,7 +667,7 @@ async function banGroup(groupID) {
 async function checkBanGroup(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
       return false;
@@ -682,10 +684,10 @@ async function checkBanGroup(groupID) {
 async function unbanGroup(groupID) {
   try {
     const response = await axios.get(
-      `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`
+      `${siliconDBUrl}/api/data/${groupID}`
     );
     if (response.status == 404 || !response.data) {
-      await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+      await axios.post(`${siliconDBUrl}/api/data`, {
         id: groupID,
         ban: false,
       });
@@ -694,12 +696,12 @@ async function unbanGroup(groupID) {
       const oldData = response.data;
       const newData = { ...oldData, ban: false };
       await axios.put(
-        `https://silicondb.32-pratyushprat.repl.co/api/data/${groupID}`,
+        `${siliconDBUrl}/api/data/${groupID}`,
         newData
       );
     }
   } catch (err) {
-    await axios.post("https://silicondb.32-pratyushprat.repl.co/api/data", {
+    await axios.post(`${siliconDBUrl}/api/data`, {
       id: groupID,
       ban: false,
     });

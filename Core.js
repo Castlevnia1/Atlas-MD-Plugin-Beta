@@ -71,6 +71,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     const text = (q = args.join(" "));
     global.suppL = "https://cutt.ly/AtlasBotSupport";
     const inputCMD = body.slice(1).trim().split(/ +/).shift().toLowerCase();
+    const groupName = m.isGroup ? metadata.subject : "";
     const {
       checkBan,
       checkMod,
@@ -169,11 +170,55 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     const botWorkMode = await getBotMode();
 
     if (isCmd || icmd) {
-      if (isbannedUser) {
+      if (botWorkMode == "private") {
+        if (!isCreator || !modcheck) {
+          return console.log(`\nCommand Rejected ! Bot is in Private mode !\n`);
+        }
+      }
+      if (botWorkMode == "self") {
+        if (m.sender != botNumber) {
+          return console.log(`\nCommand Rejected ! Bot is in Self mode !\n`);
+        }
+      }
+    }
+
+    if (isCmd || icmd) {
+      if (
+        isbannedUser &&
+        budy != `${prefix}support` &&
+        budy != `${prefix}supportgc` &&
+        budy != `${prefix}owner` &&
+        budy != `${prefix}mods` &&
+        budy != `${prefix}mod` &&
+        budy != `${prefix}modlist`
+      ) {
         return Atlas.sendMessage(
           m.from,
           {
             text: `You are banned from using commands !`,
+          },
+          { quoted: m }
+        );
+      }
+    }
+
+    if (isCmd || icmd) {
+      if (
+        isBannedGroup &&
+        budy != `${prefix}unbangc` &&
+        budy != `${prefix}unbangroup` &&
+        body.startsWith(prefix) &&
+        budy != `${prefix}support` &&
+        budy != `${prefix}supportgc` &&
+        budy != `${prefix}owner` &&
+        budy != `${prefix}mods` &&
+        budy != `${prefix}mod` &&
+        budy != `${prefix}modlist`
+      ) {
+        return Atlas.sendMessage(
+          m.from,
+          {
+            text: `This group is banned from using commands !`,
           },
           { quoted: m }
         );
@@ -204,13 +249,45 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       }
     }
 
+    if (m.isGroup && body.startsWith(prefix)) {
+      if (isGroupChatbotOn) {
+        if (!icmd && !isCmd) {
+          if (m.quoted && m.quoted.sender == botNumber) {
+            const botreply = await axios.get(
+              `http://api.brainshop.ai/get?bid=172352&key=vTmMboAxoXfsKEQQ&uid=[uid]&msg=[${budy}]`
+            );
+            const txtChatbot = `${botreply.data.cnt}`;
+            setTimeout(function () {
+              m.reply(txtChatbot);
+            }, 2200);
+          }
+        }
+      }
+    }
+
+    if (!m.isGroup && body.startsWith(prefix)) {
+      if (isPmChatbotOn) {
+        if (!icmd && !isCmd) {
+          if (m.quoted && m.quoted.sender == botNumber) {
+            const botreply = await axios.get(
+              `http://api.brainshop.ai/get?bid=172352&key=vTmMboAxoXfsKEQQ&uid=[uid]&msg=[${budy}]`
+            );
+            const txtChatbot = `${botreply.data.cnt}`;
+            setTimeout(function () {
+              m.reply(txtChatbot);
+            }, 2200);
+          }
+        }
+      }
+    }
+
     // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
 
     let char = "0"; // default one
     CharacterSelection = "0"; // user selected character
 
     try {
-      let charx = await getChar();
+      const charx = await getChar();
       CharacterSelection = charx;
     } catch (e) {
       CharacterSelection = "0";
@@ -222,7 +299,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       CharacterSelection = CharacterSelection;
     }
 
-    let idConfig = "charID" + CharacterSelection;
+    const idConfig = "charID" + CharacterSelection;
 
     global.botName = global[idConfig].botName;
     global.botVideo = global[idConfig].botVideo;
@@ -232,6 +309,9 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     global.botImage4 = global[idConfig].botImage4;
     global.botImage5 = global[idConfig].botImage5;
     global.botImage6 = global[idConfig].botImage6;
+
+
+    // ------------------------------------------------------------------------------------------------------- //
 
     const pad = (s) => (s < 10 ? "0" : "") + s;
     const formatTime = (seconds) => {
@@ -265,6 +345,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       modcheck,
       isCreator,
       quoted,
+      groupName,
       mentionByTag,
       mime,
       isBotAdmin,
