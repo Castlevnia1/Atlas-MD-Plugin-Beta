@@ -18,7 +18,13 @@ const {
   banGroup, // --------------------- BAN GROUP
   checkBanGroup, //----------------- CHECK BAN STATUS OF A GROUP
   unbanGroup, // ------------------- UNBAN GROUP
-} = require("../System/SiliconDB/siliconDB-config");
+} = require("../System/MongoDB/MongoDb_Core");
+
+const {
+  userData,
+  groupData,
+  systemData,
+} = require("../System/MongoDB/MongoDB_Schema.js");
 
 let mergedCommands = [
   "addmod",
@@ -202,24 +208,64 @@ module.exports = {
         }
         break;
 
-      /*case "modlist":
-                case "mods":
-                  try {
-          
-                    if (mods.length === 0) {
-                      return Atlas.sendMessage(m.from, { text: "There are no moderators registered currently." }, { quoted: m });
-                    }
-          
-                    let modListText = "*List of Moderators:*\n\n";
-                    for (const mod of mods) {
-                      modListText += `@${mod.split("@")[0]}\n`;
-                    }
-          
-                    Atlas.sendMessage(m.from, { text: modListText, mentions: mods }, { quoted: m });
-                  } catch (err) {
-                    console.log(err);
-                  }
-                  break;*/
+      case "modlist":
+      case "mods":
+        try {
+          var modlist = await userData.find({ addedMods: "true" });
+          var modlistString = "";
+          var ownerList = global.owner;
+          modlist.forEach((mod) => {
+            modlistString += `\n@${mod.id.split("@")[0]}\n`;
+          });
+          var mention = await modlist.map((mod) => mod.id);
+          let xy = modlist.map((mod) => mod.id);
+          let yz = ownerList.map((owner) => owner + "@s.whatsapp.net");
+          let xyz = xy.concat(yz);
+
+          ment = [ownerList.map((owner) => owner + "@s.whatsapp.net"), mention];
+          let textM = `    🧣  *${botName} Mods*  🧣\n\n`;
+
+          if (ownerList.length == 0) {
+            textM = "*No Mods Added !*";
+          }
+
+          textM += `\n🎀 *Owners* 🎀\n`;
+
+          for (var i = 0; i < ownerList.length; i++) {
+            textM += `\n〽️ @${ownerList[i]}\n`;
+          }
+
+          if (modlistString != "") {
+            textM += `\n🧩 *Added Mods* 🧩\n`;
+            for (var i = 0; i < modlist.length; i++) {
+              textM += `\n🎀 @${modlist[i].id.split("@")[0]}\n`;
+            }
+          }
+
+          if (modlistString != "" || ownerList.length != 0) {
+            textM += `\n\n📛 *Don't Spam them to avoid Blocking !*\n\n🎀 For any help, type *${prefix}support* and ask in group.\n\n*💫 Thanks for using ${botName}. 💫*\n`;
+          }
+
+          return Atlas.sendMessage(
+            m.from,
+            {
+              video: { url: botVideo },
+              gifPlayback: true,
+              caption: textM,
+              mentions: xyz,
+            },
+            { quoted: m }
+          );
+        } catch (err) {
+          console.log(err);
+          return Atlas.sendMessage(
+            m.from,
+            { text: `An internal error occurred while fetching the mod list.` },
+            { quoted: m }
+          );
+        }
+
+        break;
 
       case "ban":
       case "banuser":
@@ -345,7 +391,7 @@ module.exports = {
           "Denji",
           "Zero Two",
           "Chika",
-          "Miku",
+          "Atlas",
           "Marin",
           "Ayanokoji",
           "Ruka",
@@ -459,15 +505,6 @@ module.exports = {
 
         break;
 
-      /*
-"bangroup",
-  "bangc",
-  "unbangroup",
-  "unbangc",
-  "setbotmode",
-  "mode",
-*/
-
       case "bangroup":
       case "bangc":
         if (!m.isGroup) {
@@ -494,9 +531,7 @@ module.exports = {
         } else {
           await doReact("🧩");
           await banGroup(m.from);
-          await m.reply(
-            `*${groupName}* has been *Banned* Successfully !`
-          );
+          await m.reply(`*${groupName}* has been *Banned* Successfully !`);
         }
 
         break;
@@ -527,9 +562,7 @@ module.exports = {
         } else {
           await doReact("🧩");
           await unbanGroup(m.from);
-          await m.reply(
-            `*${groupName}* has been *Unbanned* Successfully !`
-          );
+          await m.reply(`*${groupName}* has been *Unbanned* Successfully !`);
         }
 
         break;

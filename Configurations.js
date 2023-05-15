@@ -17,10 +17,7 @@ global.packname = process.env.PACKNAME || `Atlas Bot`;
 global.author = process.env.AUTHOR || "by: Team Atlas";
 global.port = process.env.PORT || "10000";
 global.openAiAPI = process.env.OPENAI_API || "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";
-
-
-global.useMongodb = false;
-global.owner =["918101187835"]
+global.owner = gg.split(",");
 
 module.exports = {
   mongodb: global.mongodb,

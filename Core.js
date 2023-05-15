@@ -72,6 +72,16 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     global.suppL = "https://cutt.ly/AtlasBotSupport";
     const inputCMD = body.slice(1).trim().split(/ +/).shift().toLowerCase();
     const groupName = m.isGroup ? metadata.subject : "";
+    /*const {
+      checkBan,
+      checkMod,
+      getChar,
+      checkPmChatbot,
+      getBotMode,
+      checkBanGroup,
+      checkAntilink,
+      checkGroupChatbot,
+    } = require("./System/SiliconDB/siliconDB-config");*/
     const {
       checkBan,
       checkMod,
@@ -81,7 +91,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       checkBanGroup,
       checkAntilink,
       checkGroupChatbot,
-    } = require("./System/SiliconDB/siliconDB-config");
+    } = require("./System/MongoDB/MongoDb_Core");
     async function doReact(emoji) {
       let reactm = {
         react: {

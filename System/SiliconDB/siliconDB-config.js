@@ -743,30 +743,3 @@ module.exports = {
   unbanGroup, // ------------------- UNBAN GROUP
 };
 
-/*
-
- module.exports = {
-    banGroup,
-    unbanGroup,
-    updateBanGroup,
-    updateUnbanGroup,
-    botMode,
-    antilinkOn,
-    antilinkOff,
-    updateAntilinkOn,
-    updateAntilinkOff,
-    chatbotGcOn,
-    chatbotGcOff,
-    updateChatbotGcOn,
-    updateChatbotGcOff,
-    nsfwOn,
-    nsfwOff,
-    updateNsfwOn,
-    updateNsfwOff,
-    welcomeOn,
-    welcomeOff,
-    updateWelcomeOn,
-    updateWelcomeOff,
-  };
-
-*/

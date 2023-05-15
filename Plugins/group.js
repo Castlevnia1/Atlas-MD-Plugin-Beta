@@ -11,7 +11,7 @@ const {
   setGroupChatbot, // -------------- SET GROUP CHATBOT
   checkGroupChatbot, // ------------ CHECK GROUP CHATBOT STATUS
   delGroupChatbot,
-} = require("../System/SiliconDB/siliconDB-config");
+} = require("../System/MongoDB/MongoDb_Core");
 let mergedCommands = [
   "admins",
   "admin",
