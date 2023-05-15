@@ -23,13 +23,14 @@ const { state, saveCreds } = useMultiFileAuthState("./Session/session.json");
 const { serialize, WAConnection } = require("./System/whatsapp.js");
 const { smsg, getBuffer, getSizeMedia } = require("./System/Function2");
 const express = require("express");
-const welcomeLeft = require('./System/Welcome.js');
+const welcomeLeft = require("./System/Welcome.js");
 const { readcommands, commands } = require("./System/ReadCommands.js");
 commands.prefix = global.prefa;
+
 const {
-  getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
-  checkWelcome, // ------------------ CHECK IF WELCOME IS ENABLED
-} = require("./System/SiliconDB/siliconDB-config");
+  pluginData, // -------------------- GET ALL PLUGIN DATA FROM DATABASE
+} = require("./System/MongoDB/MongoDB_Schema");
+
 const chalk = require("chalk");
 const store = makeInMemoryStore({
   logger: pino().child({
@@ -37,143 +38,145 @@ const store = makeInMemoryStore({
     stream: "store",
   }),
 });
-const util = require('util');
+const util = require("util");
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const unlink = util.promisify(fs.unlink);
 
 class FileStorage {
   constructor() {
-      this.fileCache = new Map();
+    this.fileCache = new Map();
   }
 
   async loadFile(fileName) {
-      if (this.fileCache.has(fileName)) {
-          return this.fileCache.get(fileName);
-      }
+    if (this.fileCache.has(fileName)) {
+      return this.fileCache.get(fileName);
+    }
 
-      try {
-          const fileContent = await readFile(fileName, 'utf-8');
-          if (fileContent.length > 0) {
-              const content = JSON.parse(fileContent, BufferJSON.reviver);
-              this.fileCache.set(fileName, content);
-              return content;
-          }
-      } catch (error) {
-          // Do nothing if the file does not exist
+    try {
+      const fileContent = await readFile(fileName, "utf-8");
+      if (fileContent.length > 0) {
+        const content = JSON.parse(fileContent, BufferJSON.reviver);
+        this.fileCache.set(fileName, content);
+        return content;
       }
+    } catch (error) {
+      // Do nothing if the file does not exist
+    }
 
-      return null;
+    return null;
   }
 
   async saveFile(fileName, content) {
-      const serializedContent = JSON.stringify(content, BufferJSON.replacer, 2);
-      await writeFile(fileName, serializedContent);
+    const serializedContent = JSON.stringify(content, BufferJSON.replacer, 2);
+    await writeFile(fileName, serializedContent);
   }
 
   async deleteFile(fileName) {
-      try {
-          await unlink(fileName);
-      } catch (error) {
-          // Do nothing if the file does not exist
-      }
+    try {
+      await unlink(fileName);
+    } catch (error) {
+      // Do nothing if the file does not exist
+    }
   }
 }
 
 class AuthenticationFromFile {
   constructor(sessionId) {
-      this.sessionId = sessionId;
-      this.fileStorage = new FileStorage();
-      this.KEY_MAP = {
-          'pre-key': 'preKeys',
-          session: 'sessions',
-          'sender-key': 'senderKeys',
-          'app-state-sync-key': 'appStateSyncKeys',
-          'app-state-sync-version': 'appStateVersions',
-          'sender-key-memory': 'senderKeyMemory'
-      };
+    this.sessionId = sessionId;
+    this.fileStorage = new FileStorage();
+    this.KEY_MAP = {
+      "pre-key": "preKeys",
+      session: "sessions",
+      "sender-key": "senderKeys",
+      "app-state-sync-key": "appStateSyncKeys",
+      "app-state-sync-version": "appStateVersions",
+      "sender-key-memory": "senderKeyMemory",
+    };
   }
 
   debounce(func, wait) {
-      if (!this._debounceTimeouts) {
-          this._debounceTimeouts = new Map();
+    if (!this._debounceTimeouts) {
+      this._debounceTimeouts = new Map();
+    }
+
+    return (...args) => {
+      if (this._debounceTimeouts.has(func)) {
+        clearTimeout(this._debounceTimeouts.get(func));
       }
-      
-      return (...args) => {
-          if (this._debounceTimeouts.has(func)) {
-              clearTimeout(this._debounceTimeouts.get(func));
-          }
-          
-          const timeout = setTimeout(() => {
-              func.apply(this, args);
-              this._debounceTimeouts.delete(func);
-          }, wait);
-          this._debounceTimeouts.set(func, timeout);
-      };
+
+      const timeout = setTimeout(() => {
+        func.apply(this, args);
+        this._debounceTimeouts.delete(func);
+      }, wait);
+      this._debounceTimeouts.set(func, timeout);
+    };
   }
-  
+
   async useFileAuth() {
     const fileName = `./session.json`;
 
     let storedCreds = await this.fileStorage.loadFile(fileName);
-    
+
     if (!storedCreds) {
       // Create a blank session file
-      await this.fileStorage.saveFile(fileName, JSON.stringify({
-        creds: {},
-        keys: {},
-      }));
+      await this.fileStorage.saveFile(
+        fileName,
+        JSON.stringify({
+          creds: {},
+          keys: {},
+        })
+      );
     }
-    
+
     let creds = storedCreds?.creds || initAuthCreds();
     let keys = storedCreds?.keys || {};
-    
+
     const saveState = async () => {
       await this.fileStorage.saveFile(fileName, { creds, keys });
     };
 
-      const debouncedSaveState = this.debounce(saveState, 1000);
+    const debouncedSaveState = this.debounce(saveState, 1000);
 
-      const clearState = async () => {
-          await this.fileStorage.deleteFile(fileName);
-      };
+    const clearState = async () => {
+      await this.fileStorage.deleteFile(fileName);
+    };
 
-      return {
-          state: {
-              creds,
-              keys: {
-                  get: (type, ids) => {
-                      const key = this.KEY_MAP[type];
-                      return ids.reduce((dict, id) => {
-                          const value = keys[key]?.[id];
-                          if (value) {
-                              if (type === 'app-state-sync-key') {
-                                  dict[id] = proto.AppStateSyncKeyData.fromObject(value);
-                              } else {
-                                  dict[id] = value;
-                              }
-                          }
-                          return dict;
-                      }, {});
-                  },
-                  set: async (data) => {
-                      let shouldSave = false;
-                      for (const _key in data) {
-                          const key = this.KEY_MAP[_key];
-                          keys[key] = keys[key] || {};
-                          Object.assign(keys[key], data[_key]);
-                          shouldSave = true;
-                      }
-                      if (shouldSave) {
-                          debouncedSaveState();
-                      }
-                  }
-                  
+    return {
+      state: {
+        creds,
+        keys: {
+          get: (type, ids) => {
+            const key = this.KEY_MAP[type];
+            return ids.reduce((dict, id) => {
+              const value = keys[key]?.[id];
+              if (value) {
+                if (type === "app-state-sync-key") {
+                  dict[id] = proto.AppStateSyncKeyData.fromObject(value);
+                } else {
+                  dict[id] = value;
+                }
               }
+              return dict;
+            }, {});
           },
-          saveState,
-          clearState
-      };
+          set: async (data) => {
+            let shouldSave = false;
+            for (const _key in data) {
+              const key = this.KEY_MAP[_key];
+              keys[key] = keys[key] || {};
+              Object.assign(keys[key], data[_key]);
+              shouldSave = true;
+            }
+            if (shouldSave) {
+              debouncedSaveState();
+            }
+          },
+        },
+      },
+      saveState,
+      clearState,
+    };
   }
 }
 const sessionId = "session";
@@ -211,22 +214,25 @@ const startAtlas = async () => {
 
   async function installPlugin() {
     console.log(chalk.yellow("Checking for Plugins...\n"));
-    const installedPlugins = await getPlugin();
-    if (installedPlugins != undefined && installedPlugins.length > 0) {
+  
+    const plugins = await pluginData.find();
+  
+    if (!plugins.length || plugins.length == 0) {
       console.log(
-        chalk.greenBright(
-          installedPlugins.length + " Plugins found ! Installing...\n"
-        )
+        chalk.redBright("No Extra Plugins Installed ! Starting Atlas...\n")
       );
-      for (let i = 0; i < installedPlugins.length; i++) {
-        const pgUrl = installedPlugins[i].url;
-
+    } else {
+      console.log(
+        chalk.greenBright(plugins.length + " Plugins found ! Installing...\n")
+      );
+      for (const plugin of plugins) {
+        const url = plugin.url;
         var { body, statusCode } = await got(pgUrl);
         if (statusCode == 200) {
           try {
             var folderName = "Plugins";
             var fileName = path.basename(pgUrl);
-
+  
             var filePath = path.join(folderName, fileName);
             fs.writeFileSync(filePath, body);
           } catch (error) {
@@ -239,12 +245,9 @@ const startAtlas = async () => {
           "All Plugins Installed Successfully ! Starting Atlas...\n"
         )
       );
-    } else {
-      console.log(
-        chalk.redBright("No Extra Plugins Installed ! Starting Atlas...\n")
-      );
     }
   }
+  
   await readcommands();
 
   store.bind(Atlas.ev);
@@ -297,7 +300,6 @@ const startAtlas = async () => {
     }
   });
 
- 
   Atlas.ev.on("group-participants.update", async (m) => {
     welcomeLeft(Atlas, m);
   });

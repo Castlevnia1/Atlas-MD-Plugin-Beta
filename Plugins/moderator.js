@@ -246,7 +246,7 @@ module.exports = {
             textM += `\n\n📛 *Don't Spam them to avoid Blocking !*\n\n🎀 For any help, type *${prefix}support* and ask in group.\n\n*💫 Thanks for using ${botName}. 💫*\n`;
           }
 
-          return Atlas.sendMessage(
+          Atlas.sendMessage(
             m.from,
             {
               video: { url: botVideo },

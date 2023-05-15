@@ -2,7 +2,9 @@ const {
   userData,
   groupData,
   systemData,
+  pluginData,
 } = require("../MongoDB/MongoDB_Schema.js");
+
 
 // BAN USER
 async function banUser(userId) {
@@ -302,8 +304,56 @@ async function unbanGroup(groupID) {
   await groupData.findOneAndUpdate({ id: groupID }, { $set: { bangroup: false } });
 }
 
+/*// PUSH NEW INSTALLED PLUGIN IN DATABASE
+async function pushPlugin(newPlugin, url) {
+  const pluginsCollection = db.collection("plugins");
+  const plugin = {
+    plugin: newPlugin,
+    url: url,
+  };
+  await pluginsCollection.insertOne(plugin);
+}
 
+// Check if plugin is installed
+async function isPluginPresent(pluginName) {
+  const pluginsCollection = db.collection("plugins");
+  const plugin = await pluginsCollection.findOne({ plugin: pluginName });
+  return !!plugin;
+}
 
+// DELETE A PLUGIN FROM THE DATABASE
+async function delPlugin(pluginName) {
+  const pluginsCollection = db.collection("plugins");
+  const plugin = await pluginsCollection.findOne({ plugin: pluginName });
+  if (!plugin) {
+    throw new Error("The plugin is not present in the database.");
+  }
+  await pluginsCollection.deleteOne({ plugin: pluginName });
+}*/
+
+// PUSH NEW INSTALLED PLUGIN IN DATABASE
+async function pushPlugin(newPlugin, url) {
+  const plugin = new PluginData({
+    plugin: newPlugin,
+    url: url,
+  });
+  await pluginData.insertOne(plugin);
+}
+
+// Check if plugin is installed
+async function isPluginPresent(pluginName) {
+  const plugin = await pluginData.findOne({ plugin: pluginName });
+  return !!plugin;
+}
+
+// DELETE A PLUGIN FROM THE DATABASE
+async function delPlugin(pluginName) {
+  const plugin = await pluginData.findOne({ plugin: pluginName });
+  if (!plugin) {
+    throw new Error("The plugin is not present in the database.");
+  }
+  await pluginData.deleteOne({ plugin: pluginName });
+}
 
 
 
@@ -321,9 +371,9 @@ module.exports = {
   activateChatBot, // -------------- ACTIVATE PM CHATBOT
   checkPmChatbot, // --------------- CHECK PM CHATBOT STATUS
   deactivateChatBot, // ------------ DEACTIVATE PM CHATBOT
-  //pushPlugin, // ------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
-  //getPlugin, // -------------------- GET ALL PLUGIN NAMES AS AN ARRAY
-  //delPlugin, // -------------------- DELETE A PLUGIN FROM THE DATABASE
+  pushPlugin, // ------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
+  isPluginPresent, // -------------- Check if plugin is installed
+  delPlugin, // -------------------- DELETE A PLUGIN FROM THE DATABASE
   setWelcome, // ------------------- SET WELCOME MESSAGE
   checkWelcome, // ----------------- CHECK WELCOME MESSAGE STATUS
   delWelcome, // ------------------- DELETE WELCOME MESSAGE

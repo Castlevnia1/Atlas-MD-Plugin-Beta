@@ -1,4 +1,4 @@
-const {checkWelcome}= require('./SiliconDB/siliconDB-config');
+const {checkWelcome}= require('./MongoDB/MongoDb_Core');
 
 module.exports = async (Atlas, anu) => {
   try {

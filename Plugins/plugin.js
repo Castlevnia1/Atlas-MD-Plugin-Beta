@@ -5,9 +5,10 @@ const { readcommands } = require("../System/ReadCommands.js");
 const { exec } = require("child_process");
 const {
   pushPlugin, // -------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
-  getPlugin, // --------------------- GET ALL PLUGIN NAMES AS AN ARRAY
+  isPluginPresent, // --------------- CHECK IF PLUGIN IS ALREADY PRESENT IN DATABASE
   delPlugin, // --------------------- DELETE A PLUGIN FROM THE DATABASE
-} = require("../System/SiliconDB/siliconDB-config.js");
+} = require("../System/MongoDB/MongoDb_Core.js");
+const {db2} = require("../System/MongoDB/MongoDB_Schema.js");
 
 let mergedCommands = ["install", "uninstall", "plugins", "pluginlist"];
 module.exports = {
@@ -42,17 +43,16 @@ module.exports = {
             fileName = path.basename(url);
 
             // check if plugin is already installed and present in that Database array
-            chackInstallationArray = await getPlugin();
-            if (chackInstallationArray != undefined) {
-              for (let i = 0; i < chackInstallationArray.length; i++) {
-                if (chackInstallationArray[i].name == fileName) {
-                  return m.reply(`*${fileName}* plugin is already installed !`);
-                }
-              }
+            isPluginPresent = await isPluginPresent(fileName);
+            if (isPluginPresent) {
+              return m.reply(`*${fileName}* plugin is already Installed !`);
             }
+
             // Check if that file is present in same directory
             if (fs.existsSync(`./Plugins/${fileName}`)) {
-              return m.reply(`*${fileName}* plugin is already Present Locally !`);
+              return m.reply(
+                `*${fileName}* plugin is already Present Locally !`
+              );
             }
 
             var filePath = path.join(folderName, fileName);
@@ -70,23 +70,22 @@ module.exports = {
 
       case "pluginlist":
       case "plugins":
-        installedPlugins = await getPlugin();
-        if (installedPlugins != undefined && installedPlugins.length > 0) {
-          let txt = "";
-          for (let i = 0; i < installedPlugins.length; i++) {
-            txt += "*『    Installed Plugins List    』*\n\n";
-            txt += `🔖 *Plugin ${i + 1}*\n*🎀 Name:* ${
-              installedPlugins[i].name
-            }\n*🧩 Url:* ${installedPlugins[i].url}\n\n`;
-          }
-          txt += `⚜️ To uninstall a plugin type *uninstall* plugin-name !\n\nExample: *${prefix}uninstall* audioEdit.js`;
-          await Atlas.sendMessage(m.from, { text: txt }, { quoted: m });
-        } else {
+        pluginsCollection = db2.collection("plugins");
+        const plugins = await pluginsCollection.find();
+        if (!plugins.length) {
           await Atlas.sendMessage(
             m.from,
             { text: `No Plugins Found !` },
             { quoted: m }
           );
+        } else {
+          let txt = "";
+          for (var plugin of plugins) {
+            txt += "*『    Installed Plugins List    』*\n\n";
+            txt += `🔖 *Plugin ${plugin.plugin}*\n*🎀 Name:* ${plugin.name}\n*🧩 Url:* ${plugin.url}\n\n`;
+          }
+          txt += `⚜️ To uninstall a plugin type *uninstall* plugin-name !\n\nExample: *${prefix}uninstall* audioEdit.js`;
+          await Atlas.sendMessage(m.from, { text: txt }, { quoted: m });
         }
 
         break;
@@ -97,37 +96,28 @@ module.exports = {
             `Please provide a plugin name !\n\nExample: *${prefix}uninstall* audioEdit.js`
           );
         }
+
         fileName = text;
-        installedPlugins = await getPlugin();
-        if (installedPlugins != undefined && installedPlugins.length > 0) {
-          const plugin = installedPlugins.find((p) => p.name === fileName);
-          if (plugin) {
-            if (fs.existsSync(`./Plugins/${fileName}`)) {
-              fs.unlinkSync(`./Plugins/${fileName}`);
-              await delPlugin(fileName);
-              await readcommands();
-              await m.reply(`*${fileName}* plugin uninstalled successfully !\n\nPlease restart the bot to clear cache !`);
-            } else {
-              return Atlas.sendMessage(
-                m.from,
-                { text: `*${fileName}* plugin is not installed !` },
-                { quoted: m }
-              );
-            }
-          } else {
-            return Atlas.sendMessage(
-              m.from,
-              { text: `*${fileName}* plugin is not installed !` },
-              { quoted: m }
-            );
-          }
-        } else {
-          Atlas.sendMessage(
-            m.from,
-            { text: `*${fileName}* plugin is not installed !` },
-            { quoted: m }
-          );
+
+        pluginsCollection = db2.collection("plugins");
+
+        plugin = await pluginsCollection.findOne({ name: fileName });
+
+        if (!plugin) {
+          return await m.reply(`*${fileName}* plugin is not installed !`);
         }
+
+        if (fs.existsSync(`./Plugins/${fileName}`)) {
+          fs.unlinkSync(`./Plugins/${fileName}`);
+          await pluginsCollection.deleteOne({ name: fileName });
+          await readcommands();
+          await m.reply(
+            `*${fileName}* plugin uninstalled successfully !\n\nPlease restart the bot to clear cache !`
+          );
+        } else {
+          return await m.reply(`*${fileName}* plugin is not installed !`);
+        }
+
         break;
 
       default:

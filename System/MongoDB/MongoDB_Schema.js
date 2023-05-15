@@ -29,8 +29,14 @@ const CoreSchema = new mongoose.Schema({
   botMode: { type: String, default: "public" },
 });
 
+const PluginSchema = new mongoose.Schema({
+    plugin: { type: String },
+    url: { type: String },
+  });
+
 const userData = db1.model("UserData", UserSchema);
 const groupData = db1.model("GroupData", GroupSchema);
 const systemData = db2.model("SystemData", CoreSchema);
+const pluginData = db2.model("PluginData", PluginSchema);
 
-module.exports = { userData, groupData, systemData };
+module.exports = { userData, groupData, systemData, pluginData };
