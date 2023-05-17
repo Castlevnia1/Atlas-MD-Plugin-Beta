@@ -9,7 +9,7 @@ const {
   BufferJSON,
   initAuthCreds,
   jidDecode,
-} = require("@whiskeysockets/baileys");
+} = require("@adiwajshing/baileys");
 const fs = require("fs");
 const figlet = require("figlet");
 const { join } = require("path");
@@ -28,8 +28,8 @@ const { readcommands, commands } = require("./System/ReadCommands.js");
 commands.prefix = global.prefa;
 
 const {
-  pluginData, // -------------------- GET ALL PLUGIN DATA FROM DATABASE
-} = require("./System/MongoDB/MongoDB_Schema");
+  getPluginURLs, // -------------------- GET ALL PLUGIN DATA FROM DATABASE
+} = require("./System/MongoDB/MongoDb_Core.js");
 
 const chalk = require("chalk");
 const store = makeInMemoryStore({
@@ -192,7 +192,7 @@ const startAtlas = async () => {
       font: "Standard",
       horizontalLayout: "default",
       vertivalLayout: "default",
-      width: 100,
+      width: 80,
       whitespaceBreak: true,
     })
   );
@@ -202,7 +202,7 @@ const startAtlas = async () => {
 
   const { state, saveState, clearState } = await authFromFile.useFileAuth();
 
-  let { version, isLatest } = await fetchLatestBaileysVersion();
+  const { version, isLatest } = await fetchLatestBaileysVersion();
 
   const Atlas = atlasConnect({
     logger: pino({ level: "silent" }),
@@ -212,10 +212,14 @@ const startAtlas = async () => {
     version,
   });
 
+  store.bind(Atlas.ev);
+
+  Atlas.public = true;
+
   async function installPlugin() {
     console.log(chalk.yellow("Checking for Plugins...\n"));
   
-    const plugins = await pluginData.find();
+    const plugins = await getPluginURLs();
   
     if (!plugins.length || plugins.length == 0) {
       console.log(
@@ -225,13 +229,13 @@ const startAtlas = async () => {
       console.log(
         chalk.greenBright(plugins.length + " Plugins found ! Installing...\n")
       );
-      for (const plugin of plugins) {
-        const url = plugin.url;
-        var { body, statusCode } = await got(pgUrl);
+      for(let i=0;i<plugins.length;i++){
+        pluginUrl = plugins[i];
+        var { body, statusCode } = await got(pluginUrl);
         if (statusCode == 200) {
           try {
             var folderName = "Plugins";
-            var fileName = path.basename(pgUrl);
+            var fileName = path.basename(pluginUrl);
   
             var filePath = path.join(folderName, fileName);
             fs.writeFileSync(filePath, body);
@@ -250,12 +254,8 @@ const startAtlas = async () => {
   
   await readcommands();
 
-  store.bind(Atlas.ev);
-
-  Atlas.public = true;
-
   Atlas.ev.on("creds.update", saveState);
-
+  Atlas.serializeM = (m) => smsg(Atlas, m, store);
   Atlas.ev.on("connection.update", async (update) => {
     const { lastDisconnect, connection } = update;
     if (connection) {

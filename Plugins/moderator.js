@@ -95,9 +95,6 @@ module.exports = {
       groupName,
     }
   ) => {
-    const mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
-    const userId = mentionedUser;
-
     switch (inputCMD) {
       case "addmod":
       case "setmod":
@@ -118,6 +115,8 @@ module.exports = {
             { text: `Please tag a user to make *mod*!` },
             { quoted: m }
           );
+        mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
+        userId = mentionedUser;
         if (!userId) return m.reply("Please mention a valid user to ban!");
 
         try {
@@ -173,6 +172,8 @@ module.exports = {
             { text: `Please tag a user to make *mod*!` },
             { quoted: m }
           );
+        mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
+        userId = mentionedUser;
         if (!userId) return m.reply("Please mention a valid user to ban!");
 
         try {
@@ -276,6 +277,10 @@ module.exports = {
             { text: `Please tag a user to *Ban*!` },
             { quoted: m }
           );
+        } else if (m.quoted) {
+          var mentionedUser = m.quoted.sender;
+        } else {
+          var mentionedUser = mentionByTag[0];
         }
         chechSenderModStatus = await checkMod(m.sender);
         if (!chechSenderModStatus && !isCreator) {
@@ -285,6 +290,7 @@ module.exports = {
             quoted: m,
           });
         }
+        userId = (await mentionedUser) || m.msg.contextInfo.participant;
         chechBanStatus = await checkBan(userId);
         checkUserModStatus = await checkMod(userId);
         if (checkUserModStatus || isCreator) {
@@ -325,6 +331,10 @@ module.exports = {
             { text: `Please tag a user to *Un-Ban*!` },
             { quoted: m }
           );
+        } else if (m.quoted) {
+          var mentionedUser = m.quoted.sender;
+        } else {
+          var mentionedUser = mentionByTag[0];
         }
         chechSenderModStatus = await checkMod(m.sender);
         if (!chechSenderModStatus && !isCreator) {
@@ -334,6 +344,7 @@ module.exports = {
             quoted: m,
           });
         }
+        userId = (await mentionedUser) || m.msg.contextInfo.participant;
         chechBanStatus = await checkBan(userId);
         if (chechBanStatus) {
           unbanUser(userId).then(async () => {

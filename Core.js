@@ -4,6 +4,7 @@ const { getBinaryNodeChild } = require("@adiwajshing/baileys");
 const chalk = require("chalk");
 const { color } = require("./System/color.js");
 const { readdirSync } = require("fs-extra");
+const axios = require("axios");
 const prefix = global.prefa;
 //const { QuickDB, MongoDriver } = require("quick.db");
 const { QuickDB, JSONDriver } = require("quick.db");
@@ -114,22 +115,6 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
         ? m.message.extendedTextMessage.contextInfo.mentionedJid
         : [];
 
-    if (body == prefix) {
-      await doReact("❌");
-      return m.reply(
-        `Bot is active, type *${prefix}help* to see the list of commands.`
-      );
-    }
-    if (body.startsWith(prefix) && !icmd) {
-      await doReact("❌");
-      return m.reply(
-        `*${budy.replace(
-          prefix,
-          ""
-        )}* - Command not found or plug-in not installed !\n\nIf you want to see the list of commands, type:    *_${prefix}help_*\n\nOr type:  *_${prefix}pluginlist_* to see installable plug-in list.`
-      );
-    }
-
     if (m.message && isGroup) {
       console.log(
         "" + "\n" + chalk.black(chalk.bgWhite("[ GROUP ]")),
@@ -156,22 +141,22 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
         chalk.black(chalk.bgRedBright(body || type)) + "\n" + ""
       );
     }
-    if (body.startsWith(prefix) && !icmd)
-      return Atlas.sendMessage(m.from, { text: "Baka no such command" });
+    //if (body.startsWith(prefix) && !icmd)  return Atlas.sendMessage(m.from, { text: "Baka no such command" });
 
     // ----------------------------- System Configuration (Do not modify this part) ---------------------------- //
 
-    const isbannedUser = await checkBan(m.sender);
-    const modcheck = await checkMod(m.sender);
-    const isBannedGroup = await checkBanGroup(m.from);
-    const isAntilinkOn = await checkAntilink(m.from);
-    const isPmChatbotOn = await checkPmChatbot();
-    const isGroupChatbotOn = await checkGroupChatbot(m.from);
-    const botWorkMode = await getBotMode();
+    var isbannedUser = await checkBan(m.sender);
+    var modcheck = await checkMod(m.sender);
+    var isBannedGroup = await checkBanGroup(m.from);
+    var isAntilinkOn = await checkAntilink(m.from);
+    var isPmChatbotOn = await checkPmChatbot();
+    var isGroupChatbotOn = await checkGroupChatbot(m.from);
+    var botWorkMode = await getBotMode();
 
+    /*
     if (isCmd || icmd) {
       if (botWorkMode == "private") {
-        if (!isCreator || !modcheck) {
+        if (!isCreator && !modcheck) {
           return console.log(`\nCommand Rejected ! Bot is in Private mode !\n`);
         }
       }
@@ -225,6 +210,22 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
       }
     }
 
+    if (body == prefix) {
+      await doReact("❌");
+      return m.reply(
+        `Bot is active, type *${prefix}help* to see the list of commands.`
+      );
+    }
+    if (body.startsWith(prefix) && !icmd) {
+      await doReact("❌");
+      return m.reply(
+        `*${budy.replace(
+          prefix,
+          ""
+        )}* - Command not found or plug-in not installed !\n\nIf you want to see the list of commands, type:    *_${prefix}help_*\n\nOr type:  *_${prefix}pluginlist_* to see installable plug-in list.`
+      );
+    }
+
     if (isAntilinkOn && m.isGroup && !isAdmin && !isCreator && isBotAdmin) {
       const linkgce = await Atlas.groupInviteCode(from);
       if (budy.includes(`https://chat.whatsapp.com/${linkgce}`)) {
@@ -245,41 +246,37 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
             quoted: m,
           }
         );
-        return m.reply(bvl);
+        await m.reply(bvl);
       }
     }
 
-    if (m.isGroup && body.startsWith(prefix)) {
-      if (isGroupChatbotOn) {
-        if (!icmd && !isCmd) {
-          if (m.quoted && m.quoted.sender == botNumber) {
-            const botreply = await axios.get(
-              `http://api.brainshop.ai/get?bid=172352&key=vTmMboAxoXfsKEQQ&uid=[uid]&msg=[${budy}]`
-            );
-            const txtChatbot = `${botreply.data.cnt}`;
-            setTimeout(function () {
-              m.reply(txtChatbot);
-            }, 2200);
-          }
-        }
+    if (m.isGroup && !isCmd && !icmd) {
+      quotedsender = m.quoted ? m.quoted.sender : "";
+      console.log(quotedsender);
+      if (isGroupChatbotOn=="true" && m.quoted && quotedsender == botNumber) {
+          botreply = await axios.get(
+            `http://api.brainshop.ai/get?bid=172352&key=vTmMboAxoXfsKEQQ&uid=[uid]&msg=[${budy}]`
+          );
+          txtChatbot = `${botreply.data.cnt}`;
+          setTimeout(function () {
+
+            m.reply(txtChatbot);
+          }, 2200);
       }
     }
 
-    if (!m.isGroup && body.startsWith(prefix)) {
-      if (isPmChatbotOn) {
-        if (!icmd && !isCmd) {
-          if (m.quoted && m.quoted.sender == botNumber) {
-            const botreply = await axios.get(
-              `http://api.brainshop.ai/get?bid=172352&key=vTmMboAxoXfsKEQQ&uid=[uid]&msg=[${budy}]`
-            );
-            const txtChatbot = `${botreply.data.cnt}`;
-            setTimeout(function () {
-              m.reply(txtChatbot);
-            }, 2200);
-          }
-        }
+    if (!m.isGroup && !isCmd && !icmd) {
+      if (isPmChatbotOn == true) {
+          botreply = await axios.get(
+            `http://api.brainshop.ai/get?bid=172352&key=vTmMboAxoXfsKEQQ&uid=[uid]&msg=[${budy}]`
+          );
+          txtChatbot = `${botreply.data.cnt}`;
+          setTimeout(function () {
+
+            m.reply(txtChatbot);
+          }, 2200);
       }
-    }
+    }*/
 
     // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
 
@@ -309,7 +306,6 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     global.botImage4 = global[idConfig].botImage4;
     global.botImage5 = global[idConfig].botImage5;
     global.botImage6 = global[idConfig].botImage6;
-
 
     // ------------------------------------------------------------------------------------------------------- //
 

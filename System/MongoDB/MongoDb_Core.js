@@ -4,8 +4,7 @@ const {
   systemData,
   pluginData,
 } = require("../MongoDB/MongoDB_Schema.js");
-
-
+const mongoose = require("mongoose");
 // BAN USER
 async function banUser(userId) {
   const user = await userData.findOne({ id: userId });
@@ -111,13 +110,13 @@ async function getChar() {
 async function activateChatBot() {
   const chatbotpm = await systemData.findOne({ id: "1" });
   if (!chatbotpm) {
-    await systemData.create({ id: "1", chatBot: true });
+    await systemData.create({ id: "1", PMchatBot: true });
     return;
   }
-  if (chatbotpm.chatBot) {
+  if (chatbotpm.PMchatBot) {
     return;
   }
-  await systemData.findOneAndUpdate({ id: "1" }, { $set: { chatBot: true } });
+  await systemData.findOneAndUpdate({ id: "1" }, { $set: { PMchatBot: true } });
 }
 
 // CHECK PM CHATBOT STATUS
@@ -126,20 +125,20 @@ async function checkPmChatbot() {
   if (!chatbotpm) {
     return false;
   }
-  return chatbotpm.chatBot;
+  return chatbotpm.PMchatBot;
 }
 
 // DEACTIVATE PM CHATBOT
 async function deactivateChatBot() {
   const chatbotpm = await systemData.findOne({ id: "1" });
   if (!chatbotpm) {
-    await systemData.create({ id: "1", chatBot: false });
+    await systemData.create({ id: "1", PMchatBot: false });
     return;
   }
-  if (!chatbotpm.chatBot) {
+  if (!chatbotpm.PMchatBot) {
     return;
   }
-  await systemData.findOneAndUpdate({ id: "1" }, { $set: { chatBot: false } });
+  await systemData.findOneAndUpdate({ id: "1" }, { $set: { PMchatBot: false } });
 }
 
 // SET WELCOME MESSAGE
@@ -333,12 +332,13 @@ async function delPlugin(pluginName) {
 
 // PUSH NEW INSTALLED PLUGIN IN DATABASE
 async function pushPlugin(newPlugin, url) {
-  const plugin = new PluginData({
+  const plugin = new pluginData({
     plugin: newPlugin,
     url: url,
   });
-  await pluginData.insertOne(plugin);
+  await plugin.save();
 }
+
 
 // Check if plugin is installed
 async function isPluginPresent(pluginName) {
@@ -355,6 +355,18 @@ async function delPlugin(pluginName) {
   await pluginData.deleteOne({ plugin: pluginName });
 }
 
+// Get all installed plugin URLs as an array
+async function getPluginURLs() {
+  const plugins = await pluginData.find({}, 'url');
+  const urls = plugins.map(plugin => plugin.url);
+  return urls;
+}
+
+// Getting all plugins as an array
+async function getAllPlugins() {
+  const plugins = await pluginData.find({}, { plugin: 1, url: 1 });
+  return plugins;
+}
 
 
 
@@ -388,4 +400,6 @@ module.exports = {
   banGroup, // --------------------- BAN GROUP
   checkBanGroup, //----------------- CHECK BAN STATUS OF A GROUP
   unbanGroup, // ------------------- UNBAN GROUP
+  getPluginURLs, // ---------------- Get all installed plugin URLs as an array
+  getAllPlugins, // ---------------- Getting all plugins as an array
 };

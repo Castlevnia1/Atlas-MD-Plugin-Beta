@@ -7,6 +7,7 @@ const {
   pushPlugin, // -------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
   isPluginPresent, // --------------- CHECK IF PLUGIN IS ALREADY PRESENT IN DATABASE
   delPlugin, // --------------------- DELETE A PLUGIN FROM THE DATABASE
+  getAllPlugins, // ----------------- GET ALL PLUGINS FROM DATABASE
 } = require("../System/MongoDB/MongoDb_Core.js");
 const {db2} = require("../System/MongoDB/MongoDB_Schema.js");
 
@@ -43,8 +44,8 @@ module.exports = {
             fileName = path.basename(url);
 
             // check if plugin is already installed and present in that Database array
-            isPluginPresent = await isPluginPresent(fileName);
-            if (isPluginPresent) {
+            plugin = await isPluginPresent(fileName);
+            if (plugin) {
               return m.reply(`*${fileName}* plugin is already Installed !`);
             }
 
@@ -70,19 +71,18 @@ module.exports = {
 
       case "pluginlist":
       case "plugins":
-        pluginsCollection = db2.collection("plugins");
-        const plugins = await pluginsCollection.find();
+        const plugins = await getAllPlugins();
         if (!plugins.length) {
           await Atlas.sendMessage(
             m.from,
-            { text: `No Plugins Found !` },
+            { text: `No additional installed Plugins Found !` },
             { quoted: m }
           );
         } else {
           let txt = "";
-          for (var plugin of plugins) {
+          for (var i = 0; i < plugins.length; i++) {
             txt += "*『    Installed Plugins List    』*\n\n";
-            txt += `🔖 *Plugin ${plugin.plugin}*\n*🎀 Name:* ${plugin.name}\n*🧩 Url:* ${plugin.url}\n\n`;
+            txt += `🔖 *Plugin ${i+1}*\n*🎀 Name:* ${plugins[i].plugin}\n*🧩 Url:* ${plugins[i].url}\n\n`;
           }
           txt += `⚜️ To uninstall a plugin type *uninstall* plugin-name !\n\nExample: *${prefix}uninstall* audioEdit.js`;
           await Atlas.sendMessage(m.from, { text: txt }, { quoted: m });
@@ -99,9 +99,7 @@ module.exports = {
 
         fileName = text;
 
-        pluginsCollection = db2.collection("plugins");
-
-        plugin = await pluginsCollection.findOne({ name: fileName });
+        plugin = isPluginPresent(fileName)
 
         if (!plugin) {
           return await m.reply(`*${fileName}* plugin is not installed !`);
@@ -109,7 +107,7 @@ module.exports = {
 
         if (fs.existsSync(`./Plugins/${fileName}`)) {
           fs.unlinkSync(`./Plugins/${fileName}`);
-          await pluginsCollection.deleteOne({ name: fileName });
+          await delPlugin(fileName);
           await readcommands();
           await m.reply(
             `*${fileName}* plugin uninstalled successfully !\n\nPlease restart the bot to clear cache !`
