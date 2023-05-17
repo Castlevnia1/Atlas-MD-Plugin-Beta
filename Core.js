@@ -153,7 +153,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     var isGroupChatbotOn = await checkGroupChatbot(m.from);
     var botWorkMode = await getBotMode();
 
-    /*
+    
     if (isCmd || icmd) {
       if (botWorkMode == "private") {
         if (!isCreator && !modcheck) {
@@ -251,9 +251,8 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
     }
 
     if (m.isGroup && !isCmd && !icmd) {
-      quotedsender = m.quoted ? m.quoted.sender : "";
-      console.log(quotedsender);
-      if (isGroupChatbotOn=="true" && m.quoted && quotedsender == botNumber) {
+      let txtSender = m.quoted ? m.quoted.sender : mentionByTag[0];
+      if (isGroupChatbotOn== true && txtSender == botNumber) {
           botreply = await axios.get(
             `http://api.brainshop.ai/get?bid=172352&key=vTmMboAxoXfsKEQQ&uid=[uid]&msg=[${budy}]`
           );
@@ -276,7 +275,7 @@ module.exports = async (Atlas, m, commands, chatUpdate) => {
             m.reply(txtChatbot);
           }, 2200);
       }
-    }*/
+    }
 
     // ------------------------ Character Configuration (Do not modify this part) ------------------------ //
 

@@ -230,16 +230,16 @@ module.exports = {
             textM = "*No Mods Added !*";
           }
 
-          textM += `\n🎀 *Owners* 🎀\n`;
+          textM += `\n〽️ *Owners* 〽️\n`;
 
           for (var i = 0; i < ownerList.length; i++) {
-            textM += `\n〽️ @${ownerList[i]}\n`;
+            textM += `\n〄  @${ownerList[i]}\n`;
           }
 
           if (modlistString != "") {
             textM += `\n🧩 *Added Mods* 🧩\n`;
             for (var i = 0; i < modlist.length; i++) {
-              textM += `\n🎀 @${modlist[i].id.split("@")[0]}\n`;
+              textM += `\n〄  @${modlist[i].id.split("@")[0]}\n`;
             }
           }
 
@@ -293,18 +293,18 @@ module.exports = {
         userId = (await mentionedUser) || m.msg.contextInfo.participant;
         chechBanStatus = await checkBan(userId);
         checkUserModStatus = await checkMod(userId);
-        if (checkUserModStatus || isCreator) {
+        userNum = userId.split("@")[0];
+        globalOwner = global.owner;
+        if (checkUserModStatus==true || globalOwner.includes(userNum)) {
           return Atlas.sendMessage(m.from, {
             text: `Sorry, I can't ban an *Owner* or *Mod* !`,
-            quoted: m,
-          });
+          },{ quoted: m});
         }
         if (chechBanStatus) {
           return Atlas.sendMessage(m.from, {
             text: `@${mentionedUser.split("@")[0]} is already *Banned* !`,
             mentions: [mentionedUser],
-            quoted: m,
-          });
+          },{ quoted: m});
         } else {
           banUser(userId).then(async () => {
             await Atlas.sendMessage(
