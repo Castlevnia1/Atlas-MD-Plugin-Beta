@@ -78,6 +78,7 @@ module.exports = {
       banData,
       prefix,
       db,
+      isintegrated,
       doReact,
       args,
       itsMe,
@@ -98,8 +99,7 @@ module.exports = {
     switch (inputCMD) {
       case "addmod":
       case "setmod":
-        // Only allow the creator to use this command
-        if (!isCreator)
+        if (!isCreator && !isintegrated)
           return Atlas.sendMessage(
             m.from,
             {
@@ -155,8 +155,7 @@ module.exports = {
 
       case "delmod":
       case "removemod":
-        // Only allow the creator to use this command
-        if (!isCreator)
+        if (!isCreator && !isintegrated)
           return Atlas.sendMessage(
             m.from,
             {
@@ -283,7 +282,7 @@ module.exports = {
           var mentionedUser = mentionByTag[0];
         }
         chechSenderModStatus = await checkMod(m.sender);
-        if (!chechSenderModStatus && !isCreator) {
+        if (!chechSenderModStatus && !isCreator && !isintegrated) {
           await doReact("❌");
           return Atlas.sendMessage(m.from, {
             text: `Sorry, only *Owners* and *Mods* can use this command !`,
@@ -337,7 +336,7 @@ module.exports = {
           var mentionedUser = mentionByTag[0];
         }
         chechSenderModStatus = await checkMod(m.sender);
-        if (!chechSenderModStatus && !isCreator) {
+        if (!chechSenderModStatus && !isCreator && !isintegrated) {
           await doReact("❌");
           return Atlas.sendMessage(m.from, {
             text: `Sorry, only *Owners* and *Mods* can use this command !`,
@@ -378,7 +377,7 @@ module.exports = {
           );
         }
         chechSenderModStatus = await checkMod(m.sender);
-        if (!chechSenderModStatus && !isCreator) {
+        if (!chechSenderModStatus && !isCreator && !isintegrated) {
           await doReact("❌");
           return Atlas.sendMessage(m.from, {
             text: `Sorry, only *Owners* and *Mods* can use this command !`,
@@ -402,7 +401,7 @@ module.exports = {
           "Denji",
           "Zero Two",
           "Chika",
-          "Atlas",
+          "Miku",
           "Marin",
           "Ayanokoji",
           "Ruka",
@@ -474,7 +473,7 @@ module.exports = {
           );
         }
         chechSenderModStatus = await checkMod(m.sender);
-        if (!chechSenderModStatus && !isCreator) {
+        if (!chechSenderModStatus && !isCreator && !isintegrated) {
           await doReact("❌");
           return Atlas.sendMessage(m.from, {
             text: `Sorry, only *Owners* and *Mods* can use this command !`,
@@ -524,7 +523,7 @@ module.exports = {
         }
 
         chechSenderModStatus = await checkMod(m.sender);
-        if (!chechSenderModStatus && !isCreator) {
+        if (!chechSenderModStatus && !isCreator && !isintegrated) {
           await doReact("❌");
           return Atlas.sendMessage(m.from, {
             text: `Sorry, only *Owners* and *Mods* can use this command !`,
@@ -555,7 +554,7 @@ module.exports = {
         }
 
         chechSenderModStatus = await checkMod(m.sender);
-        if (!chechSenderModStatus && !isCreator) {
+        if (!chechSenderModStatus && !isCreator && !isintegrated) {
           await doReact("❌");
           return Atlas.sendMessage(m.from, {
             text: `Sorry, only *Owners* and *Mods* can use this command !`,
@@ -585,6 +584,15 @@ module.exports = {
           return m.reply(
             `Please provide *Self / Private / Public* mode names !\n\n*Example:*\n\n${prefix}mode public`
           );
+        }
+
+        chechSenderModStatus = await checkMod(m.sender);
+        if (!chechSenderModStatus && !isCreator && !isintegrated) {
+          await doReact("❌");
+          return Atlas.sendMessage(m.from, {
+            text: `Sorry, only *Owners* and *Mods* can use this command !`,
+            quoted: m,
+          });
         }
 
         chechbotMode = await getBotMode();
