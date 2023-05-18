@@ -208,14 +208,14 @@ exports.parseMention = (text = '') => {
 exports.GIFBufferToVideoBuffer = async (image) => {
         
     const filename = `${Math.random().toString(36)}`
-            await fs.writeFileSync(`./Processes/${filename}.gif`, image)
+            await fs.writeFileSync(`./System/Cache/${filename}.gif`, image)
                      child_process.exec(
-                                `ffmpeg -i ./Processes/${filename}.gif -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" ./Processes/${filename}.mp4`
+                                `ffmpeg -i ./System/Cache/${filename}.gif -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" ./System/Cache/${filename}.mp4`
                                         ) 
   await sleep(4000)
   
-    var buffer5  =  await  fs.readFileSync(`./Processes/${filename}.mp4`)
-    Promise.all([unlink(`./Processes/${filename}.mp4`), unlink(`./Processes/${filename}.gif`)])
+    var buffer5  =  await  fs.readFileSync(`./System/Cache/${filename}.mp4`)
+    Promise.all([unlink(`./System/Cache/${filename}.mp4`), unlink(`./System/Cache/${filename}.gif`)])
     return buffer5
                        }
 

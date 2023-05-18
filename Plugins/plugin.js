@@ -2,14 +2,12 @@ const got = require("got");
 const fs = require("fs");
 const path = require("path");
 const { readcommands } = require("../System/ReadCommands.js");
-const { exec } = require("child_process");
 const {
   pushPlugin, // -------------------- PUSH NEW INSTALLED PLUGIN IN DATABASE
   isPluginPresent, // --------------- CHECK IF PLUGIN IS ALREADY PRESENT IN DATABASE
   delPlugin, // --------------------- DELETE A PLUGIN FROM THE DATABASE
   getAllPlugins, // ----------------- GET ALL PLUGINS FROM DATABASE
 } = require("../System/MongoDB/MongoDb_Core.js");
-const {db2} = require("../System/MongoDB/MongoDB_Schema.js");
 
 let mergedCommands = ["install", "uninstall", "plugins", "pluginlist"];
 module.exports = {
