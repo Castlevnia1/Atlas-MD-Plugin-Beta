@@ -1,4 +1,3 @@
-const axios = require("axios");
 const {
   fetchJson,
   getBuffer,
@@ -35,7 +34,7 @@ let mergedCommands = [
 ];
 
 module.exports = {
-  name: "moderators",
+  name: "reactions",
   alias: [...mergedCommands],
   uniquecommands:  [
     "bite",
@@ -65,7 +64,7 @@ module.exports = {
     "wink",
     "yeet",
   ],
-  description: "All Moderator/Owner Commands",
+  description: "All reaction Commands",
   start: async (Atlas, m, { text, prefix, mentionByTag }) => {
     const suitableWords = {
       bite: "bited",

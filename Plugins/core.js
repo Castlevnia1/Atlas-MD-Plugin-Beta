@@ -63,30 +63,6 @@ module.exports = {
           return allCommands;
         }
 
-        /* function readUniqueCommands(dirPath) {
-    const allCommands = [];
-
-    const files = fs.readdirSync(dirPath);
-
-    for (const file of files) {
-      const filePath = path.join(dirPath, file);
-      const stat = fs.statSync(filePath);
-
-      if (stat.isDirectory()) {
-        const subCommands = readUniqueCommands(filePath);
-        allCommands.push(...subCommands);
-      } else if (stat.isFile() && file.endsWith(".js")) {
-        const command = require(filePath);
-
-        if (Array.isArray(command.uniquecommands)) {
-          allCommands.push(...command.uniquecommands);
-        }
-      }
-    }
-
-    return allCommands;
-  }*/
-
         function formatCommands(allCommands) {
           let formatted = "";
 
