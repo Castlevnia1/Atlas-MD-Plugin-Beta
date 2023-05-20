@@ -38,6 +38,7 @@ module.exports = {
       case "help":
       case "h":
       case "menu":
+        await Atlas.sendPresenceUpdate('composing', m.from);
         function readUniqueCommands(dirPath) {
           const allCommands = [];
 

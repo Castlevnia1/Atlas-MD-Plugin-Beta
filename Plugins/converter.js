@@ -3,6 +3,7 @@ const { webp2mp4File } = require("../System/Uploader");
 const { toAudio } = require("../System/File-Converter");
 const { exec } = require("child_process");
 const fs = require("fs");
+const PDFDocument = require("pdfkit");
 let { GraphOrg } = require("../System/Uploader");
 
 const util = require("util");
@@ -14,12 +15,23 @@ let mergedCommands = [
   "tomp3",
   "toaudio",
   "tourl",
+  "topdf",
+  "imgtopdf",
 ];
 
 module.exports = {
   name: "converters",
   alias: [...mergedCommands],
-  uniquecommands:["toimg", "togif", "tomp4", "tomp3", "toaudio", "tourl"],
+  uniquecommands: [
+    "toimg",
+    "togif",
+    "tomp4",
+    "tomp3",
+    "toaudio",
+    "tourl",
+    "topdf",
+    "imgtopdf",
+  ],
   description: "All converter related commands",
   start: async (
     Atlas,
@@ -171,11 +183,11 @@ module.exports = {
 
       case "tourl":
         if (!m.quoted) {
-            await doReact("❔");
-            return m.reply(
-              `Plese provide an *Image* / *Video* to generate a link! With Caption ${prefix}tourl`
-            );
-          }
+          await doReact("❔");
+          return m.reply(
+            `Plese provide an *Image* / *Video* to generate a link! With Caption ${prefix}tourl`
+          );
+        }
         let media5 = await Atlas.downloadAndSaveMediaMessage(quoted);
         if (/image/.test(mime)) {
           await doReact("🔗");
@@ -190,10 +202,12 @@ module.exports = {
             await doReact("❌");
             await fs.unlinkSync(media5);
             return Atlas.sendMessage(
-                m.from,
-                { text: `*Your video size is too big!*\n\n*Max video size:* 5MB` },
-                { quoted: m }
-              );
+              m.from,
+              {
+                text: `*Your video size is too big!*\n\n*Max video size:* 5MB`,
+              },
+              { quoted: m }
+            );
           }
         } else {
           await doReact("❌");
@@ -202,6 +216,65 @@ module.exports = {
           );
         }
         await fs.unlinkSync(media5);
+        break;
+
+      case "topdf":
+      case "imgtopdf":
+        if (/image/.test(mime)) {
+          await doReact("🎴");
+          let mediaMess4 = await Atlas.downloadAndSaveMediaMessage(quoted);
+
+          async function generatePDF(path)  {
+            return new Promise((resolve, reject) => {
+              const doc = new PDFDocument();
+              
+
+              const imageFilePath = mediaMess4.replace(/\\/g, "/"); // Replace with the path to your image file
+              doc
+                .image(imageFilePath,0,0 , {width:612,  align: 'center', valign: 'center'});
+
+               // Replace with the desired output path and filename
+              doc.pipe(fs.createWriteStream(path));
+
+              doc.on("end", () => {
+                resolve(path);
+              });
+
+              doc.end();
+            });
+          };
+
+          try {
+            let randomFileName= `./${Math.floor(Math.random() * 1000000000)}.pdf`;
+            const pdfPATH = randomFileName;
+            await generatePDF(pdfPATH);
+            pdf = fs.readFileSync(pdfPATH);
+
+            Atlas.sendMessage(
+              m.from,
+              {
+                document: pdf, 
+                fileName: `Converted-By-Atlas.pdf`,
+                mimetype: "application/pdf",
+              },
+              { quoted: m }
+            );
+
+            fs.unlinkSync(mediaMess4);
+            //fs.unlinkSync(pdfPATH);
+          } catch (error) {
+            await doReact("❌");
+            console.error(error);
+            return m.reply(
+              `An error occurred while converting the image to PDF.`
+            );
+          }
+        } else {
+          await doReact("❔");
+          return m.reply(`Please reply to an *Image* to convert it to PDF!`);
+        }
+        break;
+
       default:
         break;
     }

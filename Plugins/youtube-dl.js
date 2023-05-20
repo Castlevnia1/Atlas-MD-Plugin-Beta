@@ -69,6 +69,8 @@ module.exports = {
                 //const thumbnailBuffer = await getBuffer(song.thumbnail);
                 const thumbnailBuffer = await getBuffer(thumbAtlas);
 
+                await Atlas.sendPresenceUpdate('recording', m.from);
+
                 Atlas.sendMessage(
                   m.from,
                   {
