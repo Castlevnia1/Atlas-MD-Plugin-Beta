@@ -171,7 +171,7 @@ module.exports = {
         await doReact("🪄");
         await Atlas.sendPresenceUpdate("recording", m.from);
         texttospeechurl = tts.getAllAudioUrls(sayMess, {
-          lang: "zh-SG",
+          lang: "zh-TW",
           slow: false,
           host: "https://translate.google.com",
           splitPunct: ',.?',
