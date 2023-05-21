@@ -69,6 +69,7 @@ module.exports = {
       case "speak":
       case "tts":
         await doReact("🪄");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "en",
           slow: false,
@@ -89,6 +90,7 @@ module.exports = {
       case "saybengali":
       case "saybangla":
         await doReact("🪄");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "bn",
           slow: false,
@@ -108,6 +110,7 @@ module.exports = {
 
       case "sayhindi":
         await doReact("🪄");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "hi",
           slow: false,
@@ -127,6 +130,7 @@ module.exports = {
 
       case "sayja":
       case "sayjapanese":
+        await Atlas.sendPresenceUpdate("recording", m.from);
         await doReact("🪄");
         texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "ja",
@@ -146,6 +150,7 @@ module.exports = {
 
       case "saykorean":
         await doReact("🪄");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "ko",
           slow: false,
@@ -164,6 +169,7 @@ module.exports = {
 
       case "saychinese":
         await doReact("🪄");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "zh-SG",
           slow: false,
@@ -184,6 +190,7 @@ module.exports = {
       case "sayindo":
       case "sayindonesian":
         await doReact("🪄");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "id",
           slow: false,
