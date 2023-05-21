@@ -139,6 +139,7 @@ module.exports = {
         }
         await doReact("🎶");
         let media = await quoted.download();
+        await Atlas.sendPresenceUpdate("recording", m.from);
         let audio = await toAudio(media, "mp4");
         Atlas.sendMessage(
           m.from,
@@ -173,6 +174,7 @@ module.exports = {
         }
         await doReact("🎶");
         let media2 = await quoted.download();
+        await Atlas.sendPresenceUpdate("recording", m.from);
         let audio2 = await toAudio(media2, "mp4");
         Atlas.sendMessage(
           m.from,
@@ -224,16 +226,17 @@ module.exports = {
           await doReact("🎴");
           let mediaMess4 = await Atlas.downloadAndSaveMediaMessage(quoted);
 
-          async function generatePDF(path)  {
+          async function generatePDF(path) {
             return new Promise((resolve, reject) => {
               const doc = new PDFDocument();
-              
 
-              const imageFilePath = mediaMess4.replace(/\\/g, "/"); // Replace with the path to your image file
-              doc
-                .image(imageFilePath,0,0 , {width:612,  align: 'center', valign: 'center'});
+              const imageFilePath = mediaMess4.replace(/\\/g, "/");
+              doc.image(imageFilePath, 0, 0, {
+                width: 612, // It will make your image to horizontally fill the page - Change it as per your requirement
+                align: "center",
+                valign: "center",
+              });
 
-               // Replace with the desired output path and filename
               doc.pipe(fs.createWriteStream(path));
 
               doc.on("end", () => {
@@ -242,26 +245,31 @@ module.exports = {
 
               doc.end();
             });
-          };
+          }
 
           try {
-            let randomFileName= `./${Math.floor(Math.random() * 1000000000)}.pdf`;
+            let randomFileName = `./${Math.floor(
+              Math.random() * 1000000000
+            )}.pdf`;
             const pdfPATH = randomFileName;
             await generatePDF(pdfPATH);
             pdf = fs.readFileSync(pdfPATH);
 
-            Atlas.sendMessage(
-              m.from,
-              {
-                document: pdf, 
-                fileName: `Converted-By-Atlas.pdf`,
-                mimetype: "application/pdf",
-              },
-              { quoted: m }
-            );
+            setTimeout(async () => {
+              let pdf = fs.readFileSync(pdfPATH);
 
-            fs.unlinkSync(mediaMess4);
-            //fs.unlinkSync(pdfPATH);
+              Atlas.sendMessage(
+                m.from,
+                {
+                  document: pdf,
+                  fileName: `Converted By ${botName}.pdf`,
+                },
+                { quoted: m }
+              );
+
+              fs.unlinkSync(mediaMess4);
+              fs.unlinkSync(pdfPATH);
+            }, 1000);
           } catch (error) {
             await doReact("❌");
             console.error(error);

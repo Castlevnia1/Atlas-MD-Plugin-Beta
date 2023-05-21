@@ -13,23 +13,31 @@ let mergedCommands = [
 ];
 
 module.exports = {
-  name: "audioedit",
+  name: "audioedits",
   alias: [...mergedCommands],
-  uniquecommands:["bass", "deep", "nightcore", "reverse", "robot", "slow", "smooth", "tempo"],
+  uniquecommands: [
+    "bass",
+    "deep",
+    "nightcore",
+    "reverse",
+    "robot",
+    "slow",
+    "smooth",
+    "tempo",
+  ],
   description: "All Audio Editing Commands",
   start: async (Atlas, m, { inputCMD, text, doReact, mime, quoted }) => {
     if (!/audio/.test(mime)) {
-      doReact("❌").then(() => {
-        return m.reply(`Please mention an audio file !`);
-      });
-      return;
+      await doReact("❌");
+      return m.reply(`Please mention an audio file !`);
     }
     switch (inputCMD) {
       case "bass":
-        doReact("🎶");
+        await doReact("🎶");
         let media = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set = "-af equalizer=f=18:width_type=o:width=2:g=14";
         let ran = getRandom(".mp3");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         try {
           exec(`ffmpeg -i ${media} ${set} ${ran}`, (err, stderr, stdout) => {
             fs.unlinkSync(media);
@@ -49,10 +57,11 @@ module.exports = {
         break;
 
       case "nightcore":
-        doReact("🎶");
+        await doReact("🎶");
         let media3 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set3 = "-filter:a atempo=1.07,asetrate=44100*1.20";
         let ran3 = getRandom(".mp3");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         try {
           exec(`ffmpeg -i ${media3} ${set3} ${ran3}`, (err, stderr, stdout) => {
             fs.unlinkSync(media3);
@@ -72,10 +81,11 @@ module.exports = {
         break;
 
       case "deep":
-        doReact("🎶");
+        await doReact("🎶");
         let media2 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set2 = "-af atempo=4/4,asetrate=44500*2/3";
         let ran2 = getRandom(".mp3");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         try {
           exec(`ffmpeg -i ${media2} ${set2} ${ran2}`, (err, stderr, stdout) => {
             fs.unlinkSync(media2);
@@ -95,10 +105,11 @@ module.exports = {
         break;
 
       case "reverse":
-        doReact("🎶");
+        await doReact("🎶");
         let media4 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set4 = '-filter_complex "areverse"';
         let ran4 = getRandom(".mp3");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         try {
           exec(`ffmpeg -i ${media4} ${set4} ${ran4}`, (err, stderr, stdout) => {
             fs.unlinkSync(media4);
@@ -118,11 +129,12 @@ module.exports = {
         break;
 
       case "robot":
-        doReact("🎶");
+        await doReact("🎶");
         let media5 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set5 =
           "-filter_complex \"afftfilt=real='hypot(re,im)*sin(0)':imag='hypot(re,im)*cos(0)':win_size=512:overlap=0.75\"";
         let ran5 = getRandom(".mp3");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         try {
           exec(`ffmpeg -i ${media5} ${set5} ${ran5}`, (err, stderr, stdout) => {
             fs.unlinkSync(media5);
@@ -142,10 +154,11 @@ module.exports = {
         break;
 
       case "slow":
-        doReact("🎶");
+        await doReact("🎶");
         let media6 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set6 = '-filter:a "atempo=0.8,asetrate=44100"';
         let ran6 = getRandom(".mp3");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         try {
           exec(`ffmpeg -i ${media6} ${set6} ${ran6}`, (err, stderr, stdout) => {
             fs.unlinkSync(media6);
@@ -165,11 +178,12 @@ module.exports = {
         break;
 
       case "smooth":
-        doReact("🎶");
+        await doReact("🎶");
         let media7 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set7 =
           "-filter:v \"minterpolate='mi_mode=mci:mc_mode=aobmc:vsbmc=1:fps=120'\"";
         let ran7 = getRandom(".mp3");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         try {
           exec(`ffmpeg -i ${media7} ${set7} ${ran7}`, (err, stderr, stdout) => {
             fs.unlinkSync(media7);
@@ -189,10 +203,11 @@ module.exports = {
         break;
 
       case "tempo":
-        doReact("🎶");
+        await doReact("🎶");
         let media8 = await Atlas.downloadAndSaveMediaMessage(quoted);
         let set8 = '-filter:a "atempo=0.9,asetrate=65100"';
         let ran8 = getRandom(".mp3");
+        await Atlas.sendPresenceUpdate("recording", m.from);
         try {
           exec(`ffmpeg -i ${media8} ${set8} ${ran8}`, (err, stderr, stdout) => {
             fs.unlinkSync(media8);

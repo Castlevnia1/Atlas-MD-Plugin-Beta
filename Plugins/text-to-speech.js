@@ -69,18 +69,19 @@ module.exports = {
       case "speak":
       case "tts":
         await doReact("🪄");
-        texttospeechurl = tts.getAudioUrl(sayMess, {
+        texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "en",
           slow: false,
           host: "https://translate.google.com",
+          splitPunct: ',.?',
         });
 
         await Atlas.sendMessage(
           m.from,
-          { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
+          { audio: { url: texttospeechurl[0].url }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
-          m.reply(`An error Occurd !`);
+          m.reply(`An error Occurd !: ${e}`);
         });
 
         break;
@@ -88,33 +89,35 @@ module.exports = {
       case "saybengali":
       case "saybangla":
         await doReact("🪄");
-        texttospeechurl = tts.getAudioUrl(sayMess, {
+        texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "bn",
           slow: false,
           host: "https://translate.google.com",
+          splitPunct: ',.?',
         });
 
         await Atlas.sendMessage(
           m.from,
-          { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
+          { audio: { url: texttospeechurl[0].url }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
-          m.reply(`An error Occurd !`);
+          m.reply(`An error Occurd !: ${e}`);
         });
 
         break;
 
       case "sayhindi":
         await doReact("🪄");
-        texttospeechurl = tts.getAudioUrl(sayMess, {
+        texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "hi",
           slow: false,
           host: "https://translate.google.com",
+          splitPunct: ',.?',
         });
 
         await Atlas.sendMessage(
           m.from,
-          { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
+          { audio: { url: texttospeechurl[0].url }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
           m.reply(`An error Occurd !`);
@@ -125,15 +128,16 @@ module.exports = {
       case "sayja":
       case "sayjapanese":
         await doReact("🪄");
-        texttospeechurl = tts.getAudioUrl(sayMess, {
+        texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "ja",
           slow: false,
           host: "https://translate.google.com",
+          splitPunct: ',.?',
         });
 
         await Atlas.sendMessage(
           m.from,
-          { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
+          { audio: { url: texttospeechurl[0].url }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
           m.reply(`An error Occurd !`);
@@ -142,15 +146,16 @@ module.exports = {
 
       case "saykorean":
         await doReact("🪄");
-        texttospeechurl = tts.getAudioUrl(sayMess, {
+        texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "ko",
           slow: false,
           host: "https://translate.google.com",
+          splitPunct: ',.?',
         });
 
         await Atlas.sendMessage(
           m.from,
-          { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
+          { audio: { url: texttospeechurl[0].url }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
           m.reply(`An error Occurd !`);
@@ -159,15 +164,16 @@ module.exports = {
 
       case "saychinese":
         await doReact("🪄");
-        texttospeechurl = tts.getAudioUrl(sayMess, {
+        texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "zh-SG",
           slow: false,
           host: "https://translate.google.com",
+          splitPunct: ',.?',
         });
 
         await Atlas.sendMessage(
           m.from,
-          { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
+          { audio: { url: texttospeechurl[0].url }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
           m.reply(`An error Occurd !`);
@@ -178,15 +184,16 @@ module.exports = {
       case "sayindo":
       case "sayindonesian":
         await doReact("🪄");
-        texttospeechurl = tts.getAudioUrl(sayMess, {
+        texttospeechurl = tts.getAllAudioUrls(sayMess, {
           lang: "id",
           slow: false,
           host: "https://translate.google.com",
+          splitPunct: ',.?',
         });
 
         await Atlas.sendMessage(
           m.from,
-          { audio: { url: texttospeechurl }, mimetype: "audio/mpeg" },
+          { audio: { url: texttospeechurl[0].url }, mimetype: "audio/mpeg" },
           { quoted: m }
         ).catch((e) => {
           m.reply(`An error Occurd !`);
