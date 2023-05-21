@@ -11,7 +11,7 @@ let mergedCommands = [
 module.exports = {
   name: "downloader",
   alias: [...mergedCommands],
-  uniquecommands:["igdl", "fbdl", "mediafiredl"],
+  uniquecommands: ["igdl", "fbdl", "mediafiredl"],
   description: "All file dowloader commands",
   start: async (Atlas, m, { inputCMD, text, doReact, prefix, pushName }) => {
     switch (inputCMD) {
@@ -52,7 +52,9 @@ module.exports = {
           );
         } catch (err) {
           await doReact("❌");
-          await m.reply(`Video access denied ! It's private or has some other restrictions.`);
+          await m.reply(
+            `Video access denied ! It's private or has some other restrictions.`
+          );
         }
         break;
 
@@ -79,7 +81,7 @@ module.exports = {
         
 *🎀 File Name* : ${MDF[0].nama}
 *🧩 File Size* : ${MDF[0].size}
-*📌File Format* : ${MDF[0].mime}
+*📌 File Format* : ${MDF[0].mime}
 
 Downloading...`;
 
@@ -130,7 +132,9 @@ Downloading...`;
           );
         } catch (err) {
           await doReact("❌");
-          await m.reply(`Video access denied ! It's private or only owner's friends can view it.`);
+          await m.reply(
+            `Video access denied ! It's private or only owner's friends can view it.`
+          );
         }
 
         break;
@@ -142,7 +146,14 @@ Downloading...`;
 };
 
 async function mediafireDl(url) {
-  const res = await axios.get(url);
+  const res = await axios.get(url, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+      "Content-Type": "application/json",
+    },
+    timeout: 100000,
+  });
   const $ = cheerio.load(res.data);
   const results = [];
   const link = $("a#downloadButton").attr("href");

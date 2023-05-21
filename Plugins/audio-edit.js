@@ -51,7 +51,7 @@ module.exports = {
             fs.unlinkSync(ran);
           });
         } catch (e) {
-          doReact("❌");
+          await doReact("❌");
           m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
@@ -75,7 +75,7 @@ module.exports = {
             fs.unlinkSync(ran3);
           });
         } catch (e) {
-          doReact("❌");
+          await doReact("❌");
           m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
@@ -99,7 +99,7 @@ module.exports = {
             fs.unlinkSync(ran2);
           });
         } catch (e) {
-          doReact("❌");
+          await doReact("❌");
           m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
@@ -123,7 +123,7 @@ module.exports = {
             fs.unlinkSync(ran4);
           });
         } catch (e) {
-          doReact("❌");
+          await doReact("❌");
           m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
@@ -148,7 +148,7 @@ module.exports = {
             fs.unlinkSync(ran5);
           });
         } catch (e) {
-          doReact("❌");
+          await doReact("❌");
           m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
@@ -172,7 +172,7 @@ module.exports = {
             fs.unlinkSync(ran6);
           });
         } catch (e) {
-          doReact("❌");
+          await doReact("❌");
           m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
@@ -197,7 +197,7 @@ module.exports = {
             fs.unlinkSync(ran7);
           });
         } catch (e) {
-          doReact("❌");
+          await doReact("❌");
           m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;
@@ -221,7 +221,7 @@ module.exports = {
             fs.unlinkSync(ran8);
           });
         } catch (e) {
-          doReact("❌");
+          await doReact("❌");
           m.reply("An error Occurd ! Please mention an Audio!");
         }
         break;

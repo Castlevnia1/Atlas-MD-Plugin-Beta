@@ -223,7 +223,7 @@ module.exports = {
       case "topdf":
       case "imgtopdf":
         if (/image/.test(mime)) {
-          await doReact("🎴");
+          await doReact("📑");
           let mediaMess4 = await Atlas.downloadAndSaveMediaMessage(quoted);
 
           async function generatePDF(path) {

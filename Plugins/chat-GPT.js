@@ -1,5 +1,3 @@
-const tts = require("google-tts-api");
-const fs = require("fs");
 const axios = require("axios");
 const { Configuration, OpenAIApi } = require("openai");
 
@@ -8,13 +6,12 @@ let mergedCommands = [
   "ai",
   "imagegen",
   "dalle",
-  "imagetogpt",
 ];
 
 module.exports = {
   name: "apenai",
   alias: [...mergedCommands],
-  uniquecommands:["ai","dalle","imagetogpt"],
+  uniquecommands:["ai","dalle"],
   description: "AI Commands",
   start: async (
     Atlas,
@@ -45,6 +42,7 @@ module.exports = {
           await doReact("❔");
           return m.reply(`Please provide a message!`);
         }
+        await doReact("✅");
 
         const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -75,7 +73,8 @@ module.exports = {
               return generateResponse(prompt, retries - 1);
             } else {
               console.error(error);
-              return "Error occurred while generating response";
+              await doReact("❌");
+              return "Error occurred while generating response - API usage limit exceeded or wrong API key.";
             }
           }
         }
@@ -95,7 +94,7 @@ module.exports = {
           await doReact("❔");
           return m.reply(`Please provide a prompt for image generation!`);
         }
-
+        await doReact("✅");
         async function generateImage(prompt) {
           const API_URL = "https://api.openai.com/v1/images/generations";
 
@@ -125,7 +124,7 @@ module.exports = {
         generateImage(text)
           .then((imageUrl) => {
             if (!imageUrl) {
-              return m.reply("Failed to generate an image. Please try again.");
+              return m.reply("Failed to generate an image - API usage limit exceeded or wrong API key.");
             }
             Atlas.sendMessage(
               m.from,

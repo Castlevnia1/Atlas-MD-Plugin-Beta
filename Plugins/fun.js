@@ -1,9 +1,4 @@
 const axios = require("axios");
-const {
-  fetchJson,
-  getBuffer,
-  GIFBufferToVideoBuffer,
-} = require("../System/Function2.js");
 
 let mergedCommands = [
   "truth",
@@ -51,13 +46,14 @@ module.exports = {
   start: async (
     Atlas,
     m,
-    { text, args, prefix, inputCMD, mentionedJid, mentionByTag }
+    { text, args, prefix, inputCMD, mentionedJid, mentionByTag,doReact }
   ) => {
     function randomNumberPicker(min, max) {
       return Math.floor(Math.random() * (max - min + 1) + min);
     }
     switch (inputCMD) {
       case "truth":
+        await doReact("🤔");
         const truth = [
           "Have you ever liked anyone? How long?",
           "If you can or if you want, which gc/outside gc would you make friends with? (maybe different/same type)",
@@ -159,6 +155,7 @@ module.exports = {
         break;
 
       case "dare":
+        await doReact("😎");
         const dare = [
           "eat 2 tablespoons of rice without any side dishes, if it's dragging you can drink",
           "spill people who make you pause",
@@ -253,6 +250,7 @@ module.exports = {
         break;
 
       case "coinflip":
+        await doReact("🧫️")
         let result = Math.floor(Math.random() * 2) + 1;
         if (result === 1) {
           await Atlas.sendMessage(m.from, { text: "Heads" }, { quoted: m });
@@ -262,6 +260,7 @@ module.exports = {
         break;
 
       case "dice":
+        await doReact("🎲️")
         let max = parseInt(args[0]);
         if (!max)
           return Atlas.sendMessage(
@@ -278,6 +277,7 @@ module.exports = {
         break;
 
       case "fact":
+        await doReact("🤓")
         await axios
           .get(`https://nekos.life/api/v2/fact`)
           .then((response) => {
@@ -304,6 +304,7 @@ module.exports = {
       case "maturecheck":
       case "lesbiancheck":
         if (!text && !m.quoted) {
+          await doReact("❌");
           return Atlas.sendMessage(
             m.from,
             { text: `Please tag a user to use this command!` },
@@ -314,6 +315,7 @@ module.exports = {
         } else {
           var mentionedUser = mentionByTag[0];
         }
+        await doReact("👀");
         const dey = randomNumberPicker(1, 100);
 
         let Atlastext = `${
@@ -333,6 +335,7 @@ module.exports = {
 
       case "charactercheck":
         if (!text && !m.quoted) {
+          await doReact("❌");
           return Atlas.sendMessage(
             m.from,
             { text: `Please tag a user to use this command!` },
@@ -343,6 +346,7 @@ module.exports = {
         } else {
           var mentionedUser = mentionByTag[0];
         }
+        await doReact("👀");
 
         const userChar = [
           "Sigma",
