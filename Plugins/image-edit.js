@@ -3,23 +3,20 @@ const Canvacord = require("canvacord");
 const fs = require("fs");
 const remobg = require("remove.bg");
 const { Sticker } = require("wa-sticker-formatter");
-let mergedCommands = [
-  "blur",
-  "circle",
-  "jail",
-  "removebg",
-];
+let mergedCommands = ["blur", "circle", "jail", "removebg"];
 
 module.exports = {
   name: "audioedit",
-  uniquecommands:["blur", "circle", "jail", "removebg"],
+  uniquecommands: ["blur", "circle", "jail", "removebg"],
   alias: [...mergedCommands],
   description: "All Image Editing Commands",
   start: async (Atlas, m, { inputCMD, text, doReact, mime, quoted }) => {
     switch (inputCMD) {
       case "blur":
-        if (!m.quoted && !/image/.test(mime))
+        if (!m.quoted && !/image/.test(mime)) {
+          await doReact("❔");
           return m.reply("Please tag someone ! or mention a picture !");
+        }
 
         if (/image/.test(mime)) {
           userPfp = await quoted.download();
@@ -27,13 +24,16 @@ module.exports = {
           try {
             userPfp = await Atlas.profilePictureUrl(m.quoted.sender, "image");
           } catch (e) {
+            await doReact("❌");
             return m.reply(
               "User profile pic is Private ! or User doesn't have any profile picture !"
             );
           }
         } else {
+          await doReact("❔");
           return m.reply("Please tag someone ! or mention a picture !");
         }
+        await doReact("✔️");
 
         let level = text.split(" ")[1] || 5;
         const img = await Jimp.read(userPfp);
@@ -56,7 +56,7 @@ module.exports = {
       case "circle":
         if (/image/.test(mime)) {
           let mediaMess = await quoted.download();
-
+          await doReact("🔘");
           await Jimp.read(mediaMess).then((image) => {
             return image.circle().getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
               if (!err) {
@@ -71,19 +71,18 @@ module.exports = {
             });
           });
         } else {
-          Atlas.sendMessage(
-            m.from,
-            {
-              text: `Please mention an *imade* and type *${prefix}circle* to create circle image.`,
-            },
-            { quoted: m }
+          await doReact("❌");
+          return m.reply(
+            `Please mention an *imade* and type *${prefix}circle* to create circle image.`
           );
         }
         break;
 
       case "jail":
-        if (!m.quoted && !/image/.test(mime))
+        if (!m.quoted && !/image/.test(mime)) {
+          await doReact("❔");
           return m.reply("Please tag someone ! or mention a picture !");
+        }
 
         if (/image/.test(mime)) {
           userPfp = await quoted.download();
@@ -91,14 +90,16 @@ module.exports = {
           try {
             userPfp = await Atlas.profilePictureUrl(m.quoted.sender, "image");
           } catch (e) {
+            await doReact("❌");
             return m.reply(
               "User profile pic is Private ! or User doesn't have any profile picture !"
             );
           }
         } else {
+          await doReact("❔");
           return m.reply("Please tag someone ! or mention a picture !");
         }
-
+        await doReact("🔲");
         const result = await Canvacord.Canvacord.jail(userPfp, false);
 
         await Atlas.sendMessage(
@@ -109,14 +110,16 @@ module.exports = {
         break;
 
       case "removebg":
-        if (!m.quoted || !/image/.test(mime))
+        if (!m.quoted || !/image/.test(mime)){
+          await doReact("❌");
           return m.reply(
             `Send/Reply Image With Caption *${prefix}removebg* to remove background of an image`
-          );
-        if (/webp/.test(mime))
+          );}
+        if (/webp/.test(mime)){
+          await doReact("❌");
           return m.reply(
             `Send/Reply Image With Caption *${prefix}removebg* to remove background of an image`
-          );
+          );}
 
         let rbgKEYS = [
           "cHLxHkyovvnFKA46bWDoy5ab0",
@@ -170,8 +173,9 @@ module.exports = {
           "EpRzXpncobaNKATWLppj5v8s",
           "cX3yucYC6KGb9U7ZqetGz91z",
         ];
+        await doReact("☯️");
         let rbgKEY = rbgKEYS[Math.floor(Math.random() * rbgKEYS.length)];
-        let outputFile = await "./Assets/removeBgOUT.png";
+        let outputFile = await "./System/Cache/removeBgOUT.png";
         let qFile = await Atlas.downloadAndSaveMediaMessage(quoted);
 
         var bgRempic = await remobg.removeBackgroundFromImageFile({
@@ -195,7 +199,6 @@ module.exports = {
         fs.unlinkSync(outputFile);
         break;
 
-      
       default:
         break;
     }

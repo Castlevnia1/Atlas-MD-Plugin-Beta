@@ -99,29 +99,24 @@ module.exports = {
     switch (inputCMD) {
       case "addmod":
       case "setmod":
-        if (!isCreator && !isintegrated)
-          return Atlas.sendMessage(
-            m.from,
-            {
-              text: "Sorry, only my *Owner* can use this command ! *Added Mods* does not has this permission.",
-            },
-            { quoted: m }
-          );
-
-        // Check if a user is mentioned
-        if (!text && !m.quoted)
-          return Atlas.sendMessage(
-            m.from,
-            { text: `Please tag a user to make *mod*!` },
-            { quoted: m }
-          );
+        if (!text && !m.quoted) {
+          await doReact("❌");
+          return m.reply(`Please tag a user to make *mod*!`);
+        }
         mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
         userId = mentionedUser;
+        isUsermod = await checkMod(userId);
+        if (!isCreator && !isintegrated && isUsermod) {
+          await doReact("❌");
+          return m.reply(
+            "Sorry, only my *Owner* can use this command ! *Added Mods* does not have this permission."
+          );
+        }
         if (!userId) return m.reply("Please mention a valid user to ban!");
 
         try {
-          const isUsermod = await checkMod(userId);
-          if (isUsermod)
+          if (isUsermod) {
+            await doReact("✅");
             return Atlas.sendMessage(
               m.from,
               {
@@ -130,8 +125,10 @@ module.exports = {
               },
               { quoted: m }
             );
+          }
 
           // Add user to the mods list and save to the database
+          await doReact("✅");
           await addMod(userId)
             .then(() => {
               Atlas.sendMessage(
@@ -155,29 +152,25 @@ module.exports = {
 
       case "delmod":
       case "removemod":
-        if (!isCreator && !isintegrated)
-          return Atlas.sendMessage(
-            m.from,
-            {
-              text: "Sorry, only my *Owner* can use this command ! *Added Mods* does not has this permission.",
-            },
-            { quoted: m }
-          );
-
         // Check if a user is mentioned
-        if (!text && !m.quoted)
-          return Atlas.sendMessage(
-            m.from,
-            { text: `Please tag a user to make *mod*!` },
-            { quoted: m }
-          );
+        if (!text && !m.quoted) {
+          await doReact("❔");
+          return m.reply(`Please tag a user to remove from *mod*!`);
+        }
         mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
         userId = mentionedUser;
+        isUsermod = await checkMod(userId);
+        if (!isCreator && !isintegrated && isUsermod) {
+          await doReact("❌");
+          return m.reply(
+            "Sorry, only my *Owner* can use this command ! *Added Mods* does not have this permission."
+          );
+        }
         if (!userId) return m.reply("Please mention a valid user to ban!");
 
         try {
-          const isUsermod = await checkMod(userId);
-          if (!isUsermod)
+          if (!isUsermod) {
+            await doReact("✅");
             return Atlas.sendMessage(
               m.from,
               {
@@ -186,6 +179,7 @@ module.exports = {
               },
               { quoted: m }
             );
+          }
 
           await delMod(userId)
             .then(() => {
@@ -210,6 +204,7 @@ module.exports = {
 
       case "modlist":
       case "mods":
+        await doReact("✅");
         try {
           var modlist = await userData.find({ addedMods: "true" });
           var modlistString = "";
@@ -258,6 +253,7 @@ module.exports = {
           );
         } catch (err) {
           console.log(err);
+          await doReact("❌");
           return Atlas.sendMessage(
             m.from,
             { text: `An internal error occurred while fetching the mod list.` },
@@ -294,18 +290,23 @@ module.exports = {
         checkUserModStatus = await checkMod(userId);
         userNum = userId.split("@")[0];
         globalOwner = global.owner;
-        if (checkUserModStatus==true || globalOwner.includes(userNum)) {
-          return Atlas.sendMessage(m.from, {
-            text: `Sorry, I can't ban an *Owner* or *Mod* !`,
-          },{ quoted: m});
+        if (checkUserModStatus == true || globalOwner.includes(userNum)) {
+          await doReact("❌");
+          return m.reply(`Sorry, I can't ban an *Owner* or *Mod* !`);
         }
         if (chechBanStatus) {
-          return Atlas.sendMessage(m.from, {
-            text: `@${mentionedUser.split("@")[0]} is already *Banned* !`,
-            mentions: [mentionedUser],
-          },{ quoted: m});
+          await doReact("✅");
+          return Atlas.sendMessage(
+            m.from,
+            {
+              text: `@${mentionedUser.split("@")[0]} is already *Banned* !`,
+              mentions: [mentionedUser],
+            },
+            { quoted: m }
+          );
         } else {
           banUser(userId).then(async () => {
+            await doReact("✅");
             await Atlas.sendMessage(
               m.from,
               {
@@ -325,11 +326,7 @@ module.exports = {
       case "unbanuser":
         if (!text && !m.quoted) {
           await doReact("❌");
-          return Atlas.sendMessage(
-            m.from,
-            { text: `Please tag a user to *Un-Ban*!` },
-            { quoted: m }
-          );
+          return m.reply(`Please tag a user to *Un-Ban*!`);
         } else if (m.quoted) {
           var mentionedUser = m.quoted.sender;
         } else {
@@ -347,6 +344,7 @@ module.exports = {
         chechBanStatus = await checkBan(userId);
         if (chechBanStatus) {
           unbanUser(userId).then(async () => {
+            await doReact("✅");
             await Atlas.sendMessage(
               m.from,
               {
@@ -359,6 +357,7 @@ module.exports = {
             );
           });
         } else {
+          await doReact("❌");
           return Atlas.sendMessage(m.from, {
             text: `@${mentionedUser.split("@")[0]} is not *Banned* !`,
             mentions: [mentionedUser],
@@ -441,6 +440,7 @@ module.exports = {
 
         checkChar = await getChar();
         if (checkChar === intinput) {
+          await doReact("✅");
           return Atlas.sendMessage(
             m.from,
             {
@@ -450,18 +450,16 @@ module.exports = {
             { quoted: m }
           );
         }
-
-        setChar(intinput).then(async () => {
-          await Atlas.sendMessage(
-            m.from,
-            {
-              image: { url: botLogos[intinput] },
-              caption: `Character number *${intinput}* - *${botNames[intinput]}* has been set Successfully by *${pushName}*`,
-            },
-            { quoted: m }
-          );
-        });
-
+        await doReact("✅");
+        await setChar(intinput);
+        await Atlas.sendMessage(
+          m.from,
+          {
+            image: { url: botLogos[intinput] },
+            caption: `Character number *${intinput}* - *${botNames[intinput]}* has been set Successfully by *${pushName}*`,
+          },
+          { quoted: m }
+        );
         break;
 
       case "dmchatbot":

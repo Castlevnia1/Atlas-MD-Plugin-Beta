@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
 const config = require("../../Configurations.js");
+const options = {
+  socketTimeoutMS: 30000, 
+};
 
-const db1 = mongoose.createConnection(config.mongodb);
-const db2 = mongoose.createConnection(config.mongodb);
+const db1 = mongoose.createConnection(config.mongodb, options);
+const db2 = mongoose.createConnection(config.mongodb, options);
 
 const GroupSchema = new mongoose.Schema({
   id: { type: String, unique: true, required: true },

@@ -47,7 +47,7 @@ module.exports = {
   ) => {
     let sayMess;
     if (!text && !m.quoted) {
-      await doReact("❌");
+      await doReact("❔");
       return m.reply(
         `Please provide a text (Type or mention a message) !\n\nExample: ${prefix}say Atlas MD is OP`
       );

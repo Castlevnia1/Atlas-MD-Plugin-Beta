@@ -1,5 +1,6 @@
 const axios = require("axios");
 const nsfwarray = [
+  "nsfwmenu",
   "spreadpussy",
   "genshin",
   "squirt",
@@ -101,9 +102,10 @@ const nsfwarray = [
   "fingering",
 ];
 module.exports = {
-  name: "nsfwmenu",
+  name: "nsfwimages",
   alias: [...nsfwarray],
   uniquecommands: [
+    "nsfwmenu",
     "spreadpussy",
     "genshin",
     "squirt",

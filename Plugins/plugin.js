@@ -7,6 +7,7 @@ const {
   isPluginPresent, // --------------- CHECK IF PLUGIN IS ALREADY PRESENT IN DATABASE
   delPlugin, // --------------------- DELETE A PLUGIN FROM THE DATABASE
   getAllPlugins, // ----------------- GET ALL PLUGINS FROM DATABASE
+  checkMod, // ---------------------- CHECK IF SENDER IS MOD
 } = require("../System/MongoDB/MongoDb_Core.js");
 
 let mergedCommands = ["install", "uninstall", "plugins", "pluginlist"];
@@ -15,9 +16,17 @@ module.exports = {
   alias: [...mergedCommands],
   uniquecommands: ["install", "uninstall", "plugins"],
   description: "Install, Uninstall, List plugins",
-  start: async (Atlas, m, { text, args, pushName, prefix, inputCMD }) => {
+  start: async (Atlas, m, { text, args, pushName, prefix, inputCMD, isCreator, isintegrated, doReact }) => {
     switch (inputCMD) {
       case "install":
+        chechSenderModStatus = await checkMod(m.sender);
+        if (!chechSenderModStatus && !isCreator && !isintegrated) {
+          await doReact("❌");
+          return Atlas.sendMessage(m.from, {
+            text: `Sorry, only *Owners* and *Mods* can use this command !`,
+            quoted: m,
+          });
+        }
         try {
           var url = new URL(text);
         } catch (e) {
@@ -89,17 +98,25 @@ module.exports = {
         break;
 
       case "uninstall":
+        chechSenderModStatus = await checkMod(m.sender);
+        if (!chechSenderModStatus && !isCreator && !isintegrated) {
+          await doReact("❌");
+          return Atlas.sendMessage(m.from, {
+            text: `Sorry, only *Owners* and *Mods* can use this command !`,
+            quoted: m,
+          });
+        }
         if (!text) {
           return await m.reply(
             `Please provide a plugin name !\n\nExample: *${prefix}uninstall* audioEdit.js`
           );
         }
-
+        await doReact("🧩");
         fileName = text;
-
         plugin = isPluginPresent(fileName)
 
         if (!plugin) {
+          await doReact("❌");
           return await m.reply(`*${fileName}* plugin is not installed !`);
         }
 
@@ -111,7 +128,8 @@ module.exports = {
             `*${fileName}* plugin uninstalled successfully !\n\nPlease restart the bot to clear cache !`
           );
         } else {
-          return await m.reply(`*${fileName}* plugin is not installed !`);
+          await doReact("❌");
+          return m.reply(`*${fileName}* plugin is not installed !`);
         }
 
         break;

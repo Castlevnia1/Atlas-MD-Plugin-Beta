@@ -36,7 +36,7 @@ let mergedCommands = [
 module.exports = {
   name: "reactions",
   alias: [...mergedCommands],
-  uniquecommands:  [
+  uniquecommands: [
     "bite",
     "blush",
     "bonk",
@@ -65,7 +65,7 @@ module.exports = {
     "yeet",
   ],
   description: "All reaction Commands",
-  start: async (Atlas, m, { text, prefix, mentionByTag }) => {
+  start: async (Atlas, m, { text, prefix, mentionByTag, doReact }) => {
     const suitableWords = {
       bite: "bited",
       blush: "is blushing at",
@@ -94,6 +94,7 @@ module.exports = {
       wink: "Winked at",
       yeet: "Yeeted at",
     };
+    await doReact("🎭");
 
     const reactions = Object.keys(suitableWords);
     const command = m.body

@@ -25,12 +25,7 @@ let mergedCommands = [
 module.exports = {
   name: "mediaDownloader",
   alias: [...mergedCommands],
-  uniquecommands: [
-    "song",
-    "video",
-    "ytmp3",
-    "ytmp4",
-  ],
+  uniquecommands: ["song", "video", "ytmp3", "ytmp4"],
   description: "All file dowloader commands",
   start: async (Atlas, m, { inputCMD, text, doReact, prefix, pushName }) => {
     switch (inputCMD) {
@@ -43,60 +38,55 @@ module.exports = {
           );
         }
         await doReact("📥");
-        //thumbAtlas = fs.readFileSync("./Assets/Atlas.jpg");
         thumbAtlas = "https://graph.org/file/d0a287fa875c809f234ce.jpg";
         songInfo = await yts(text);
         song = songInfo.videos[0];
         videoUrl = song.url;
         videoId = videoUrl.split("v=")[1];
 
-        ttt = `*${song.title}*   _Downloading_ ...`;
+        ttt = `Downloading: *${song.title}*...`;
         await m.reply(ttt);
 
-        yts({ videoId }).then((result) => {
-          var vlength = result.seconds;
+        YT.mp3(videoId).then((file) => {
+          const inputPath = file.path;
+          const outputPath = inputPath + ".opus";
 
-          YT.mp3(videoId).then((file) => {
-            const inputPath = file.path;
-            const outputPath = inputPath + ".opus";
+          ffmpeg(inputPath)
+            .format("opus")
+            .on("error", (err) => {
+              console.error("Error converting to opus:", err);
+            })
+            .on("end", async () => {
+              //const thumbnailBuffer = await getBuffer(song.thumbnail);
+              const thumbnailBuffer = await getBuffer(thumbAtlas);
 
-            ffmpeg(inputPath)
-              .format("opus")
-              .on("error", (err) => {
-                console.error("Error converting to opus:", err);
-              })
-              .on("end", async () => {
-                //const thumbnailBuffer = await getBuffer(song.thumbnail);
-                const thumbnailBuffer = await getBuffer(thumbAtlas);
+              await Atlas.sendPresenceUpdate("recording", m.from);
 
-                await Atlas.sendPresenceUpdate('recording', m.from);
-
-                Atlas.sendMessage(
-                  m.from,
-                  {
-                    audio: fs.readFileSync(outputPath),
-                    mimetype: "audio/mpeg",
-                    ptt: true,
-                    contextInfo: {
-                      externalAdReply: {
-                        title: song.title.substr(0, 50),
-                        body: `Downloaded by: ${botName}`,
-                        thumbnail: thumbnailBuffer,
-                        mediaType: 1,
-                        mediaUrl: thumbAtlas,
-                        sourceUrl: song.url,
-                      },
+              Atlas.sendMessage(
+                m.from,
+                {
+                  audio: fs.readFileSync(outputPath),
+                  mimetype: "audio/mpeg",
+                  ptt: true,
+                  contextInfo: {
+                    externalAdReply: {
+                      title: song.title.substr(0, 50),
+                      body: `Downloaded by: ${botName}`,
+                      thumbnail: thumbnailBuffer,
+                      mediaType: 1,
+                      mediaUrl: thumbAtlas,
+                      sourceUrl: song.url,
                     },
                   },
-                  { quoted: m }
-                );
+                },
+                { quoted: m }
+              );
 
-                fs.unlinkSync(inputPath);
-                fs.unlinkSync(outputPath);
-              })
+              fs.unlinkSync(inputPath);
+              fs.unlinkSync(outputPath);
+            })
 
-              .save(outputPath);
-          });
+            .save(outputPath);
         });
 
         break;
@@ -115,21 +105,54 @@ module.exports = {
           );
         }
         await doReact("📥");
-        videoUrl = text;
+        songInfo = await yts(text);
+        song = songInfo.videos[0];
+        videoUrl = song.url;
         videoId = videoUrl.split("v=")[1];
+        thumbAtlas = "https://graph.org/file/d0a287fa875c809f234ce.jpg";
 
-        yts({ videoId }).then((result) => {
-          const ytaud = YT.mp3(text).then((file) => {
-            Atlas.sendMessage(
-              m.from,
-              {
-                audio: fs.readFileSync(file.path),
-                mimetype: "audio/mpeg",
-              },
-              { quoted: m }
-            );
-            fs.unlinkSync(file.path);
-          });
+        ttt = `Downloading: *${song.title}*...`;
+        await m.reply(ttt);
+
+        YT.mp3(videoId).then((file) => {
+          const inputPath = file.path;
+          const outputPath = inputPath + ".opus";
+
+          ffmpeg(inputPath)
+            .format("opus")
+            .on("error", (err) => {
+              console.error("Error converting to opus:", err);
+            })
+            .on("end", async () => {
+              const thumbnailBuffer = await getBuffer(thumbAtlas);
+
+              await Atlas.sendPresenceUpdate("recording", m.from);
+
+              Atlas.sendMessage(
+                m.from,
+                {
+                  audio: fs.readFileSync(outputPath),
+                  mimetype: "audio/mpeg",
+                  ptt: true,
+                  contextInfo: {
+                    externalAdReply: {
+                      title: song.title.substr(0, 50),
+                      body: `Downloaded by: ${botName}`,
+                      thumbnail: thumbnailBuffer,
+                      mediaType: 1,
+                      mediaUrl: thumbAtlas,
+                      sourceUrl: song.url,
+                    },
+                  },
+                },
+                { quoted: m }
+              );
+
+              fs.unlinkSync(inputPath);
+              fs.unlinkSync(outputPath);
+            })
+
+            .save(outputPath);
         });
 
         break;
@@ -148,30 +171,25 @@ module.exports = {
           );
         }
         await doReact("📥");
-        videoUrl = text;
+        songInfo = await yts(text);
+        song = songInfo.videos[0];
+        videoUrl = song.url;
         videoId = videoUrl.split("v=")[1];
+        result = await yts(videoId);
 
-        yts({ videoId }).then(async (result) => {
-          try {
-            const ytvid = await YT.mp4(text);
-            await Atlas.sendMessage(
-              m.from,
-              {
-                image: { url: ytvid.thumbnail },
-                caption: ``,
-                video: { url: ytvid.videoUrl },
-              },
-              { quoted: m }
-            );
-          } catch (err) {
-            console.error(err);
-            Atlas.sendMessage(
-              m.from,
-              { text: `Failed to play the song: ${err.message}` },
-              { quoted: m }
-            );
-          }
-        });
+        ttt = `Downloading: *${song.title}*...`;
+        await m.reply(ttt);
+
+        const ytaud3 = await YT.mp4(videoUrl);
+        Atlas.sendMessage(
+          m.from,
+          {
+            video: { url: ytaud3.videoUrl },
+            caption: `${song.title} By: *${botName}*`,
+          },
+          { quoted: m }
+        );
+
         break;
 
       case "video":
@@ -189,14 +207,14 @@ module.exports = {
         videoId = videoUrl.split("v=")[1];
         result = await yts(videoId);
 
-        ttt = `*${song.title}*   _Downloading_ ...`;
+        ttt = `Downloading: *${song.title}*...`;
         await m.reply(ttt);
 
-        const ytaud = await YT.mp4(videoUrl);
+        const ytaud2 = await YT.mp4(videoUrl);
         Atlas.sendMessage(
           m.from,
           {
-            video: { url: ytaud.videoUrl },
+            video: { url: ytaud2.videoUrl },
             caption: `${song.title} By: *${botName}*`,
           },
           { quoted: m }
