@@ -44,8 +44,20 @@ module.exports = {
         videoUrl = song.url;
         videoId = videoUrl.split("v=")[1];
 
-        ttt = `Downloading: *${song.title}*...`;
-        await m.reply(ttt);
+        await Atlas.sendMessage(
+          m.from,
+          {
+            image: { url: song.thumbnail },
+            caption: `\nDownloading: *${song.title}*
+            
+_🕛 Duration:_ *${song.timestamp}*
+
+_🎀 Channel Name:_ *${song.author.name}*
+
+_🏮 Video Uploaded:_ *${song.ago}*\n`,
+          },
+          { quoted: m }
+        );
 
         YT.mp3(videoId).then((file) => {
           const inputPath = file.path;
@@ -111,8 +123,20 @@ module.exports = {
         videoId = videoUrl.split("v=")[1];
         thumbAtlas = "https://graph.org/file/d0a287fa875c809f234ce.jpg";
 
-        ttt = `Downloading: *${song.title}*...`;
-        await m.reply(ttt);
+        await Atlas.sendMessage(
+          m.from,
+          {
+            image: { url: song.thumbnail },
+            caption: `\nDownloading: *${song.title}*
+            
+_🕛 Duration:_ *${song.timestamp}*
+
+_🎀 Channel Name:_ *${song.author.name}*
+
+_🏮 Video Uploaded:_ *${song.ago}*\n`,
+          },
+          { quoted: m }
+        );
 
         YT.mp3(videoId).then((file) => {
           const inputPath = file.path;
@@ -177,8 +201,20 @@ module.exports = {
         videoId = videoUrl.split("v=")[1];
         result = await yts(videoId);
 
-        ttt = `Downloading: *${song.title}*...`;
-        await m.reply(ttt);
+        await Atlas.sendMessage(
+          m.from,
+          {
+            image: { url: song.thumbnail },
+            caption: `\nDownloading: *${song.title}*
+            
+_🕛 Duration:_ *${song.timestamp}*
+
+_🎀 Channel Name:_ *${song.author.name}*
+
+_🏮 Video Uploaded:_ *${song.ago}*\n`,
+          },
+          { quoted: m }
+        );
 
         const ytaud3 = await YT.mp4(videoUrl);
         Atlas.sendMessage(
@@ -205,10 +241,21 @@ module.exports = {
         song = songInfo.videos[0];
         videoUrl = song.url;
         videoId = videoUrl.split("v=")[1];
-        result = await yts(videoId);
 
-        ttt = `Downloading: *${song.title}*...`;
-        await m.reply(ttt);
+        await Atlas.sendMessage(
+          m.from,
+          {
+            image: { url: song.thumbnail },
+            caption: `\nDownloading: *${song.title}*
+            
+_🕛 Duration:_ *${song.timestamp}*
+
+_🎀 Channel Name:_ *${song.author.name}*
+
+_🏮 Video Uploaded:_ *${song.ago}*\n`,
+          },
+          { quoted: m }
+        );
 
         const ytaud2 = await YT.mp4(videoUrl);
         Atlas.sendMessage(

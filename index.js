@@ -3,11 +3,8 @@ const {
   default: atlasConnect,
   DisconnectReason,
   fetchLatestBaileysVersion,
-  useMultiFileAuthState,
   downloadContentFromMessage,
   makeInMemoryStore,
-  BufferJSON,
-  initAuthCreds,
   jidDecode,
 } = require("@adiwajshing/baileys");
 const fs = require("fs");
@@ -18,15 +15,17 @@ const pino = require("pino");
 const path = require("path");
 const FileType = require("file-type");
 const { Boom } = require("@hapi/boom");
-const Collections = require("./System/Collections");
-const { state, saveCreds } = useMultiFileAuthState("./Session/session.json");
 const { serialize, WAConnection } = require("./System/whatsapp.js");
 const { smsg, getBuffer, getSizeMedia } = require("./System/Function2");
 const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 3000;
 const welcomeLeft = require("./System/Welcome.js");
 const { readcommands, commands } = require("./System/ReadCommands.js");
 commands.prefix = global.prefa;
-
+const mongoose = require("mongoose");
+const Auth = require("./System/MongoAuth/MongoAuth");
+const qrcode = require("qrcode");
 const {
   getPluginURLs, // -------------------- GET ALL PLUGIN DATA FROM DATABASE
 } = require("./System/MongoDB/MongoDb_Core.js");
@@ -38,169 +37,36 @@ const store = makeInMemoryStore({
     stream: "store",
   }),
 });
-const util = require("util");
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
-const unlink = util.promisify(fs.unlink);
-
-class FileStorage {
-  constructor() {
-    this.fileCache = new Map();
-  }
-
-  async loadFile(fileName) {
-    if (this.fileCache.has(fileName)) {
-      return this.fileCache.get(fileName);
-    }
-
-    try {
-      const fileContent = await readFile(fileName, "utf-8");
-      if (fileContent.length > 0) {
-        const content = JSON.parse(fileContent, BufferJSON.reviver);
-        this.fileCache.set(fileName, content);
-        return content;
-      }
-    } catch (error) {
-      // Do nothing if the file does not exist
-    }
-
-    return null;
-  }
-
-  async saveFile(fileName, content) {
-    const serializedContent = JSON.stringify(content, BufferJSON.replacer, 2);
-    await writeFile(fileName, serializedContent);
-  }
-
-  async deleteFile(fileName) {
-    try {
-      await unlink(fileName);
-    } catch (error) {
-      // Do nothing if the file does not exist
-    }
-  }
-}
-
-class AuthenticationFromFile {
-  constructor(sessionId) {
-    this.sessionId = sessionId;
-    this.fileStorage = new FileStorage();
-    this.KEY_MAP = {
-      "pre-key": "preKeys",
-      session: "sessions",
-      "sender-key": "senderKeys",
-      "app-state-sync-key": "appStateSyncKeys",
-      "app-state-sync-version": "appStateVersions",
-      "sender-key-memory": "senderKeyMemory",
-    };
-  }
-
-  debounce(func, wait) {
-    if (!this._debounceTimeouts) {
-      this._debounceTimeouts = new Map();
-    }
-
-    return (...args) => {
-      if (this._debounceTimeouts.has(func)) {
-        clearTimeout(this._debounceTimeouts.get(func));
-      }
-
-      const timeout = setTimeout(() => {
-        func.apply(this, args);
-        this._debounceTimeouts.delete(func);
-      }, wait);
-      this._debounceTimeouts.set(func, timeout);
-    };
-  }
-
-  async useFileAuth() {
-    const fileName = `./session.json`;
-
-    let storedCreds = await this.fileStorage.loadFile(fileName);
-
-    if (!storedCreds) {
-      // Create a blank session file
-      await this.fileStorage.saveFile(
-        fileName,
-        JSON.stringify({
-          creds: {},
-          keys: {},
-        })
-      );
-    }
-
-    let creds = storedCreds?.creds || initAuthCreds();
-    let keys = storedCreds?.keys || {};
-
-    const saveState = async () => {
-      await this.fileStorage.saveFile(fileName, { creds, keys });
-    };
-
-    const debouncedSaveState = this.debounce(saveState, 1000);
-
-    const clearState = async () => {
-      await this.fileStorage.deleteFile(fileName);
-    };
-
-    return {
-      state: {
-        creds,
-        keys: {
-          get: (type, ids) => {
-            const key = this.KEY_MAP[type];
-            return ids.reduce((dict, id) => {
-              const value = keys[key]?.[id];
-              if (value) {
-                if (type === "app-state-sync-key") {
-                  dict[id] = proto.AppStateSyncKeyData.fromObject(value);
-                } else {
-                  dict[id] = value;
-                }
-              }
-              return dict;
-            }, {});
-          },
-          set: async (data) => {
-            let shouldSave = false;
-            for (const _key in data) {
-              const key = this.KEY_MAP[_key];
-              keys[key] = keys[key] || {};
-              Object.assign(keys[key], data[_key]);
-              shouldSave = true;
-            }
-            if (shouldSave) {
-              debouncedSaveState();
-            }
-          },
-        },
-      },
-      saveState,
-      clearState,
-    };
-  }
-}
-const sessionId = "session";
-const authFromFile = new AuthenticationFromFile(sessionId); // Moved to after the class definition
-const switchName = sessionId;
-module.exports.switchName = switchName;
 
 // Atlas Server configuration
-
+let QR_GENERATE = "invalid";
+let status;
 const startAtlas = async () => {
+  try {
+    await mongoose.connect(mongodb).then(() => {
+      console.log(
+        chalk.greenBright("Establishing secure connection with MongoDB...\n")
+      );
+    });
+  } catch (err) {
+    console.log(chalk.redBright("Error connecting to MongoDB ! Please check MongoDB URL or try again after some minutes !\n"));
+    console.log(err);
+  }
+  const { getAuthFromDatabase } = new Auth(sessionId);
+
+  const { saveState, state, clearState } = await getAuthFromDatabase();
   console.log(
     figlet.textSync("ATLAS", {
       font: "Standard",
       horizontalLayout: "default",
       vertivalLayout: "default",
-      width: 80,
+      width: 70,
       whitespaceBreak: true,
     })
   );
   console.log(`\n`);
 
   await installPlugin();
-
-  const { state, saveState, clearState } = await authFromFile.useFileAuth();
 
   const { version, isLatest } = await fetchLatestBaileysVersion();
 
@@ -218,9 +84,14 @@ const startAtlas = async () => {
 
   async function installPlugin() {
     console.log(chalk.yellow("Checking for Plugins...\n"));
-  
-    const plugins = await getPluginURLs();
-  
+    let plugins = [];
+    try{
+      plugins = await getPluginURLs();
+    } catch (err) {
+      console.log(chalk.redBright("Error connecting to MongoDB ! Please re-check MongoDB URL or try again after some minutes !\n"));
+      console.log(err);
+    }
+
     if (!plugins.length || plugins.length == 0) {
       console.log(
         chalk.redBright("No Extra Plugins Installed ! Starting Atlas...\n")
@@ -229,14 +100,14 @@ const startAtlas = async () => {
       console.log(
         chalk.greenBright(plugins.length + " Plugins found ! Installing...\n")
       );
-      for(let i=0;i<plugins.length;i++){
+      for (let i = 0; i < plugins.length; i++) {
         pluginUrl = plugins[i];
         var { body, statusCode } = await got(pluginUrl);
         if (statusCode == 200) {
           try {
             var folderName = "Plugins";
             var fileName = path.basename(pluginUrl);
-  
+
             var filePath = path.join(folderName, fileName);
             fs.writeFileSync(filePath, body);
           } catch (error) {
@@ -251,13 +122,13 @@ const startAtlas = async () => {
       );
     }
   }
-  
+
   await readcommands();
 
   Atlas.ev.on("creds.update", saveState);
   Atlas.serializeM = (m) => smsg(Atlas, m, store);
   Atlas.ev.on("connection.update", async (update) => {
-    const { lastDisconnect, connection } = update;
+    const { lastDisconnect, connection, qr } = update;
     if (connection) {
       console.info(`[ ATLAS ] Server Status => ${connection}`);
     }
@@ -297,6 +168,9 @@ const startAtlas = async () => {
           `[ ATLAS ] Server Disconnected: "It's either safe disconnect or WhatsApp Account got banned !\n"`
         );
       }
+    }
+    if (qr) {
+      QR_GENERATE = qr;
     }
   });
 
@@ -487,8 +361,30 @@ const startAtlas = async () => {
 
 startAtlas();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
 app.use("/", express.static(join(__dirname, "Frontend")));
+
+app.get("/qr", async (req, res) => {
+  const { session } = req.query;
+  if (!session)
+    return void res
+      .status(404)
+      .setHeader("Content-Type", "text/plain")
+      .send("Provide the session id for authentication")
+      .end();
+  if (sessionId !== session)
+    return void res
+      .status(404)
+      .setHeader("Content-Type", "text/plain")
+      .send("Invalid session")
+      .end();
+  if (status == "open")
+    return void res
+      .status(404)
+      .setHeader("Content-Type", "text/plain")
+      .send("Session already exist")
+      .end();
+  res.setHeader("content-type", "image/png");
+  res.send(await qrcode.toBuffer(QR_GENERATE));
+});
 
 app.listen(PORT);

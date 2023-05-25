@@ -1,0 +1,128 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;	
+	font-family: Raleway, sans-serif;
+  ;
+}
+
+body {
+    background-image: url(BG.png);
+    background-repeat: no-repeat;
+    height: 122vh;
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+  }
+  
+
+.container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+}
+
+.login__submit {
+	background: #fff;
+	font-size: 14px;
+    margin-left: 30px;
+	padding: 13px 40px;
+	border-radius: 26px;
+	border: 1px solid #D4D3E8;
+	text-transform: uppercase;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	color: #d44714;
+	box-shadow: 0px 2px 2px #c05f22;
+	cursor: pointer;
+	transition: .2s;
+}
+
+.login__submit:active,
+.login__submit:focus,
+.login__submit:hover {
+	border-color: #c6640f;
+	outline: none;
+    scale: 1.05;
+}
+
+.button__icon {
+	font-size: 24px;
+	margin-left: auto;
+	color: #c05f22;
+}
+
+
+.button__text{
+    text-align: center;
+    margin: auto;
+   
+}
+
+.button{
+	margin: auto;
+	text-align: center;
+	
+    box-shadow: 0px 0px 24px #010101c9;
+}
+
+.qr-container{
+    text-align: center;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    box-shadow: 0px 0px 24px #01010127;
+}
+
+.main-qr {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  #bg-video {
+    position: absolute;
+    background-size: cover;
+    width: fit-content;
+    top: 0;
+    left: 0;
+    height: 122vh;
+    width: auto;
+    background-size: cover;
+    z-index: -1;
+}
+
+.box-container-main{
+    display: block;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    width: 400px;
+}
+
+ .video-bg{
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    
+ } 
+
+ .btn-main{
+    z-index: 1;
+ }
