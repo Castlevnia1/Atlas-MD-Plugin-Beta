@@ -19,7 +19,7 @@ const { serialize, WAConnection } = require("./System/whatsapp.js");
 const { smsg, getBuffer, getSizeMedia } = require("./System/Function2");
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = global.port;
 const welcomeLeft = require("./System/Welcome.js");
 const { readcommands, commands } = require("./System/ReadCommands.js");
 commands.prefix = global.prefa;
@@ -49,7 +49,11 @@ const startAtlas = async () => {
       );
     });
   } catch (err) {
-    console.log(chalk.redBright("Error connecting to MongoDB ! Please check MongoDB URL or try again after some minutes !\n"));
+    console.log(
+      chalk.redBright(
+        "Error connecting to MongoDB ! Please check MongoDB URL or try again after some minutes !\n"
+      )
+    );
     console.log(err);
   }
   const { getAuthFromDatabase } = new Auth(sessionId);
@@ -85,10 +89,14 @@ const startAtlas = async () => {
   async function installPlugin() {
     console.log(chalk.yellow("Checking for Plugins...\n"));
     let plugins = [];
-    try{
+    try {
       plugins = await getPluginURLs();
     } catch (err) {
-      console.log(chalk.redBright("Error connecting to MongoDB ! Please re-check MongoDB URL or try again after some minutes !\n"));
+      console.log(
+        chalk.redBright(
+          "Error connecting to MongoDB ! Please re-check MongoDB URL or try again after some minutes !\n"
+        )
+      );
       console.log(err);
     }
 
@@ -369,19 +377,19 @@ app.get("/qr", async (req, res) => {
     return void res
       .status(404)
       .setHeader("Content-Type", "text/plain")
-      .send("Provide the session id for authentication")
+      .send("Please Provide the session ID that you set for authentication !")
       .end();
   if (sessionId !== session)
     return void res
       .status(404)
       .setHeader("Content-Type", "text/plain")
-      .send("Invalid session")
+      .send("Invalid session ID ! Please check your session ID !")
       .end();
   if (status == "open")
     return void res
       .status(404)
       .setHeader("Content-Type", "text/plain")
-      .send("Session already exist")
+      .send("Session is already in use !")
       .end();
   res.setHeader("content-type", "image/png");
   res.send(await qrcode.toBuffer(QR_GENERATE));

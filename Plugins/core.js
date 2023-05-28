@@ -1,18 +1,27 @@
 const fs = require("fs");
 const axios = require("axios");
 const path = require("path");
-let mergedCommands = ["help","h", "menu", "sc", "support", "supportgc", "script"];
+let mergedCommands = [
+  "help",
+  "h",
+  "menu",
+  "sc",
+  "support",
+  "supportgc",
+  "script",
+];
 
 module.exports = {
   name: "others",
   alias: [...mergedCommands],
   uniquecommands: ["sc", "support"],
   description: "All miscleaneous commands",
-  start: async (Atlas, m, { pushName, prefix, inputCMD }) => {
+  start: async (Atlas, m, { pushName, prefix, inputCMD, doReact }) => {
     let pic = fs.readFileSync("./Assets/Atlas.jpg");
     switch (inputCMD) {
       case "script":
       case "sc":
+        await doReact("🧣");
         let repoInfo = await axios.get(
           "https://api.github.com/repos/FantoX001/Atlas-MD"
         );
@@ -31,6 +40,7 @@ module.exports = {
 
       case "support":
       case "supportgc":
+        await doReact("🔰");
         let txt2 = `              🧣 *Support Group* 🧣\n\n*${botName}* is an open source project, and we are always happy to help you.\n\n*Link:* ${suppL}\n\n*Note:* Please don't spam in the group, and don't message *Admins directly* without permission. Ask for help inside *Group*.\n\n*Thanks for using Atlas.*`;
         Atlas.sendMessage(m.from, { image: pic, caption: txt2 }, { quoted: m });
         break;
@@ -38,7 +48,8 @@ module.exports = {
       case "help":
       case "h":
       case "menu":
-        await Atlas.sendPresenceUpdate('composing', m.from);
+        await doReact("☃️");
+        await Atlas.sendPresenceUpdate("composing", m.from);
         function readUniqueCommands(dirPath) {
           const allCommands = [];
 
@@ -75,7 +86,9 @@ module.exports = {
             formatted += `╟   🏮 *${capitalizedFile}* 🏮   ╢\n\n`;
             //formatted += `\`\`\`${commands.join("\n")}\`\`\`\n\n\n`;
             // Adding a - before each command
-            formatted += `\`\`\`${commands.map((cmd) => `⥼   ${prefix+cmd}`).join("\n")}\`\`\`\n\n\n`;
+            formatted += `\`\`\`${commands
+              .map((cmd) => `⥼   ${prefix + cmd}`)
+              .join("\n")}\`\`\`\n\n\n`;
           }
 
           return formatted.trim();
@@ -86,7 +99,11 @@ module.exports = {
         const allCommands = readUniqueCommands(pluginsDir);
         const formattedCommands = formatCommands(allCommands);
         var helpText = `\nKonnichiwa *${pushName}* Senpai,\n\nI am *${botName}*, a WhatsApp bot built to take your boring WhatsApp experience into next level.\n\n*🔖 My Prefix is:*  ${prefix}\n\n${formattedCommands}\n\n\n*©️ Team ATLAS- 2023*`;
-        await Atlas.sendMessage(m.from, { image: {url:botImage1}, caption: helpText }, { quoted: m });
+        await Atlas.sendMessage(
+          m.from,
+          { video: { url: botVideo }, gifPlayback: true, caption: helpText },
+          { quoted: m }
+        );
 
         break;
       default:
