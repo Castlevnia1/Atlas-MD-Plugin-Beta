@@ -14,7 +14,7 @@ let mergedCommands = ["install", "uninstall", "plugins", "pluginlist"];
 module.exports = {
   name: "plugininstaller",
   alias: [...mergedCommands],
-  uniquecommands: ["install", "uninstall", "plugins"],
+  uniquecommands: ["install", "uninstall", "plugins", "pluginlist"],
   description: "Install, Uninstall, List plugins",
   start: async (Atlas, m, { text, args, pushName, prefix, inputCMD, isCreator, isintegrated, doReact }) => {
     switch (inputCMD) {
@@ -76,13 +76,12 @@ module.exports = {
         }
         break;
 
-      case "pluginlist":
       case "plugins":
         const plugins = await getAllPlugins();
         if (!plugins.length) {
           await Atlas.sendMessage(
             m.from,
-            { text: `No additional installed Plugins Found !` },
+            { text: `No additional plugins installed !` },
             { quoted: m }
           );
         } else {
@@ -134,6 +133,8 @@ module.exports = {
 
         break;
 
+        case "pluginlist":
+          break;
       default:
         break;
     }
