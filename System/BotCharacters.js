@@ -59,7 +59,7 @@ Video Host: https://graph.org/
 ** Note: 
 Do not change or remove present charID. You can add more characters by adding more charID sequentially.
 Add character name, video link, and image links.
-Don't forget to change "charlist.js" and "setchar.js" insdide "Commands\Mods\"  folder.
+Don't forget to change "charlist.js" and "setchar.js" inside "Plugins\moderator.js"  file.
 */
 
 
