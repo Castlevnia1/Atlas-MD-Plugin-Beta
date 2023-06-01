@@ -65,7 +65,7 @@ Don't forget to change "charlist.js" and "setchar.js" insdide "Commands\Mods\"  
 
 
 global.charID0 = {
-    botName : "Atlas MD",
+    botName : "Atlas",
     botVideo : "https://graph.org/file/e3b2ee218b98b8679bf98.mp4",
     botImage1 : "https://i.imgur.com/MClOeqe.jpeg",
     botImage2 : "https://i.imgur.com/MClOeqe.jpeg",
@@ -76,7 +76,7 @@ global.charID0 = {
 }
 
 global.charID1 = {
-  botName : "Power MD",
+  botName : "Power",
   botVideo : "https://graph.org/file/b402e2d4718992187787b.mp4",
   botImage1 : "https://wallpapercave.com/wp/wp11253614.jpg",
   botImage2 : "https://wallpapercave.com/wp/wp9413488.jpg",
@@ -87,7 +87,7 @@ global.charID1 = {
 }
 
 global.charID2 = {
-  botName : "Makima MD",
+  botName : "Makima",
   botVideo : "https://graph.org/file/de402b3a47195735ac60f.mp4",
   botImage1 : "https://images5.alphacoders.com/126/1264439.jpg",
   botImage2 : "https://images8.alphacoders.com/122/1227171.jpg",
@@ -98,7 +98,7 @@ global.charID2 = {
 }
 
 global.charID3 = {
-  botName : "Denji MD",
+  botName : "Denji",
   botVideo : "https://graph.org/file/0c48e29b402c76ae6028b.mp4",
   botImage1 : "https://i0.wp.com/metagalaxia.com.br/wp-content/uploads/2022/11/Chainsaw-Man-Denji-e-Power.webp?resize=1068%2C601&ssl=1",
   botImage2 : "https://images.alphacoders.com/128/1284967.jpg",
@@ -120,7 +120,7 @@ global.charID4 = {
 }
 
 global.charID5 = {
-  botName : "Chika MD",
+  botName : "Chika",
   botVideo : "https://graph.org/file/140e1f2488a005a889b26.mp4",
   botImage1 : "https://images4.alphacoders.com/100/1002134.png",
   botImage2 : "https://images4.alphacoders.com/100/1002714.jpg",
@@ -131,7 +131,7 @@ global.charID5 = {
 }
 
 global.charID6 = {
-  botName : "Miku MD",
+  botName : "Miku",
   botVideo : "https://graph.org/file/c37d336b8cfad543fd9c8.mp4",
   botImage1 : "https://wallpapercave.com/wp/wp10524580.jpg",
   botImage2 : "https://wallpapercave.com/wp/wp4828029.jpg",
@@ -142,7 +142,7 @@ global.charID6 = {
 }
 
 global.charID7 = {
-  botName : "Marin MD",
+  botName : "Marin",
   botVideo : "https://graph.org/file/cf5abde596ccbd6c92c6f.mp4",
   botImage1 : "https://images2.alphacoders.com/125/1257915.jpg",
   botImage2 : "https://wallpapercave.com/wp/wp10472356.png",
@@ -153,7 +153,7 @@ global.charID7 = {
 }
 
 global.charID8 = {
-  botName : "Ayanokoji MD",
+  botName : "Ayanokoji",
   botVideo : "https://graph.org/file/ae503b0700b345816f4d3.mp4",
   botImage1 : "https://wallpapers.com/images/file/kiyotaka-ayanokoji-in-pink-qs33qgqm79ccsq7n.jpg",
   botImage2 : "https://wallpapercave.com/wp/wp6530733.jpg",
@@ -164,7 +164,7 @@ global.charID8 = {
 }
 
 global.charID9 = {
-  botName : "Ruka MD",
+  botName : "Ruka",
   botVideo : "https://graph.org/file/b4fe227829affab6bd758.mp4",
   botImage1 : "https://wallpapercave.com/wp/wp8228630.jpg",
   botImage2 : "https://wallpapercave.com/uwp/uwp1175286.jpeg",
@@ -176,7 +176,7 @@ global.charID9 = {
 
 
 global.charID10 = {
-  botName : "Mizuhara MD",
+  botName : "Mizuhara",
   botVideo : "https://graph.org/file/ae039b89dea812fbcf0de.mp4",
   botImage1 : "https://images3.alphacoders.com/128/1288059.png",
   botImage2 : "https://images3.alphacoders.com/125/1251910.jpg",
@@ -188,7 +188,7 @@ global.charID10 = {
 
 
 global.charID11 = {
-  botName : "Rem MD",
+  botName : "Rem",
   botVideo : "https://graph.org/file/a84a767f4a4d6e8173c7e.mp4",
   botImage1 : "https://images.alphacoders.com/711/711900.png",
   botImage2 : "https://wallpapercave.com/uwp/uwp3278068.jpeg",
@@ -200,7 +200,7 @@ global.charID11 = {
 
 
 global.charID12 = {
-  botName : "Sumi MD",
+  botName : "Sumi",
   botVideo : "https://graph.org/file/d3779cdc930d5914aa305.mp4",
   botImage1 : "https://moewalls.com/wp-content/uploads/2022/07/sumi-sakurasawa-hmph-rent-a-girlfriend-thumb.jpg",
   botImage2 : "https://images6.alphacoders.com/128/1281400.jpg",
@@ -211,7 +211,7 @@ global.charID12 = {
 }
 
 global.charID13 = {
-  botName : "Kaguya MD",
+  botName : "Kaguya",
   botVideo : "https://graph.org/file/d9ac8d87ddb9315a0037f.mp4",
   botImage1 : "https://wallpapercave.com/wp/wp6099650.png",
   botImage2 : "https://wallpapercave.com/wp/wp5733231.png",
@@ -222,7 +222,7 @@ global.charID13 = {
 }
 
 global.charID14 = {
-  botName : "Yumeko MD",
+  botName : "Yumeko",
   botVideo : "https://graph.org/file/cca5eeed813e151bd2d39.mp4",
   botImage1 : "https://wallpapercave.com/wp/wp5017991.jpg",
   botImage2 : "https://wallpapercave.com/wp/wp4304699.png",
@@ -233,7 +233,7 @@ global.charID14 = {
 }
 
 global.charID15 = {
-  botName : "Kurumi MD",
+  botName : "Kurumi",
   botVideo : "https://graph.org/file/bdb79b42a9c0737730c84.mp4",
   botImage1 : "https://wallpapercave.com/wp/wp2535489.jpg",
   botImage2 : "https://wallpapercave.com/wp/wp5179279.jpg",
@@ -245,7 +245,7 @@ global.charID15 = {
 
 
 global.charID16 = {
-  botName : "Mai MD",
+  botName : "Mai",
   botVideo : "https://graph.org/file/c71c3076de5e792cc209c.mp4",
   botImage1 : "https://images4.alphacoders.com/972/972790.jpg",
   botImage2 : "https://images6.alphacoders.com/129/1292073.png",
@@ -257,7 +257,7 @@ global.charID16 = {
 
 
 global.charID17 = {
-  botName : "Yor MD",
+  botName : "Yor",
   botVideo : "https://graph.org/file/8817be3a15ed5c02debf7.mp4",
   botImage1 : "https://images7.alphacoders.com/123/1236729.jpg",
   botImage2 : "https://images7.alphacoders.com/122/1229718.jpg",
@@ -269,7 +269,7 @@ global.charID17 = {
 
 
 global.charID18 = {
-  botName : "Shinbou MD",
+  botName : "Shinbou",
   botVideo : "https://graph.org/file/1bacc57547657bc93aa66.mp4",
   botImage1 : "https://wallpapercave.com/wp/wp4650481.jpg",
   botImage2 : "https://wallpapercave.com/uwp/uwp2138883.webp",
@@ -280,7 +280,7 @@ global.charID18 = {
 }
 
 global.charID19 = {
-  botName : "Eiko MD",
+  botName : "Eiko",
   botVideo : "https://graph.org/file/7f99357fec0f000c7ab0a.mp4",
   botImage1 : "https://images8.alphacoders.com/122/1229829.jpg",
   botImage2 : "https://images2.alphacoders.com/123/1234944.png",
