@@ -1,14 +1,30 @@
 {
   "name": "atlas",
-  "version": "1.0.0",
-  "description": "a whatsapp plugin bot ",
+  "version": "3.1.0",
+  "description": "The future of WhatsApp bots now with plugin support.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --max-old-space-size=8192 index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FantoX001/Atlas-MD.git"
+  },
+  "keywords": [
+    "bot",
+    "whatsapp bot",
+    "whatsapp",
+    "baileys",
+    "baileys bot",
+    "md bot"
+  ],
+  "author": "Fanto001",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FantoX001/Atlas-MD/issues"
+  },
+  "homepage": "https://github.com/FantoX001/Atlas-MD#readme",
   "dependencies": {
     "@adiwajshing/baileys": "github:WhiskeySockets/Baileys",
     "@adiwajshing/keyed-db": "^0.2.4",
