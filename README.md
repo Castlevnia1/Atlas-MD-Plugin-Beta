@@ -438,7 +438,7 @@ npm start
 ```
 https://gist.githubusercontent.com/FantoX001/b818960e024c541e155f948db34a2da2/raw/f6771fbd4c615a64eafb92d53e7627276f20167a/audio-edit.js
 ```
-💡 [Plug-in Source Code](https://gist.github.com/FantoX001/b818960e024c541e155f948db34a2da2)
+💡 [Plug-in Source Code ↗](https://gist.github.com/FantoX001/b818960e024c541e155f948db34a2da2)
 <br><br>
 
 ## 🪟 Image Edit plug-in
@@ -447,7 +447,7 @@ https://gist.githubusercontent.com/FantoX001/b818960e024c541e155f948db34a2da2/ra
 ```
 https://gist.githubusercontent.com/FantoX001/b48fd5040b2cd83e5e331c0d2c974871/raw/909c5a6a32cfcb2dbb965f1ee2a5e3025802de5b/image-edit.js
 ```
-💡 [Plug-in Source Code](https://gist.github.com/FantoX001/b48fd5040b2cd83e5e331c0d2c974871)
+💡 [Plug-in Source Code ↗](https://gist.github.com/FantoX001/b48fd5040b2cd83e5e331c0d2c974871)
 <br><br>
     
 ## 🪟 Text to Speech plug-in
@@ -456,7 +456,7 @@ https://gist.githubusercontent.com/FantoX001/b48fd5040b2cd83e5e331c0d2c974871/ra
 ```
 https://gist.githubusercontent.com/FantoX001/109e3f04e70ca2edeb8d47072bbd0499/raw/84de4d44994fcb8b9f315a2be41eac062378df01/text-to-speech.js
 ```
-💡 [Plug-in Source Code](https://gist.github.com/FantoX001/109e3f04e70ca2edeb8d47072bbd0499)
+💡 [Plug-in Source Code ↗](https://gist.github.com/FantoX001/109e3f04e70ca2edeb8d47072bbd0499)
 <br><br>
     
 ## 🪟 Logo Maker plug-in
@@ -465,7 +465,7 @@ https://gist.githubusercontent.com/FantoX001/109e3f04e70ca2edeb8d47072bbd0499/ra
 ```
 https://gist.githubusercontent.com/FantoX001/b8e4a9782623c6197c10f68aa798a548/raw/7466871764434cf4c2ee30b15aac871e5db48a74/logo-maker.js
 ```
-💡 [Plug-in Source Code](https://gist.github.com/FantoX001/b8e4a9782623c6197c10f68aa798a548)
+💡 [Plug-in Source Code ↗](https://gist.github.com/FantoX001/b8e4a9782623c6197c10f68aa798a548)
 <br><br>
     
 ## 🪟 Chat GPT plug-in
@@ -474,7 +474,7 @@ https://gist.githubusercontent.com/FantoX001/b8e4a9782623c6197c10f68aa798a548/ra
 ```
 https://gist.githubusercontent.com/FantoX001/ec3e327c9711b1d3059cc26b8b7945be/raw/9396030969cbf0f24ad1c318a9035540ce4577b2/chat-GPT.js
 ```
-💡 [Plug-in Source Code](https://gist.github.com/FantoX001/ec3e327c9711b1d3059cc26b8b7945be)
+💡 [Plug-in Source Code ↗](https://gist.github.com/FantoX001/ec3e327c9711b1d3059cc26b8b7945be)
 <br><br>
     
 ## 🪟 Fun Commands plug-in
@@ -483,7 +483,7 @@ https://gist.githubusercontent.com/FantoX001/ec3e327c9711b1d3059cc26b8b7945be/ra
 ```
 https://gist.githubusercontent.com/FantoX001/e4df3eb3cc06baaccce3130a29262b30/raw/4c9b280fe527891f4d935b36b1c06e7f2fda9f6f/fun.js
 ```
-💡 [Plug-in Source Code](https://gist.github.com/FantoX001/e4df3eb3cc06baaccce3130a29262b30)
+💡 [Plug-in Source Code ↗](https://gist.github.com/FantoX001/e4df3eb3cc06baaccce3130a29262b30)
 <br><br>
     
 ## 🪟 Tiktok Downloader plug-in
@@ -492,7 +492,7 @@ https://gist.githubusercontent.com/FantoX001/e4df3eb3cc06baaccce3130a29262b30/ra
 ```
 https://gist.githubusercontent.com/FantoX001/481b039ef502a56339374b29b7491695/raw/854ed660349cc3fd45de89ce137721c674a03ec3/tiktokdl.js
 ```
-💡 [Plug-in Source Code](https://gist.github.com/FantoX001/481b039ef502a56339374b29b7491695)
+💡 [Plug-in Source Code ↗](https://gist.github.com/FantoX001/481b039ef502a56339374b29b7491695)
 <br><br>
     
 ## 🪟 Anime NSFW Image plug-in
