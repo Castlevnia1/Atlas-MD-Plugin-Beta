@@ -67,7 +67,8 @@
     "util": "^0.12.5",
     "wa-sticker-formatter": "^4.4.4",
     "youtube-yts": "^2.0.0",
-    "youtubedl-core": "^4.11.5"
+    "youtubedl-core": "^4.11.5",
+    "jimp": "^0.16.1"
   },
   "directories": {
     "System": "System",
@@ -75,7 +76,6 @@
   },
   "devDependencies": {
     "express": "^4.18.2",
-    "jimp": "^0.22.8",
     "pino": "^8.14.1"
   }
 }
