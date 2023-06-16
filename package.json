@@ -26,11 +26,11 @@
   },
   "homepage": "https://github.com/FantoX001/Atlas-MD#readme",
   "dependencies": {
-    "baileys": "^6.0.9",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@fantox01/lyrics-scraper": "^1.0.1",
     "@hapi/boom": "^10.0.1",
     "axios": "^1.2.2",
+    "baileys": "^6.0.9",
     "canvacord": "^5.2.3",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
@@ -52,7 +52,6 @@
     "goto": "^0.2.0",
     "human-readable": "^0.2.1",
     "hxz-api": "^1.0.1",
-    "jimp": "^0.16.13",
     "moment-timezone": "^0.5.43",
     "mongoose": "^7.1.1",
     "mumaker": "^1.0.0",
@@ -61,7 +60,6 @@
     "openai": "^3.2.1",
     "path": "^0.12.7",
     "pdfkit": "^0.13.0",
-    "pino": "^8.11.0",
     "qrcode": "^1.5.1",
     "qrcode-terminal": "^0.12.0",
     "quick.db": "^9.1.6",
@@ -74,5 +72,10 @@
   "directories": {
     "System": "System",
     "Plugins": "Plugins"
+  },
+  "devDependencies": {
+    "express": "^4.18.2",
+    "jimp": "^0.22.8",
+    "pino": "^8.14.1"
   }
 }
