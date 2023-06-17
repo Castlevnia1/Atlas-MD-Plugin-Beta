@@ -6,7 +6,7 @@ const {
   downloadContentFromMessage,
   makeInMemoryStore,
   jidDecode,
-} = require("@whiskeysockets/baileys");
+} = require("./BaileysJS/lib");
 const fs = require("fs");
 const figlet = require("figlet");
 const { join } = require("path");
