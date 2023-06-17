@@ -1,4 +1,4 @@
-const { proto, delay, getContentType } = require("./BaileysJS/lib");
+const { proto, delay, getContentType } = require("../BaileysJS/lib");
 const chalk = require("chalk");
 const fs = require("fs");
 const { unlink } = require("fs").promises;
