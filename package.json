@@ -70,10 +70,6 @@
     "youtubedl-core": "^4.11.5",
     "jimp": "^0.16.1"
   },
-  "directories": {
-    "System": "System",
-    "Plugins": "Plugins"
-  },
   "devDependencies": {
     "pino": "^8.1.0",
     "qrcode-terminal": "^0.12.0",
