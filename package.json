@@ -19,7 +19,7 @@
     "baileys bot",
     "md bot"
   ],
-  "author": "Fanto001",
+  "author": "FantoX001",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/FantoX001/Atlas-MD/issues"
@@ -59,6 +59,9 @@
     "node-id3": "^0.2.6",
     "openai": "^3.2.1",
     "path": "^0.12.7",
+    "pino": "^8.1.0",
+    "qrcode-terminal": "^0.12.0",
+    "@hapi/boom": "^10.0.1",
     "pdfkit": "^0.13.0",
     "qrcode": "^1.5.1",
     "quick.db": "^9.1.6",
@@ -68,11 +71,5 @@
     "youtube-yts": "^2.0.0",
     "youtubedl-core": "^4.11.5",
     "jimp": "^0.16.1"
-  },
-  "devDependencies": {
-    "pino": "^8.1.0",
-    "qrcode-terminal": "^0.12.0",
-    "jimp": "^0.16.1",
-    "@hapi/boom": "^10.0.1"
   }
 }
