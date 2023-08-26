@@ -96,6 +96,7 @@ module.exports = {
       groupName,
     }
   ) => {
+<<<<<<< HEAD
    isUsermod = await checkMod(m.sender);
         if (!isCreator && !isintegrated && !isUsermod) {
           await doReact("❌");
@@ -103,6 +104,8 @@ module.exports = {
             "Sorry, only my *Mods* can use this command !"
           );
         }
+=======
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
     switch (inputCMD) {
       case "addmod":
       case "setmod":
@@ -110,7 +113,11 @@ module.exports = {
           await doReact("❌");
           return m.reply(`Please tag a user to make *mod*!`);
         }
+<<<<<<< HEAD
          mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
+=======
+        mentionedUser = m.quoted ? m.quoted.sender : mentionByTag[0];
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
         userId = mentionedUser;
         isUsermod = await checkMod(userId);
         if (!isCreator && !isintegrated && isUsermod) {
