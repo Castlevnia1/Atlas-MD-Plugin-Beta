@@ -1,3 +1,6 @@
 node_modules
 yarn.lock
+<<<<<<< HEAD
 .env
+=======
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
