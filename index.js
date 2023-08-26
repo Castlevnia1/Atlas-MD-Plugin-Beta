@@ -6,7 +6,11 @@ const {
   downloadContentFromMessage,
   makeInMemoryStore,
   jidDecode,
+<<<<<<< HEAD
 } = require("baileysjs");
+=======
+} = require("./BaileysJS/lib");
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
 const fs = require("fs");
 const figlet = require("figlet");
 const { join } = require("path");
@@ -130,6 +134,7 @@ const startAtlas = async () => {
       );
     }
   }
+<<<<<<< HEAD
 
   await readcommands();
 
@@ -296,6 +301,138 @@ const startAtlas = async () => {
     );
   };
 
+=======
+
+  await readcommands();
+
+  Atlas.ev.on("creds.update", saveState);
+  Atlas.serializeM = (m) => smsg(Atlas, m, store);
+  Atlas.ev.on("connection.update", async (update) => {
+    const { lastDisconnect, connection, qr } = update;
+    if (connection) {
+      console.info(`[ ATLAS ] Server Status => ${connection}`);
+    }
+
+    if (connection === "close") {
+      let reason = new Boom(lastDisconnect?.error)?.output.statusCode;
+      if (reason === DisconnectReason.badSession) {
+        console.log(
+          `[ ATLAS ] Bad Session File, Please Delete Session and Scan Again.\n`
+        );
+        process.exit();
+      } else if (reason === DisconnectReason.connectionClosed) {
+        console.log("[ ATLAS ] Connection closed, reconnecting....\n");
+        startAtlas();
+      } else if (reason === DisconnectReason.connectionLost) {
+        console.log("[ ATLAS ] Connection Lost from Server, reconnecting...\n");
+        startAtlas();
+      } else if (reason === DisconnectReason.connectionReplaced) {
+        console.log(
+          "[ ATLAS ] Connection Replaced, Another New Session Opened, Please Close Current Session First!\n"
+        );
+        process.exit();
+      } else if (reason === DisconnectReason.loggedOut) {
+        clearState();
+        console.log(
+          `[ ATLAS ] Device Logged Out, Please Delete Session and Scan Again.\n`
+        );
+        process.exit();
+      } else if (reason === DisconnectReason.restartRequired) {
+        console.log("[ ATLAS ] Server Restarting...\n");
+        startAtlas();
+      } else if (reason === DisconnectReason.timedOut) {
+        console.log("[ ATLAS ] Connection Timed Out, Trying to Reconnect...\n");
+        startAtlas();
+      } else {
+        console.log(
+          `[ ATLAS ] Server Disconnected: "It's either safe disconnect or WhatsApp Account got banned !\n"`
+        );
+      }
+    }
+    if (qr) {
+      QR_GENERATE = qr;
+    }
+  });
+
+  Atlas.ev.on("group-participants.update", async (m) => {
+    welcomeLeft(Atlas, m);
+  });
+
+  Atlas.ev.on("messages.upsert", async (chatUpdate) => {
+    m = serialize(Atlas, chatUpdate.messages[0]);
+
+    if (!m.message) return;
+    if (m.key && m.key.remoteJid == "status@broadcast") return;
+    if (m.key.id.startsWith("BAE5") && m.key.id.length == 16) return;
+
+    require("./Core.js")(Atlas, m, commands, chatUpdate);
+  });
+
+  Atlas.decodeJid = (jid) => {
+    if (!jid) return jid;
+    if (/:\d+@/gi.test(jid)) {
+      let decode = jidDecode(jid) || {};
+      return (
+        (decode.user && decode.server && decode.user + "@" + decode.server) ||
+        jid
+      );
+    } else return jid;
+  };
+
+  Atlas.ev.on("contacts.update", (update) => {
+    for (let contact of update) {
+      let id = Atlas.decodeJid(contact.id);
+      if (store && store.contacts)
+        store.contacts[id] = {
+          id,
+          name: contact.notify,
+        };
+    }
+  });
+
+  Atlas.downloadAndSaveMediaMessage = async (
+    message,
+    filename,
+    attachExtension = true
+  ) => {
+    let quoted = message.msg ? message.msg : message;
+    let mime = (message.msg || message).mimetype || "";
+    let messageType = message.mtype
+      ? message.mtype.replace(/Message/gi, "")
+      : mime.split("/")[0];
+    const stream = await downloadContentFromMessage(quoted, messageType);
+    let buffer = Buffer.from([]);
+    for await (const chunk of stream) {
+      buffer = Buffer.concat([buffer, chunk]);
+    }
+    let type = await FileType.fromBuffer(buffer);
+    trueFileName = attachExtension ? filename + "." + type.ext : filename;
+    // save to file
+    await fs.writeFileSync(trueFileName, buffer);
+    return trueFileName;
+  };
+
+  Atlas.downloadMediaMessage = async (message) => {
+    let mime = (message.msg || message).mimetype || "";
+    let messageType = message.mtype
+      ? message.mtype.replace(/Message/gi, "")
+      : mime.split("/")[0];
+    const stream = await downloadContentFromMessage(message, messageType);
+    let buffer = Buffer.from([]);
+    for await (const chunk of stream) {
+      buffer = Buffer.concat([buffer, chunk]);
+    }
+
+    return buffer;
+  };
+
+  Atlas.parseMention = async (text) => {
+    return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(
+      (v) => v[1] + "@s.whatsapp.net"
+    );
+  };
+
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
   Atlas.sendText = (jid, text, quoted = "", options) =>
     Atlas.sendMessage(
       jid,
