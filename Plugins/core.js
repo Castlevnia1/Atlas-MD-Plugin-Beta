@@ -1,7 +1,10 @@
 const fs = require("fs");
 const axios = require("axios");
 const path = require("path");
+<<<<<<< HEAD
 const package = require("../package.json");
+=======
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
 let mergedCommands = [
   "help",
   "h",
@@ -10,6 +13,7 @@ let mergedCommands = [
   "support",
   "supportgc",
   "script",
+<<<<<<< HEAD
   "system",
   "info",
   "about",
@@ -26,6 +30,17 @@ module.exports = {
     { pushName, prefix, inputCMD, doReact, text, args }
   ) => {
     const pic = fs.readFileSync("./Assets/Atlas.jpg");
+=======
+];
+
+module.exports = {
+  name: "others",
+  alias: [...mergedCommands],
+  uniquecommands: ["sc", "support"],
+  description: "All miscleaneous commands",
+  start: async (Atlas, m, { pushName, prefix, inputCMD, doReact }) => {
+    let pic = fs.readFileSync("./Assets/Atlas.jpg");
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
     switch (inputCMD) {
       case "script":
       case "sc":
@@ -34,7 +49,10 @@ module.exports = {
           "https://api.github.com/repos/FantoX001/Atlas-MD"
         );
         let repo = repoInfo.data;
+<<<<<<< HEAD
         console.log(repo);
+=======
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
         let txt = `            🧣 *${botName}'s Script* 🧣\n\n*🎀 Total Forks:* ${
           repo.forks_count
         }\n*⭐ Total Stars:* ${repo.stargazers_count}\n*📜 License:* ${
@@ -93,6 +111,11 @@ module.exports = {
               file.replace(".js", "").slice(1);
 
             formatted += `╟   🏮 *${capitalizedFile}* 🏮   ╢\n\n`;
+<<<<<<< HEAD
+=======
+            //formatted += `\`\`\`${commands.join("\n")}\`\`\`\n\n\n`;
+            // Adding a - before each command
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
             formatted += `\`\`\`${commands
               .map((cmd) => `⥼   ${prefix + cmd}`)
               .join("\n")}\`\`\`\n\n\n`;
@@ -113,6 +136,7 @@ module.exports = {
         );
 
         break;
+<<<<<<< HEAD
 
       case "system":
       case "info":
@@ -163,6 +187,8 @@ module.exports = {
 
         break;
 
+=======
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
       default:
         break;
     }
