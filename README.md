@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <p align="center">
 <a href="https://github.com/FantoX001/Atlas-MD">
     <img src="https://i.imgur.com/MClOeqe.jpeg">
@@ -121,15 +120,10 @@ Konnichiwa Senpai, I am "Atlas" an Opensource WhatsApp bot made by <a href="http
 
 <p align="center" >
     <a href="https://heroku.com/deploy?template=https://github.com/FantoX001/Atlas-MD">
-=======
-<p align="center" >
-    <a href="https://heroku.com/deploy?template=https://github.com/FantoX001/Atlas-MD-plugin">
->>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
     <img src="https://www.herokucdn.com/deploy/button.png" width="160px" alt="Deploy on Heroku" >
     </a>
 
 </p>
-<<<<<<< HEAD
 
 <p align="center" >
     <br>
@@ -636,5 +630,3 @@ https://gist.githubusercontent.com/FantoX001/804c106f1f2fb1ae46e9bd63f854069d/ra
 ----|----|----|----|----|----
 [FantoX](https://github.com/FantoX001)  | [Ahmii Kun](https://github.com/Ahmii-kun) | [Pratyush](https://github.com/pratyush4932) | [Devime](https://github.com/Devime69) | [Kai](https://github.com/Kai0071) | [Jayjay Ops](https://github.com/jayjay-ops)
 Owner, Main Developer, Maintainer, Dubugger  | Co-Developer, Co-Maintainer | Support Developer | API Maintainer | Ideas, Testing | Ideas, Testing
-=======
->>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c

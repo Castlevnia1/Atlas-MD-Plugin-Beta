@@ -69,12 +69,6 @@ _🏮 Video Uploaded:_ *${song.ago}*\n`,
               console.error("Error converting to opus:", err);
             })
             .on("end", async () => {
-<<<<<<< HEAD
-=======
-              //const thumbnailBuffer = await getBuffer(song.thumbnail);
-              const thumbnailBuffer = await getBuffer(thumbAtlas);
-
->>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
               await Atlas.sendPresenceUpdate("recording", m.from);
 
               Atlas.sendMessage(
@@ -83,19 +77,6 @@ _🏮 Video Uploaded:_ *${song.ago}*\n`,
                   audio: fs.readFileSync(outputPath),
                   mimetype: "audio/mpeg",
                   ptt: true,
-<<<<<<< HEAD
-=======
-                  /*contextInfo: {
-                    externalAdReply: {
-                      title: song.title.substr(0, 50),
-                      body: `Downloaded by: ${botName}`,
-                      thumbnail: thumbnailBuffer,
-                      mediaType: 1,
-                      mediaUrl: thumbAtlas,
-                      sourceUrl: song.url,
-                    },
-                  },*/
->>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
                 },
                 { quoted: m }
               );
@@ -161,25 +142,9 @@ _🏮 Video Uploaded:_ *${song.ago}*\n`,
               Atlas.sendMessage(
                 m.from,
                 {
-<<<<<<< HEAD
                   audio: fs.readFileSync(inputPath),
                   mimetype: "audio/mpeg",
                   ptt: true,
-=======
-                  audio: fs.readFileSync(outputPath),
-                  mimetype: "audio/mpeg",
-                  ptt: true,
-                  /*contextInfo: {
-                    externalAdReply: {
-                      title: song.title.substr(0, 50),
-                      body: `Downloaded by: ${botName}`,
-                      thumbnail: thumbnailBuffer,
-                      mediaType: 1,
-                      mediaUrl: thumbAtlas,
-                      sourceUrl: song.url,
-                    },
-                  },*/
->>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
                 },
                 { quoted: m }
               );

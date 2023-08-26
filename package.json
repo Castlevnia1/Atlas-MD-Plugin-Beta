@@ -32,10 +32,7 @@
     "@napi-rs/canvas": "^0.1.41",
     "@whiskeysockets/baileys": "^6.2.1",
     "axios": "^1.2.2",
-<<<<<<< HEAD
     "baileysjs": "^6.2.1",
-=======
->>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
     "canvacord": "^5.2.3",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
@@ -64,11 +61,7 @@
     "libphonenumber-js": "^1.10.20",
     "libsignal": "https://github.com/adiwajshing/libsignal-node.git",
     "moment-timezone": "^0.5.43",
-<<<<<<< HEAD
     "mongoose": "^7.4.4",
-=======
-    "mongoose": "^7.1.1",
->>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
     "mumaker": "^1.0.0",
     "music-metadata": "^7.12.3",
     "node-cache": "^5.1.2",

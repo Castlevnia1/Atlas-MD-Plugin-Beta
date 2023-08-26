@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const config = require("../../Configurations.js");
 const options = {
-<<<<<<< HEAD
   socketTimeoutMS: 30000,
 };
 
@@ -9,13 +8,6 @@ const options = {
 
 const db1 = mongoose.createConnection(config.mongodb, options); // You malually put first mongodb url here
 const db2 = mongoose.createConnection(config.mongodb, options); // You malually put second mongodb url here
-=======
-  socketTimeoutMS: 30000, 
-};
-
-const db1 = mongoose.createConnection(config.mongodb, options);
-const db2 = mongoose.createConnection(config.mongodb, options);
->>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
 
 const GroupSchema = new mongoose.Schema({
   id: { type: String, unique: true, required: true },
@@ -43,15 +35,9 @@ const CoreSchema = new mongoose.Schema({
 });
 
 const PluginSchema = new mongoose.Schema({
-<<<<<<< HEAD
   plugin: { type: String },
   url: { type: String },
 });
-=======
-    plugin: { type: String },
-    url: { type: String },
-  });
->>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
 
 const userData = db1.model("UserData", UserSchema);
 const groupData = db1.model("GroupData", GroupSchema);
