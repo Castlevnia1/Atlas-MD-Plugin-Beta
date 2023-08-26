@@ -8,7 +8,11 @@ const {
   delay,
   downloadContentFromMessage,
   getBinaryNodeChild,
+<<<<<<< HEAD
 } = require("baileysjs");
+=======
+} = require("../BaileysJS/lib");
+>>>>>>> 1cbf3fa642e55c58afe5b4f44b8b2f6b0771373c
 const fs = require("fs");
 const FileType = require("file-type");
 const { getRandom, fetchBuffer } = require("./Function");
